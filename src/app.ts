@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 
-import { createApi } from './lib/api'
+import { createApi } from './lib/api.sqlite'
 import * as theme from './theme'
 import * as admin from './admin'
 
