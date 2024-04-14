@@ -1,5 +1,4 @@
 import { Database } from "bun:sqlite";
-import { Elysia } from 'elysia';
 
 export type DbConf = {
     filename: string;
@@ -9,14 +8,14 @@ const dbConfDefault = {
     filename: './mydb.sqlite'
 }
 
-export const connectDb = async (dbConf: DbConf) => {
-    const { filename, ...options} = {
+export const connectDb = async (dbConf?: DbConf) => {
+    const { filename, ...options } = {
         ...dbConfDefault,
-        ...dbConf
+        ...dbConf || {}
     }
-    const db = new Database(filename, { 
+    const db = new Database(filename, {
         ...options,
-        create: true 
+        create: true
     });
 
     const data = db
@@ -39,7 +38,7 @@ export const connectDb = async (dbConf: DbConf) => {
           title TEXT UNIQUE,
           content TEXT
         );
-      `).run()
+        `).run()
 
         console.log('Inserting dummy data')
         db.query(`
@@ -47,8 +46,18 @@ export const connectDb = async (dbConf: DbConf) => {
           slug, title, content
         ) VALUES (
           'test-article', 'Test article', '<span>Test <b>article</b> content</span>'
-        );
-      `).run()
+        );        
+        `).run()
+
+        db.query(`
+        INSERT INTO article (
+          slug, title, content
+        ) VALUES (
+          'test-article-2', 'Test article 2', '<span>Test <b>article</b> 2 content</span>'
+        );        
+        `).run()
+
+
     }
 
     return db

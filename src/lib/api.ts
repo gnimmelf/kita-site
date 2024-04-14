@@ -1,7 +1,6 @@
 import { Elysia, NotFoundError } from 'elysia';
+import { Database } from "bun:sqlite";
 import { z } from 'zod'
-
-import { connectDb, DbConf } from './db-conn';
 
 const Article = z.object({
   id: z.union([z.string(), z.number()]),
@@ -11,10 +10,9 @@ const Article = z.object({
 })
 
 
-export const createApi = (dbConf: DbConf) => {
-  return async (app: Elysia) => {
-      const db = await connectDb(dbConf)
-      const api = new Api(db)
+export const createApi = (dbConn: Database) => {
+  return async (app: Elysia) => {      
+      const api = new Api(dbConn)
       app.decorate('api', api)
       return app;
   }
