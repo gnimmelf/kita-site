@@ -20,7 +20,7 @@ export const createApi = (dbConn: Database) => {
 
 const Articles = z.array(Article)
 
-class Api {
+export class Api {
   #db
 
   constructor(db: Database) {
@@ -29,6 +29,12 @@ class Api {
 
   get db() {
     return this.#db
+  }
+
+  async getUserByEmail(email: string) {
+    const data = this.#db.query(`SELECT * FROM user WHERE email = $1 `).get([ email ]);
+
+    return data;
   }
 
   async getArticleById(id: string) {
@@ -51,8 +57,6 @@ class Api {
 
   async getArticles() {
     const data = this.#db.query(`SELECT * FROM article;`).all();
-
-    console.log(data)
 
     if (!(Articles.safeParse(data).success)) {
       throw new NotFoundError()

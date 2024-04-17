@@ -1,1 +1,0 @@
-console.log('web-server/public')

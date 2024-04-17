@@ -18,19 +18,29 @@ export const connectDb = async (dbConf?: DbConf) => {
         create: true
     });
 
-    const data = db
+    return db
+}
+
+export const setupDb = (db: Database, recreateDb: boolean) => {
+
+    const tablenames = db
         .query(`
             SELECT name FROM sqlite_master 
-            WHERE type='table' 
-            AND 
+            WHERE type='table'AND 
             name NOT LIKE 'sqlite_' || '%';
         `)
         .all()
+        .map(({ name }) => name)
 
-    console.log(`Tabels in db (${filename})`, data.map(({ name }) => name).join(' | '))
+    console.log(`Tabels in db (${db.filename})`, tablenames.join(' | '))
 
-    if (!data.length) {
-        console.log('Creating tables...')
+    if (recreateDb) {
+        console.log('Recreating tables...')
+
+        tablenames.forEach(tablename => db
+            .query(`DROP table '${tablename}';`)
+            .run())
+
         db.query(`
         CREATE TABLE IF NOT EXISTS article (
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -40,7 +50,16 @@ export const connectDb = async (dbConf?: DbConf) => {
         );
         `).run()
 
+        db.query(`
+        CREATE TABLE IF NOT EXISTS user (
+          id INTEGER PRIMARY KEY AUTOINCREMENT, 
+          email TEXT UNIQUE,
+          password TEXT UNIQUE          
+        );
+        `).run()
+
         console.log('Inserting dummy data')
+
         db.query(`
         INSERT INTO article (
           slug, title, content
@@ -58,7 +77,14 @@ export const connectDb = async (dbConf?: DbConf) => {
         `).run()
 
 
-    }
+        db.query(`
+        INSERT INTO user (
+          email, password
+        ) VALUES (
+          'gnimmelf@gmail.com', 'flemming'
+        );        
+        `).run()
 
-    return db
+
+    }
 }
