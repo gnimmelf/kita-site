@@ -12,13 +12,18 @@ function getArticleData() {
 
 
 htmx.defineExtension('saveArticle', {
-  onEvent: function (name, evt) {
-    if (name === "htmx:configRequest") {
-      evt.detail.headers['Content-Type'] = "application/json"
+    /* 
+    Abuse `defineExtension` to get and save article data.
+    Use in theme as `hx-ext="saveArticle"`
+    */
+    onEvent: function (name, evt) {
+        if (name === "htmx:configRequest") {
+            evt.detail.headers['Content-Type'] = "application/json"
+        }
+    },
+    encodeParameters: function (xhr) {
+        xhr.overrideMimeType('text/json')
+        // Get the article data from custom-element
+        return (JSON.stringify(getArticleData()))
     }
-  },
-  encodeParameters: function(xhr) {
-    xhr.overrideMimeType('text/json')
-    return (JSON.stringify(getArticleData()))
-  }
 })
