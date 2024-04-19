@@ -1,6 +1,7 @@
 import { Elysia, NotFoundError } from 'elysia';
 import { Database } from "bun:sqlite";
 import { z } from 'zod'
+import { sqlParameterize } from './utils'
 
 const Article = z.object({
   id: z.union([z.string(), z.number()]),
@@ -11,10 +12,10 @@ const Article = z.object({
 
 
 export const createApi = (dbConn: Database) => {
-  return async (app: Elysia) => {      
-      const api = new Api(dbConn)
-      app.decorate('api', api)
-      return app;
+  return async (app: Elysia) => {
+    const api = new Api(dbConn)
+    app.decorate('api', api)
+    return app;
   }
 }
 
@@ -32,13 +33,13 @@ export class Api {
   }
 
   async getUserByEmail(email: string) {
-    const data = this.#db.query(`SELECT * FROM user WHERE email = $1 `).get([ email ]);
+    const data = this.#db.query(`SELECT * FROM user WHERE email = $1 `).get(email);
 
     return data;
   }
 
   async getArticleById(id: string) {
-    const data = this.#db.query(`SELECT * FROM article WHERE id = $1 `).get([ id ]);
+    const data = this.#db.query(`SELECT * FROM article WHERE id = $1 `).get(id);
 
     if (!(Article.safeParse(data).success)) {
       throw new NotFoundError()
@@ -47,8 +48,8 @@ export class Api {
   }
 
   async getArticleBySlug(slug: string) {
-    const data = this.#db.query(`SELECT * FROM article WHERE slug = $1 `).get([ slug ]);
-    
+    const data = this.#db.query(`SELECT * FROM article WHERE slug = $1 `).get(slug);
+
     if (!(Article.safeParse(data).success)) {
       throw new NotFoundError()
     }
@@ -64,11 +65,20 @@ export class Api {
     return data
   }
 
-  async createArticle({ title, content}) {
-    console.log('createArticle', { title, content })
+  async createArticle({ title, content }) {
+    console.log('createArticle', { title, slug, content })
   }
 
-  async saveArticle(id, { title, content}) {
-    console.log('saveArticle', { id, title, content })
+  async saveArticle(id, body) {
+    this.#db.query(`
+      UPDATE 
+        article 
+      SET 
+        title = $title, 
+        slug = $slug,
+        content = $content 
+      WHERE 
+        id = $id;
+    `).run(sqlParameterize({id, ...body}))
   }
 }

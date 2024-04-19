@@ -28,6 +28,7 @@ const credentialsSchema = {
 const articleSchema = {
   body: t.Object({
     title: t.String(),
+    slug: t.String(),
     content: t.String()
   })
 }
@@ -133,13 +134,13 @@ export const createAdminPlugin = (prefix: string) => {
                     article,
                   })
                 })
-                .patch('/:id', ({ api, body, params: { id }, ...ctx }) => {
+                .put('/:id', ({ api, body, params: { id }, ...ctx }) => {
                   const { updated_at, formErrors } = api.saveArticle(id, body)
                   // TODO! This requires htmx -> replace articlebutton
-                  return theme.SaveArticleButton({
+                  return theme.ArticleControls({
                     ...ctx,
                     formErrors,
-                    updated_at,
+                    updated_at: new Date(),
                   })
                 }, articleSchema)
                 .delete('/:id', ({ api, params: { id }, set }) => {

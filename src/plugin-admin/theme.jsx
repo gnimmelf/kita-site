@@ -25,8 +25,10 @@ const ArticleList = ({ articles, articlePath }) => {
 }
 
 const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
+    headTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
+    headTags.push('<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>')
     endTags.push('<script src="/public/main.js"></script>')
-    endTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
+    
     return (
         <html>
             <head>
@@ -56,7 +58,12 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
 export const ArticleControls = (ctx) => {
     return (
         <div id="article-controls">
-            <button onclick="getArticleData()">Save me</button>
+            <button 
+                hx-put={ctx.path}
+                hx-ext="saveArticle"
+                hx-swap="outerHTML"
+                hx-trigger="click once"
+            >Save</button>
         </div>
     )
 }
@@ -112,6 +119,7 @@ export const ArticlePage = ({ article, ...ctx }) => {
                 <section>
                     <editor-app
                         title={article.title}
+                        slug={article.slug}
                         content={article.content}
                     ></editor-app>
                     {ArticleControls(ctx)}
