@@ -9,15 +9,14 @@ const Page = ({ content, title }) => (
     </section>
 )
 
-const ArticleList = async ({ api, ...ctx }) => {
-    const articles = await api.getArticles();
+const ArticleList = ({ articles, articlePath }) => {
     return (
         <>
             <h2>Articlelist</h2>
             <section>
                 {articles.map((a) => (
                     <div>
-                        {a.title} <a href={ctx.path + '/' + a.id}>Edit</a>
+                        {a.title} <a href={articlePath + '/' + a.id}>Edit</a>
                     </div>
                 ))}
             </section>
@@ -25,15 +24,16 @@ const ArticleList = async ({ api, ...ctx }) => {
     )
 }
 
-const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {    
-    headTags.push('<script src="/public/main.js"></script>')
+const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
+    endTags.push('<script src="/public/main.js"></script>')
+    endTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
     return (
         <html>
             <head>
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
-                <meta http-equiv="Expires" content="0" />                
-                {headTags.join('\n')}                
+                <meta http-equiv="Expires" content="0" />
+                {headTags.join('\n')}
             </head>
             <body>
                 <section>
@@ -53,15 +53,15 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
 
 // Partials
 
-export const SaveArticleButton = async (ctx) => {
+export const ArticleControls = (ctx) => {
     return (
-        <pre>
-            {JSON.stringify(ctx, null, 2)}
-        </pre>
+        <div id="article-controls">
+            <button onclick="getArticleData()">Save me</button>
+        </div>
     )
 }
 
-export const LoginForm = async (ctx) => {
+export const LoginForm = (ctx) => {
     const { formErrors } = ctx
     return (
         <form method="post">
@@ -82,7 +82,7 @@ export const LoginForm = async (ctx) => {
 
 // Pages
 
-export const LoginPage = async (ctx) => {
+export const LoginPage = (ctx) => {
     return Layout({
         ctx,
         body: Page({
@@ -91,7 +91,7 @@ export const LoginPage = async (ctx) => {
     })
 }
 
-export const IndexPage = async (ctx) => {
+export const IndexPage = (ctx) => {
     return Layout({
         ctx,
         body: Page({
@@ -100,13 +100,10 @@ export const IndexPage = async (ctx) => {
     })
 }
 
-export const ArticlePage = async ({ api, ...ctx }) => {
-    const article = await api.getArticleById(ctx.params.id)
+export const ArticlePage = ({ article, ...ctx }) => {
     return Layout({
         ctx,
-        headTags: [
-            '<script src="https://unpkg.com/htmx.org@1.9.11"></script>',            
-        ],
+        headTags: [],
         endTags: [
             '<script src="/public/admin/editor.js" type="module"></script>',
         ],
@@ -116,8 +113,8 @@ export const ArticlePage = async ({ api, ...ctx }) => {
                     <editor-app
                         title={article.title}
                         content={article.content}
-                        endpoint={`/api/save/${ctx.params.id}`}></editor-app>
-                    <button>Save</button>
+                    ></editor-app>
+                    {ArticleControls(ctx)}
                 </section>
             )
         })

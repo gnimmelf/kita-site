@@ -7,12 +7,35 @@ type Credentials = { email: string, password: string }
 const getCookieCredentials = async (jwt: any, authCookie?: Cookie<Credentials>) => {
   if (!authCookie) {
     return false
+  }  
+  let credentials
+  try {
+    credentials = await jwt.verify(authCookie.value)
+  } catch(err) {
+    console.error(err)
+    return false
   }
-  const credentials = await jwt.verify(authCookie.value)
   return credentials
 }
 
+const credentialsSchema = {
+  body: t.Object({
+    email: t.String(),
+    password: t.String()
+  })
+}
+
+const articleSchema = {
+  body: t.Object({
+    title: t.String(),
+    content: t.String()
+  })
+}
+
 export const createAdminPlugin = (prefix: string) => {
+  const articleGroupPrefix = '/article'
+  const articlePath = prefix + articleGroupPrefix
+
   const app = new Elysia({
     prefix,
     cookie: {
@@ -47,12 +70,7 @@ export const createAdminPlugin = (prefix: string) => {
       }
 
       return theme.LoginPage({ ...ctx, formErrors: 'invalid credentials' })
-    }, {
-      body: t.Object({
-        email: t.String(),
-        password: t.String()
-      })
-    })
+    }, credentialsSchema)
     .get('/logout', ({ cookie: { auth }, set }) => {
       auth.set({
         value: '',
@@ -62,23 +80,74 @@ export const createAdminPlugin = (prefix: string) => {
     })
     .guard(
       {
-        async beforeHandle({jwt, api, cookie: { auth }, set}) {
+        async beforeHandle({ jwt, api, cookie: { auth }, set }) {
+          
+          return // TODO! Remove
+
           const redirectUrl = `${prefix}/login`
           const credentials = await getCookieCredentials(jwt, auth)
+          
           console.log({ credentials: !!credentials })
+          
           if (!credentials) {
+            console.log('redirecting #1', { redirectUrl })
             return (set.redirect = redirectUrl)
           }
           const user = await api.getUserByEmail(credentials.email)
+
           if (!user || user.password !== credentials.password) {
+            console.log('redirecting #2', { redirectUrl })
             return (set.redirect = redirectUrl)
           }
         }
       },
       (app) => app
-        .get('/', theme.IndexPage)
-        .get('/:id', theme.ArticlePage)
-      // .post('/:id', admin.SaveArticle)               
+        .get('/', async ({ api, ...ctx }) => {
+          const articles = await api.getArticles();
+          // Return index page
+          return theme.IndexPage({
+            ...ctx,
+            articles,
+            articlePath
+          })
+        })
+        .group(articleGroupPrefix,
+          (app) => app
+            .post('/', ({ api, body, set }) => {
+              const { id } = api.createArticle(body)
+              // Redirect to edit newly created article
+              return (set.redirect = `${articlePath}/${id}`)
+            }, articleSchema)
+            .guard(
+              {
+                params: t.Object({
+                  id: t.String()
+                })
+              },
+              (app) => app
+                .get('/:id', async ({ api, params: { id }, ...ctx }) => {
+                  const article = await api.getArticleById(id)
+                  // Return article editor
+                  return theme.ArticlePage({
+                    ...ctx,
+                    article,
+                  })
+                })
+                .patch('/:id', ({ api, body, params: { id }, ...ctx }) => {
+                  const { updated_at, formErrors } = api.saveArticle(id, body)
+                  // TODO! This requires htmx -> replace articlebutton
+                  return theme.SaveArticleButton({
+                    ...ctx,
+                    formErrors,
+                    updated_at,
+                  })
+                }, articleSchema)
+                .delete('/:id', ({ api, params: { id }, set }) => {
+                  api.deleteArticle(id)
+                  // Redirect to index page
+                  return (set.redirect = prefix)
+                })
+            ))
     )
 
   return app

@@ -5,7 +5,7 @@ export type DbConf = {
 }
 
 const dbConfDefault = {
-    filename: './mydb.sqlite'
+    filename: './db/mydb.sqlite'
 }
 
 export const connectDb = async (dbConf?: DbConf) => {
@@ -13,6 +13,9 @@ export const connectDb = async (dbConf?: DbConf) => {
         ...dbConfDefault,
         ...dbConf || {}
     }
+
+    console.log({ dbConf })
+
     const db = new Database(filename, {
         ...options,
         create: true

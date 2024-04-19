@@ -64,4 +64,11 @@ export class Api {
     return data
   }
 
+  async createArticle({ title, content}) {
+    console.log('createArticle', { title, content })
+  }
+
+  async saveArticle(id, { title, content}) {
+    console.log('saveArticle', { id, title, content })
+  }
 }
