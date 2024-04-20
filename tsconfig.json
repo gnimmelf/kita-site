@@ -29,7 +29,6 @@
     "jsxFactory": "Html.createElement",
     "jsxFragmentFactory": "Html.Fragment",
     "plugins": [{ "name": "@kitajs/ts-html-plugin" }],
-    "": [],
 
     /* Modules */
     "module": "ES2022",                                  /* Specify what module code is generated. */

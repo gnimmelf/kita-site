@@ -2,6 +2,13 @@ import { datetimeStr } from '../lib/utils'
 
 // Snippets
 
+const Show = ({ when, children }) => (
+    <>
+        {when ? children : null}
+    </>
+)
+
+
 const Page = ({ content, title }) => (
     <section>
         <h1>{title}</h1>
@@ -18,12 +25,12 @@ const ArticleList = ({ articles, articlePath }) => {
             <section>
                 {articles.map((a) => (
                     <div>
-                        {a.title} 
+                        {a.title}
                         <a href={`${articlePath}/${a.id}/`}>Edit</a>
                         |
                         <button
                             hx-delete={`${articlePath}/${a.id}/`}
-                            hx-confirm={`Confirm delete: '${a.title}'!`}                            
+                            hx-confirm={`Confirm delete: '${a.title}'!`}
                         >Delete</button>
                     </div>
                 ))}
@@ -32,11 +39,15 @@ const ArticleList = ({ articles, articlePath }) => {
     )
 }
 
+// Layout
+
 const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
     headTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
     headTags.push('<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>')
     endTags.push('<script src="/public/main.js"></script>')
-    
+
+    console.log('IndexPage', { ctx })
+
     return (
         <html>
             <head>
@@ -46,14 +57,8 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
                 {headTags.join('\n')}
             </head>
             <body>
-                <section>
-                    <a href="/">Home</a>
-                    |
-                    <a href="/admin">Admin</a>
-                </section>
+                <AccountControls ctx={ctx} />
                 {body}
-                <hr />
-                <a href="/admin/logout">Logout</a>
                 {endTags.join('\n')}
             </body>
         </html>
@@ -63,15 +68,31 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
 
 // Partials
 
-export const ArticleControls = (ctx) => {
-    const { updated_at } = ctx
-    const datetime = datetimeStr(updated_at)
+const AccountControls = ({ ctx }) => {
+    const { session } = ctx
+    return (
+        <section>
+            <a href="/">Home</a>
+            |
+            <a href="/admin">Admin</a>
+            <Show when={session}>
+                |
+                <a href="/admin/logout">Logout</a>
+            </Show>
+        </section >
+    )
+}
+
+export const ArticleControls = ({ ctx, updated_at, formErrors }) => {
+    const datetime = updated_at ? datetimeStr(updated_at) : ''
     return (
         <div id="article-controls">
-            <div>
-                {updated_at ? <span>Last updated: <time datetime={datetime}></time>{datetime}</span> : null}
-            </div>
-            <button 
+            <Show when={datetime}>
+                <div>
+                    <span>Last updated: <time datetime={datetime}></time>{datetime}</span>
+                </div>
+            </Show>
+            <button
                 hx-put={ctx.path}
                 hx-ext="saveArticle"
                 hx-swap="outerHTML"
@@ -82,8 +103,7 @@ export const ArticleControls = (ctx) => {
     )
 }
 
-export const LoginForm = (ctx) => {
-    const { formErrors } = ctx
+export const LoginForm = ({ ctx, formErrors }) => {
     return (
         <form method="post">
             <div>
@@ -103,25 +123,32 @@ export const LoginForm = (ctx) => {
 
 // Pages
 
-export const LoginPage = (ctx) => {
+export const LoginPage = ({ ctx, formErrors }) => {
     return Layout({
         ctx,
         body: Page({
-            title: 'Login', content: LoginForm(ctx)
+            title: 'Login', content: (
+                <LoginForm ctx={ctx} formErrors={formErrors} />
+            )
         })
     })
 }
 
-export const IndexPage = (ctx) => {
+export const IndexPage = ({ ctx, articles, articlePath }) => {
     return Layout({
         ctx,
         body: Page({
-            title: 'Admin', content: ArticleList(ctx)
+            title: 'Admin', content: (
+                <ArticleList
+                    articles={articles}
+                    articlePath={articlePath}
+                />
+            )
         })
     })
 }
 
-export const ArticlePage = ({ article, ...ctx }) => {
+export const ArticlePage = ({ article, ctx }) => {
     return Layout({
         ctx,
         headTags: [],
@@ -136,7 +163,7 @@ export const ArticlePage = ({ article, ...ctx }) => {
                         slug={article.slug}
                         content={article.content}
                     ></editor-app>
-                    {ArticleControls(ctx)}
+                    <ArticleControls ctx={ctx} />
                 </section>
             )
         })

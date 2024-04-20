@@ -8,11 +8,11 @@ type Credentials = { email: string, password: string }
 const getCookieCredentials = async (jwt: any, authCookie?: Cookie<Credentials>) => {
   if (!authCookie) {
     return false
-  }  
+  }
   let credentials
   try {
     credentials = await jwt.verify(authCookie.value)
-  } catch(err) {
+  } catch (err) {
     console.error(err)
     return false
   }
@@ -40,7 +40,7 @@ export const createAdminPlugin = (prefix: string) => {
   const app = new Elysia({
     prefix,
     cookie: {
-      sign: 'auth',
+      sign: ['auth', 'session'],
       secrets: [makeSecretPhrase()],
     }
   })
@@ -56,7 +56,7 @@ export const createAdminPlugin = (prefix: string) => {
         password: t.String()
       })
     }))
-    .get('/login', theme.LoginPage)
+    .get('/login', (ctx) => theme.LoginPage({ ctx }))
     .post('/login', async (ctx) => {
       const { jwt, api, cookie: { auth }, body, set } = ctx
       const user = await api.getUserByEmail(body.email)
@@ -70,7 +70,7 @@ export const createAdminPlugin = (prefix: string) => {
         return (set.redirect = prefix)
       }
 
-      return theme.LoginPage({ ...ctx, formErrors: 'invalid credentials' })
+      return theme.LoginPage({ ctx, formErrors: 'invalid credentials' })
     }, credentialsSchema)
     .get('/logout', ({ cookie: { auth }, set }) => {
       auth.set({
@@ -83,15 +83,15 @@ export const createAdminPlugin = (prefix: string) => {
     })
     .guard(
       {
-        async beforeHandle({ jwt, api, cookie: { auth }, set }) {
-          
+        async beforeHandle({ jwt, api, cookie: { auth, session }, set }) {
+
           // return // Uncomment to skip auth
 
           const redirectUrl = `${prefix}/login`
           const credentials = await getCookieCredentials(jwt, auth)
-          
+
           console.log({ credentials: !!credentials })
-          
+
           if (!credentials) {
             console.log('redirecting #1', { redirectUrl })
             return (set.redirect = redirectUrl)
@@ -102,14 +102,22 @@ export const createAdminPlugin = (prefix: string) => {
             console.log('redirecting #2', { redirectUrl })
             return (set.redirect = redirectUrl)
           }
-        }
+
+          // Flag that user is logged in
+          session.value = {
+            email: credentials.email
+          }
+        },
       },
       (app) => app
+        .derive(({ cookie: { session } }) => { 
+          return { session: session.value }
+        })
         .get('/', async ({ api, ...ctx }) => {
           const articles = await api.getArticles();
           // Return index page
           return theme.IndexPage({
-            ...ctx,
+            ctx,
             articles,
             articlePath
           })
@@ -132,7 +140,7 @@ export const createAdminPlugin = (prefix: string) => {
                   const article = await api.getArticleById(id)
                   // Return article editor
                   return theme.ArticlePage({
-                    ...ctx,
+                    ctx,
                     article,
                   })
                 })
@@ -140,7 +148,7 @@ export const createAdminPlugin = (prefix: string) => {
                   const { updated_at, formErrors } = api.saveArticle(id, body)
                   // TODO! This requires htmx -> replace articlebutton
                   return theme.ArticleControls({
-                    ...ctx,
+                    ctx,
                     formErrors,
                     updated_at: new Date(),
                   })
