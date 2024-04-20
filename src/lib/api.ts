@@ -75,7 +75,6 @@ export class Api {
         article 
       SET 
         title = $title, 
-        slug = $slug,
         content = $content 
       WHERE 
         id = $id;

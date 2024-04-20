@@ -28,7 +28,6 @@ const credentialsSchema = {
 const articleSchema = {
   body: t.Object({
     title: t.String(),
-    slug: t.String(),
     content: t.String()
   })
 }
