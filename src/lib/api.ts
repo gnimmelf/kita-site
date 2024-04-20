@@ -1,6 +1,7 @@
-import { Elysia, NotFoundError } from 'elysia';
 import { Database } from "bun:sqlite";
-import { z } from 'zod'
+import { t, Elysia, NotFoundError } from 'elysia';
+import slugify from 'slugify';
+import { z } from 'zod' // TODO! Use Elysia { t } instead of zod ?
 import { sqlParameterize } from './utils'
 
 const Article = z.object({
@@ -65,11 +66,30 @@ export class Api {
     return data
   }
 
-  async createArticle({ title, content }) {
-    console.log('createArticle', { title, slug, content })
+  async createArticle({ title, content }: { title: string, content: string}) {
+    let slug = slugify(title).toLocaleLowerCase()
+    
+    // Make sure we have unique fields
+    let { count } = this.#db.query(`
+      SELECT count(*) as count FROM article;
+    `).get(sqlParameterize({ slug })) as { count: number }
+
+    title = `${title} ${count + 1}`
+    slug = `${slug}-${count + 1}`
+
+    const { id } = this.#db.query(`
+        INSERT INTO article (
+          slug, title, content
+        ) VALUES  (
+          $slug, $title, $content
+        )
+        RETURNING id; 
+      `).get(sqlParameterize({ title, slug, content })) as { id: string }
+
+    return { id }
   }
 
-  async saveArticle(id, body) {
+  async saveArticle(id: string, body: { title: string, content: string}) {
     this.#db.query(`
       UPDATE 
         article 
@@ -81,7 +101,7 @@ export class Api {
     `).run(sqlParameterize({ id, ...body }))
   }
 
-  async deleteArticle(id) {
+  async deleteArticle(id: string) {
     console.log('deleteArticle', { id })
 
     this.#db.query(`

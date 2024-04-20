@@ -8,7 +8,6 @@
             slug: res.slug,
             content: res.content.html
         }
-        console.log({ article: data })
         return data
     }
 
@@ -16,7 +15,7 @@
     globalThis.htmx.defineExtension('saveArticle', {
         /* 
         Abuse `defineExtension` to get and save article data.
-        Use in theme as `hx-ext="saveArticle"`
+        Use in theme as `hx-ext="<name>"`
         */
         onEvent: function (name, evt) {
             if (name === "htmx:configRequest") {
@@ -29,5 +28,18 @@
             return (JSON.stringify(getArticleData()))
         }
     })
+
+    globalThis.htmx.defineExtension('redirectToResponseUrl', {
+        /* 
+        Abuse `defineExtension` to redirect on a known 302 response.
+        Use in theme as `hx-ext="<name>"`
+        */
+        transformResponse: function (text, xhr) {
+            globalThis.document.location = xhr.responseURL
+            return 'Redirecting...'
+        }
+    })
+
+
 
 }) (window)

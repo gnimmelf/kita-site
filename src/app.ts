@@ -25,6 +25,7 @@ export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
 
   const app = new Elysia()
     .onError((ctx) => {
+      // TODO! Fix this better, including zod errors from api
       console.error(ctx.error)
       return 'Error'
     })
@@ -35,7 +36,6 @@ export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
     .use(html({
       autoDetect: true,
       isHtml: () => {
-        console.log("!")
         return true
       }
     }))

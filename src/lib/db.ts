@@ -50,7 +50,7 @@ export const setupDb = (db: Database, recreateDb: boolean) => {
         CREATE TABLE IF NOT EXISTS article (
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
           slug TEXT UNIQUE,
-          title TEXT UNIQUE,
+          title TEXT,
           content TEXT
         );
         `).run()

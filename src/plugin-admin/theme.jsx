@@ -41,13 +41,10 @@ const ArticleList = ({ articles, articlePath }) => {
 
 // Layout
 
-const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
+const Layout = ({ ctx, title, body, headTags = [], endTags = [] }) => {
     headTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
     headTags.push('<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>')
-    endTags.push('<script src="/public/main.js"></script>')
-
-    console.log('IndexPage', { ctx })
-
+    endTags.push('<script src="/public/client.js"></script>')
     return (
         <html>
             <head>
@@ -55,6 +52,7 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
                 {headTags.join('\n')}
+                <title>CMX - {title || ''}</title>
             </head>
             <body>
                 <AccountControls ctx={ctx} />
@@ -66,7 +64,7 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
     )
 }
 
-// Partials
+// Page partials
 
 const AccountControls = ({ ctx }) => {
     const { session } = ctx
@@ -93,7 +91,7 @@ export const ArticleControls = ({ ctx, updated_at, formErrors }) => {
                 </div>
             </Show>
             <button
-                hx-put={ctx.path}
+                hx-put={ctx.articlePath}
                 hx-ext="saveArticle"
                 hx-swap="outerHTML"
                 hx-target="#article-controls"
@@ -134,15 +132,24 @@ export const LoginPage = ({ ctx, formErrors }) => {
     })
 }
 
-export const IndexPage = ({ ctx, articles, articlePath }) => {
+export const IndexPage = ({ ctx, articles }) => {
     return Layout({
         ctx,
+        title: 'articles',
         body: Page({
             title: 'Admin', content: (
-                <ArticleList
-                    articles={articles}
-                    articlePath={articlePath}
-                />
+                <>
+                    <button
+                        hx-post={ctx.articleGroupPath}
+                        hx-vals='{"title": "New article", "content": "The story begins..."}'     
+                        hx-ext="redirectToResponseUrl" 
+                        hx-trigger="click"
+                    >Create article</button>
+                    <ArticleList
+                        articlePath={ctx.articleGroupPath}
+                        articles={articles}
+                    />
+                </>
             )
         })
     })
@@ -151,6 +158,7 @@ export const IndexPage = ({ ctx, articles, articlePath }) => {
 export const ArticlePage = ({ article, ctx }) => {
     return Layout({
         ctx,
+        title: article.title,
         headTags: [],
         endTags: [
             '<script src="/public/admin/editor.js" type="module"></script>',
