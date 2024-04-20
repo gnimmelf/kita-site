@@ -18,7 +18,7 @@ const Page = ({ content, title }) => (
     </section>
 )
 
-const ArticleList = ({ articles, articlePath }) => {
+const ArticleList = ({ articles, articleGroupPath }) => {
     return (
         <>
             <h2>Articlelist</h2>
@@ -26,10 +26,10 @@ const ArticleList = ({ articles, articlePath }) => {
                 {articles.map((a) => (
                     <div>
                         {a.title}
-                        <a href={`${articlePath}/${a.id}/`}>Edit</a>
+                        <a href={`${articleGroupPath}/${a.id}/`}>Edit</a>
                         |
                         <button
-                            hx-delete={`${articlePath}/${a.id}/`}
+                            hx-delete={`${articleGroupPath}/${a.id}/`}
                             hx-confirm={`Confirm delete: '${a.title}'!`}
                         >Delete</button>
                     </div>
@@ -91,7 +91,7 @@ export const ArticleControls = ({ ctx, updated_at, formErrors }) => {
                 </div>
             </Show>
             <button
-                hx-put={ctx.articlePath}
+                hx-put={ctx.request.url}
                 hx-ext="saveArticle"
                 hx-swap="outerHTML"
                 hx-target="#article-controls"
@@ -146,7 +146,7 @@ export const IndexPage = ({ ctx, articles }) => {
                         hx-trigger="click"
                     >Create article</button>
                     <ArticleList
-                        articlePath={ctx.articleGroupPath}
+                        articleGroupPath={ctx.articleGroupPath}
                         articles={articles}
                     />
                 </>
