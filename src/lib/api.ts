@@ -78,6 +78,17 @@ export class Api {
         content = $content 
       WHERE 
         id = $id;
-    `).run(sqlParameterize({id, ...body}))
+    `).run(sqlParameterize({ id, ...body }))
+  }
+
+  async deleteArticle(id) {
+    console.log('deleteArticle', { id })
+
+    this.#db.query(`
+    DELETE FROM 
+      article     
+    WHERE 
+      id = $id;
+  `).run(sqlParameterize({ id }))
   }
 }

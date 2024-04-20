@@ -1,5 +1,6 @@
 import { Elysia, t, Context, Cookie } from 'elysia';
 import { jwt } from '@elysiajs/jwt'
+import { makeSecretPhrase } from '../lib/utils'
 import * as theme from './theme'
 
 type Credentials = { email: string, password: string }
@@ -40,13 +41,13 @@ export const createAdminPlugin = (prefix: string) => {
     prefix,
     cookie: {
       sign: 'auth',
-      secrets: [crypto.randomUUID()],
+      secrets: [makeSecretPhrase()],
     }
   })
     .use(jwt({
       name: 'jwt',
       sub: 'auth',
-      secret: crypto.randomUUID(),
+      secret: makeSecretPhrase(),
       iss: 'cmx',
       exp: '7d',
       path: prefix,
@@ -76,13 +77,15 @@ export const createAdminPlugin = (prefix: string) => {
         value: '',
         maxAge: 0
       })
+      auth.remove()
+      console.log('Logout!')
       return (set.redirect = prefix)
     })
     .guard(
       {
         async beforeHandle({ jwt, api, cookie: { auth }, set }) {
           
-          return // TODO! Remove
+          // return // Uncomment to skip auth
 
           const redirectUrl = `${prefix}/login`
           const credentials = await getCookieCredentials(jwt, auth)

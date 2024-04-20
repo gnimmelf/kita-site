@@ -5,6 +5,7 @@ import { staticPlugin } from '@elysiajs/static'
 import { connectDb, setupDb } from './lib/db'
 import { createApi } from './lib/api'
 import { createAdminPlugin } from './plugin-admin'
+import { isDev } from "./lib/utils";
 
 import * as theme from './theme'
 
@@ -46,8 +47,9 @@ export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
   app.listen(port)
 
   console.log(
-    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+    `🦊 Elysia (${isDev ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
   );
+  console.log('With features', process.features)
 
   return app
 }

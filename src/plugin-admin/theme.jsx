@@ -1,3 +1,5 @@
+import { datetimeStr } from '../lib/utils'
+
 // Snippets
 
 const Page = ({ content, title }) => (
@@ -16,7 +18,13 @@ const ArticleList = ({ articles, articlePath }) => {
             <section>
                 {articles.map((a) => (
                     <div>
-                        {a.title} <a href={articlePath + '/' + a.id}>Edit</a>
+                        {a.title} 
+                        <a href={`${articlePath}/${a.id}/`}>Edit</a>
+                        |
+                        <button
+                            hx-delete={`${articlePath}/${a.id}/`}
+                            hx-confirm={`Confirm delete: '${a.title}'!`}                            
+                        >Delete</button>
                     </div>
                 ))}
             </section>
@@ -56,12 +64,18 @@ const Layout = ({ ctx, body, headTags = [], endTags = [] }) => {
 // Partials
 
 export const ArticleControls = (ctx) => {
+    const { updated_at } = ctx
+    const datetime = datetimeStr(updated_at)
     return (
         <div id="article-controls">
+            <div>
+                {updated_at ? <span>Last updated: <time datetime={datetime}></time>{datetime}</span> : null}
+            </div>
             <button 
                 hx-put={ctx.path}
                 hx-ext="saveArticle"
                 hx-swap="outerHTML"
+                hx-target="#article-controls"
                 hx-trigger="click once"
             >Save</button>
         </div>

@@ -16,6 +16,8 @@ export const connectDb = async (dbConf?: DbConf) => {
 
     console.log({ dbConf })
 
+    // TODO! `mkdir -p ${path(dbConf.filename)}`
+
     const db = new Database(filename, {
         ...options,
         create: true
@@ -33,7 +35,7 @@ export const setupDb = (db: Database, recreateDb: boolean) => {
             name NOT LIKE 'sqlite_' || '%';
         `)
         .all()
-        .map(({ name }) => name)
+        .map((row) => (row as { name: string}).name)
 
     console.log(`Tabels in db (${db.filename})`, tablenames.join(' | '))
 
