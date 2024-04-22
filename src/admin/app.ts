@@ -1,7 +1,7 @@
 import { Elysia, t, Context, Cookie } from 'elysia';
 import { jwt } from '@elysiajs/jwt'
 import { makeSecretPhrase } from '../lib/utils'
-import * as theme from './theme'
+import * as theme from './theme/templates'
 
 type Credentials = { email: string, password: string }
 
@@ -73,10 +73,6 @@ export const createAdminPlugin = (prefix: string) => {
             return theme.LoginPage({ ctx, formErrors: 'invalid credentials' })
         }, credentialsSchema)
         .get('/logout', ({ cookie: { auth }, set }) => {
-            auth.set({
-                value: '',
-                maxAge: 0
-            })
             auth.remove()
             console.log('Logout!')
             return (set.redirect = prefix)
@@ -89,8 +85,6 @@ export const createAdminPlugin = (prefix: string) => {
 
                     const redirectUrl = `${prefix}/login`
                     const credentials = await getCookieCredentials(jwt, auth)
-
-                    console.log({ credentials: !!credentials })
 
                     if (!credentials) {
                         console.log('redirecting #1', { redirectUrl })
@@ -113,7 +107,7 @@ export const createAdminPlugin = (prefix: string) => {
                 .derive(({ cookie: { session } }) => {
                     return {
                         articleGroupPath,
-                        session: session.value
+                        profile: session.value
                     }
                 })
                 .get('/', async ({ api, ...ctx }) => {

@@ -4,10 +4,10 @@ import { staticPlugin } from '@elysiajs/static'
 
 import { connectDb, setupDb } from './lib/db'
 import { createApi } from './lib/api'
-import { createAdminPlugin } from './plugin-admin'
+import { createAdminPlugin } from './admin/app'
 import { isDev } from "./lib/utils";
 
-import * as theme from './theme'
+import * as theme from './theme/templates'
 
 type AppParams = {
   port: string | number
@@ -41,8 +41,25 @@ export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
     }))
     .use(createApi(dbConn))
     .use(createAdminPlugin('/admin'))
-    .get('/', theme.IndexPage)
-    .get('/:slug', theme.ArticlePage)
+    .decorate({
+      siteTitle: 'My Blog'
+    })
+    .get('/', async ({ api, ...ctx }) => {
+      const articles = await api.getArticles();
+      // Return index page
+      return theme.IndexPage({
+        ctx,
+        articles,
+      })
+    })
+    .get('/:slug', async ({ api, params: { slug }, ...ctx }) => {
+      const article = await api.getArticleBySlug(slug)
+      // Return article editor
+      return theme.ArticlePage({
+          ctx,
+          article,
+      })
+  })
 
   app.listen(port)
 
