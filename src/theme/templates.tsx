@@ -17,7 +17,7 @@ const ArticleList: Component<{
             <>
                 <h2>Articlelist</h2>
                 <section>
-                    {articles.map((a) => {
+                    {articles.filter(a => !!a.is_published).map((a) => {
                         const articleUrl = `/${a.slug}`
                         return (
                             <div>

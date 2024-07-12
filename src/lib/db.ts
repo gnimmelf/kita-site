@@ -51,7 +51,8 @@ export const setupDb = (db: Database, recreateDb: boolean) => {
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
           slug TEXT UNIQUE,
           title TEXT,
-          content TEXT
+          content TEXT,
+          is_published INTEGER
         );
         `).run()
 
@@ -67,17 +68,17 @@ export const setupDb = (db: Database, recreateDb: boolean) => {
 
         db.query(`
         INSERT INTO article (
-          slug, title, content
+          slug, title, content, is_published
         ) VALUES (
-          'test-article', 'Test article', '<span>Test <b>article</b> content</span>'
+          'test-article', 'Test article', '<span>Test <b>article</b> content</span>', 1
         );        
         `).run()
 
         db.query(`
         INSERT INTO article (
-          slug, title, content
+          slug, title, content, is_published
         ) VALUES (
-          'test-article-2', 'Test article 2', '<span>Test <b>article</b> 2 content</span>'
+          'test-article-2', 'Test article 2', '<span>Test <b>article</b> 2 content</span>', 0
         );        
         `).run()
 

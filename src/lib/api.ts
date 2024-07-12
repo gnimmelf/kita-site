@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { t, Elysia, NotFoundError } from 'elysia';
 import slugify from 'slugify';
 import { z } from 'zod' // TODO! Use Elysia { t } instead of zod ?
-import { sqlParameterize } from './utils'
+import { sqlQueryFieldsString, sqlQueryParams } from './utils'
 
 const Article = z.object({
   id: z.union([z.string(), z.number()]),
@@ -72,7 +72,7 @@ export class Api {
     // Make sure we have unique fields
     let { count } = this.#db.query(`
       SELECT count(*) as count FROM article;
-    `).get(sqlParameterize({ slug })) as { count: number }
+    `).get(sqlQueryParams({ slug })) as { count: number }
 
     title = `${title} ${count + 1}`
     slug = `${slug}-${count + 1}`
@@ -84,31 +84,35 @@ export class Api {
           $slug, $title, $content
         )
         RETURNING id; 
-      `).get(sqlParameterize({ title, slug, content })) as { id: string }
+      `).get(sqlQueryParams({ title, slug, content })) as { id: string }
 
     return { id }
   }
 
-  async saveArticle(id: string, body: { title: string, content: string}) {
+  async saveArticle(id: string, body: { 
+    title?: string, 
+    content?: string,
+    slug?: string, 
+    is_published?: boolean,
+  }) {
+    console.log('saveArticle', { id, body })
     this.#db.query(`
       UPDATE 
         article 
       SET 
-        title = $title, 
-        content = $content 
+        ${sqlQueryFieldsString(body)}
       WHERE 
         id = $id;
-    `).run(sqlParameterize({ id, ...body }))
+    `).run(sqlQueryParams({ id, ...body }))
   }
 
   async deleteArticle(id: string) {
     console.log('deleteArticle', { id })
-
     this.#db.query(`
     DELETE FROM 
       article     
     WHERE 
       id = $id;
-  `).run(sqlParameterize({ id }))
+  `).run(sqlQueryParams({ id }))
   }
 }

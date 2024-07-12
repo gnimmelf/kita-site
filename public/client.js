@@ -5,7 +5,6 @@
         const res = adminEl.getArticleState({ html: true })
         const data = {
             title: res.title,
-            slug: res.slug,
             content: res.content.html
         }
         return data

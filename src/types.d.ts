@@ -31,7 +31,8 @@ export type Article = {
     id: string | number    
     title: string,
     slug: string
-    content: string
+    content: string,
+    is_published: number,
 }
 
 export type Profile = {

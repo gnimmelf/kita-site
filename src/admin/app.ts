@@ -2,6 +2,7 @@ import { Elysia, t, Context, Cookie } from 'elysia';
 import { jwt } from '@elysiajs/jwt'
 import { makeSecretPhrase } from '../lib/utils'
 import * as theme from './theme/templates'
+import { Article } from '../types';
 
 type Credentials = { email: string, password: string }
 
@@ -29,7 +30,9 @@ const credentialsSchema = {
 const articleSchema = {
     body: t.Object({
         title: t.String(),
-        content: t.String()
+        content: t.String(),
+        slug: t.Optional(t.String()),
+        is_published: t.Optional(t.Integer())
     })
 }
 
@@ -140,15 +143,27 @@ export const createAdminPlugin = (prefix: string) => {
                                         article,
                                     })
                                 })
-                                .put('/:id', ({ api, body, params: { id }, ...ctx }) => {
-                                    const { updated_at, formErrors } = api.saveArticle(id, body)
-                                    // TODO! This requires htmx -> replace articlebutton
+                                .put('/:id', async ({ api, body, params: { id }, ...ctx }) => {
+                                    api.saveArticle(id, body)                                    
+                                    const article = await api.getArticleById(id)
                                     return theme.ArticleControls({
                                         ctx,
-                                        formErrors,
                                         updated_at: new Date(),
+                                        article,
                                     })
                                 }, articleSchema)
+                                .put('/:id/togglepublished', async ({ api, body, params: { id }, ...ctx }) => {
+                                    const article: Article = await api.getArticleById(id)
+                                    const is_published = !!article.is_published ? 0 : 1
+                                    api.saveArticle(id, { is_published })                                                                        
+                                    return theme.PublishButton({
+                                        ctx,                                        
+                                        article: {
+                                            ...article,
+                                            is_published,
+                                        },
+                                    })
+                                })
                                 .delete('/:id', ({ api, params: { id }, set }) => {
                                     api.deleteArticle(id)
                                     // Redirect to index page

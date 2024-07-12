@@ -1,10 +1,30 @@
-export const sqlParameterize = (dict: Record<string, string>, prefix = '$') => {
-    const sqlParams = Object.entries(dict).reduce((acc: Record<string, string>, [k, v]) => {
-        acc[prefix + k] = v
+/**
+ * Returns a string of comma separated fieldnames to match the passed parameters, 
+ * e.g "title = $title, content = $content"
+ * @param dict the data Object of type Record<key, value>
+ * @param prefix the key-prefix
+ * @returns 
+ */
+export const sqlQueryFieldsString = (dict: Record<string, any>, paramPrefix = '$') => {
+    const sqlFields = Object.keys(dict).map((k: string) => `${k} = ${paramPrefix}${k}`)    
+    return sqlFields.join(', ')
+}
+
+/**
+ * Returns a sqlite3 parameters dict of <key, value>
+ * @param dict the data Object of type Record<key, value>
+ * @param prefix the key-prefix
+ * @returns 
+ */
+export const sqlQueryParams = (dict: Record<string, any>, paramPrefix = '$') => {
+    const sqlParams = Object.entries(dict).reduce((acc: Record<string, any>, [k, v]) => {
+        acc[paramPrefix + k] = v
         return acc
     }, {})
     return sqlParams
 }
+
+
 
 const defaultDatetimeOptions = {
     year: "numeric",

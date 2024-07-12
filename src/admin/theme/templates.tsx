@@ -16,6 +16,21 @@ declare global {
 
 // Snippets
 
+export const PublishButton: Component<{
+    article: Article
+}> = ({
+    ctx,
+    article
+}) => {
+        return (
+            <button
+                hx-put={`${ctx.articleGroupPath}/${article.id}/togglepublished`}
+                hx-trigger="click once"
+                hx-swap="outerHTML"
+            >{!article.is_published ? 'Publish' : 'Unpublish'}</button>
+        )
+    }
+
 const ArticleList: Component<{
     articles: Article[],
 }> = ({
@@ -32,6 +47,11 @@ const ArticleList: Component<{
                             <div>
                                 {a.title}
                                 <a href={articleUrl}>Edit</a>
+                                |
+                                <PublishButton
+                                    ctx={ctx}
+                                    article={a}
+                                />
                                 |
                                 <button
                                     hx-delete={articleUrl}
@@ -86,7 +106,7 @@ const Layout: Component<{
                     {headTags.join('\n')}
                     <title>{ctx.siteTitle} {pageTitle ? `- ${pageTitle}` : ''}</title>
                 </head>
-                <body>                                        
+                <body>
                     <main>
                         {children}
                     </main>
@@ -121,26 +141,30 @@ const AccountControls: Component<{
     }
 
 export const ArticleControls: Component<{
+    article: Article,
     updated_at?: Date
 }> = ({
     ctx,
+    article,
     updated_at
 }) => {
         const datetime = updated_at ? datetimeStr(updated_at) : ''
         return (
             <div id="article-controls">
-                <Show when={!!datetime}>
-                    <div>
-                        <span>Last updated: <time datetime={datetime}></time>{datetime}</span>
-                    </div>
-                </Show>                
+                <div>
+                    <label for="slug">Slug</label>
+                    <input name="slug" value={article.slug}></input>
+                </div>
                 <button
-                    hx-put={ctx.request.url}
+                    hx-put={`${ctx.articleGroupPath}/${article.id}`}
                     hx-ext="saveArticle"
                     hx-swap="outerHTML"
                     hx-target="#article-controls"
                     hx-trigger="click once"
                 >Save</button>
+                <Show when={!!datetime}>
+                    <div>Last updated: <time datetime={datetime}></time>{datetime}</div>
+                </Show>
             </div>
         )
     }
@@ -233,14 +257,21 @@ export const ArticlePage: Component<{
                 <Page ctx={ctx} title='Edit article'>
                     <>
                         <hr />
-                        <a href="../">Back</a>                
+                        <a href="../">Back</a>
                         <hr />
-                        <editor-app
+                        <PublishButton
+                            ctx={ctx}
+                            article={article}
+                        />
+                        <editor-app id="editor-app"
                             title={article.title}
                             content={article.content}
                         ></editor-app>
-                        <hr />                        
-                        <ArticleControls ctx={ctx} />
+                        <hr />
+                        <ArticleControls
+                            ctx={ctx}
+                            article={article}
+                        />
                     </>
                 </Page>
             </Layout>
