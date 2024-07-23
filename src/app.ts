@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { t, Elysia, redirect } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 
@@ -31,13 +31,18 @@ export const createApp = async ({ port }: AppParams) => {
       isHtml: () => {
         return true
       }
-    }))    
+    }))
     .decorate({
       siteTitle: 'Hurdalecovillage.org',
       api: createApi(dbConn)
 
     })
     .get('/', async ({ api, ...ctx }) => {
+      if (ctx.query.refresh) {
+        await api.refreshDb();
+        return redirect('/')
+      }
+
       const articles = await api.getArticles();
 
       console.log({ articles })
@@ -48,18 +53,7 @@ export const createApp = async ({ port }: AppParams) => {
         articles,
       })
     })
-    .get('/reload', async ({ api, ...ctx }) => {
-      await api.refreshDb();
-      const articles = await api.getArticles();
 
-      console.log({ articles })
-
-      // Return index page
-      return theme.IndexPage({
-        ctx,
-        articles,
-      })
-    })
 
   app.listen(port)
 

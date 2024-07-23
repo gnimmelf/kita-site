@@ -4,8 +4,6 @@ import {
     Article,
 } from '../types'
 
-import { Show } from '../lib/components'
-
 const Layout: Component<{
     pageTitle?: string
     headTags?: string[]
@@ -38,6 +36,16 @@ const Layout: Component<{
         )
     }
 
+// Snippets
+
+const PreTag: Component<{
+    data: object
+}> = ({
+    data = {}
+}) => {
+    return (<pre>{Bun.escapeHTML(JSON.stringify(data, null, 2))}</pre>)
+}
+
 // Pages
 
 export const IndexPage: Component<{
@@ -49,7 +57,8 @@ export const IndexPage: Component<{
         return (
             <Layout ctx={ctx}>
                 <h1>Flemming</h1>
-                <pre>{JSON.stringify(articles, null, 2)}</pre>
+                <PreTag ctx={ctx} data={articles} />
             </Layout>
         )
     }
+

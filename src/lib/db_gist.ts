@@ -49,7 +49,6 @@ const getDbFile = (): BunFile => {
 
 const createDb = async (dbFile: BunFile) => {
     const env = getDotEnvParams();
-    const db = {}
 
     const octokit = new Octokit({
         auth: env.authToken
@@ -76,17 +75,19 @@ const createDb = async (dbFile: BunFile) => {
         })
    
     // Write the db-file
-    await Bun.write(dbFile, JSON.stringify({
+    const db = {
         files: dbFiles
-    }, null, 2))    
+    }
+    await Bun.write(dbFile, JSON.stringify(db, null, 2))    
+    
+    console.log("DB-content fetched from github")  
 }
 
 export const connectDb = async (): Promise<Database> => {    
     const dbFile = getDbFile()
 
     if (!dbFile.size) {
-        await createDb(dbFile)     
-        console.log("DB-content fetched from github")   
+        await createDb(dbFile)              
     }
     else {
         console.log("DB-content loaded from file")
