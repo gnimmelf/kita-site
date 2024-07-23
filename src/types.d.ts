@@ -27,14 +27,24 @@ export type TemplateProps<P = {}> = P & {
     } & Context
 }
 
+// Data types
+
 export type Article = {
     id: string | number    
     title: string,
-    slug: string
     content: string,
-    is_published: number,
 }
+
+export type Articles = Article[]
 
 export type Profile = {
     email: string
+}
+
+// Interfaces
+
+export interface Database {
+    refresh: () => Promise<void>
+    getArticles: () => Articles
+    getArticle: (id: string) => Article | undefined
 }

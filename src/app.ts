@@ -2,26 +2,19 @@ import { Elysia } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 
-import { connectDb, setupDb } from './lib/db'
+import { connectDb } from './lib/db_gist'
 import { createApi } from './lib/api'
-import { createAdminPlugin } from './admin/app'
 import { isDev } from "./lib/utils";
 
 import * as theme from './theme/templates'
 
 type AppParams = {
   port: string | number
-  dbfile: string
-  recreateDb: boolean
 }
 
-export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
+export const createApp = async ({ port }: AppParams) => {
 
-  const dbConn = await connectDb({
-    filename: dbfile
-  })
-
-  setupDb(dbConn, recreateDb)
+  const dbConn = await connectDb()
 
   const app = new Elysia()
     .onError((ctx) => {
@@ -38,28 +31,35 @@ export const createApp = async ({ port, dbfile, recreateDb }: AppParams) => {
       isHtml: () => {
         return true
       }
-    }))
-    .use(createApi(dbConn))
-    .use(createAdminPlugin('/admin'))
+    }))    
     .decorate({
-      siteTitle: 'My Blog'
+      siteTitle: 'Hurdalecovillage.org',
+      api: createApi(dbConn)
+
     })
     .get('/', async ({ api, ...ctx }) => {
       const articles = await api.getArticles();
+
+      console.log({ articles })
+
       // Return index page
       return theme.IndexPage({
         ctx,
         articles,
       })
     })
-    .get('/:slug', async ({ api, params: { slug }, ...ctx }) => {
-      const article = await api.getArticleBySlug(slug)
-      // Return article editor
-      return theme.ArticlePage({
-          ctx,
-          article,
+    .get('/reload', async ({ api, ...ctx }) => {
+      await api.refreshDb();
+      const articles = await api.getArticles();
+
+      console.log({ articles })
+
+      // Return index page
+      return theme.IndexPage({
+        ctx,
+        articles,
       })
-  })
+    })
 
   app.listen(port)
 
