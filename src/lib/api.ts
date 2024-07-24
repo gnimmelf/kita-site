@@ -1,4 +1,4 @@
-import { Database, Articles, Article } from '../types';
+import { Database, Articles } from '../types';
 
 export const createApi = (dbConn: Database) => {
   const api = new Api(dbConn)

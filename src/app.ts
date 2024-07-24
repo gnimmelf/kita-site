@@ -1,8 +1,8 @@
-import { t, Elysia, redirect } from "elysia";
+import { Elysia, redirect } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 
-import { connectDb } from './lib/db_gist'
+import { connectDb, setupDb } from './lib/db_github'
 import { createApi } from './lib/api'
 import { ensureArticle, isDev } from "./lib/utils";
 
@@ -16,6 +16,7 @@ type AppParams = {
 export const createApp = async ({ port }: AppParams) => {
 
   const dbConn = await connectDb()
+  await setupDb(dbConn)
 
   const app = new Elysia()
     .onError((ctx) => {
@@ -39,11 +40,6 @@ export const createApp = async ({ port }: AppParams) => {
 
     })
     .get('/', async ({ api, ...ctx }) => {
-      if (ctx.query.refresh) {
-        await api.refreshDb();
-        return redirect('/')
-      }
-
       const articles = await api.getArticles();
 
       // Return index page
