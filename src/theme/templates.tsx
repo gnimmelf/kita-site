@@ -70,7 +70,7 @@ const Section: Component<{
         return (
             <section class={''}>
                 <h2>{article.meta.title}</h2>
-                <div>{article.body}</div>
+                <div>{article.meta.intro}</div>
             </section>
         )
     }
@@ -78,23 +78,35 @@ const Section: Component<{
 // Pages
 
 export const IndexPage: Component<{
-    articles: Article[]
-    getArticle: (id: string) => Article
+    getArticle: (id: string) => Promise<Article>
 }> = async ({
     ctx,
-    articles,
     getArticle
 }) => {
         return (
             <Layout ctx={ctx}>
                 <Intro ctx={ctx} article={getArticle('intro')} />
-                <Section ctx={ctx} article={getArticle('huldra-vel')} />
                 <Section ctx={ctx} article={getArticle('realsameiet')} />
+                <Section ctx={ctx} article={getArticle('huldra-vel')} />
                 <Section ctx={ctx} article={getArticle('naboskap')} />
                 <Section ctx={ctx} article={getArticle('destinasjonsgruppa')} />
                 <Section ctx={ctx} article={getArticle('gården')} />
-                {/* <PreTag ctx={ctx} data={articles} /> */}
             </Layout>
         )
     }
 
+export const ArticlePage: Component<{
+    article: Article
+}> = async ({
+    ctx,
+    article
+}) => {
+        return (
+            <Layout ctx={ctx}>
+                <section class={''}>
+                    <h1>{article.meta.title}</h1>
+                    <div>{article.body}</div>
+                </section>
+            </Layout>
+        )
+    }    

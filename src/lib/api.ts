@@ -1,4 +1,4 @@
-import { Database, Articles } from '../types';
+import { Database, Articles, Article } from '../types';
 
 export const createApi = (dbConn: Database) => {
   const api = new Api(dbConn)
@@ -12,11 +12,11 @@ export class Api {
     this.#db = db
   }
 
-  async refreshDb(): Promise<void> {
-    await this.#db.refresh()
-  }
-
   async getArticles(): Promise<Articles> {
     return this.#db.getArticles()
   }
+
+  async getArticleById(id: string): Promise<Article | undefined> {
+    return this.#db.getArticleById(id)
+  }  
 }

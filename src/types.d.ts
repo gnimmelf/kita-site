@@ -11,12 +11,12 @@ type Context = {
 } & ElysiaContext
 
 
-export type ExtendedProps<T = {}> = {
+export type KitaProps<T = {}> = {
     children?: Children
     ctx: Context
-} & T;
+} & Omit<T, Parameters, query>;
 
-export type Component<T = {}> = (this: void, props: ExtendedProps<T>) => JSX.Element;
+export type Component<T = {}> = (this: void, props: KitaProps<T>) => JSX.Element;
 
 export type FormErrors = string | Record<string, unknown>
 
@@ -29,10 +29,8 @@ export type TemplateProps<P = {}> = P & {
 
 // Data types
 
-
-
 export type Article = {
-    id: string | number    
+    id: string | number
     body: string,
     meta: Record<{
         title?: string,
@@ -49,7 +47,6 @@ export type Profile = {
 // Interfaces
 
 export interface Database {
-    refresh: () => Promise<void>
-    getArticles: () => Articles
-    getArticleById: (id: string) => Article | undefined    
+    getArticles: () => Promise<Articles>
+    getArticleById: (id: string) => Promise<Article | undefined>
 }

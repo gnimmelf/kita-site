@@ -40,16 +40,24 @@ export const createApp = async ({ port }: AppParams) => {
 
     })
     .get('/', async ({ api, ...ctx }) => {
-      const articles = await api.getArticles();
-
-      // Return index page
+      const articles = await api.getArticles()
       return theme.IndexPage({
         ctx,
         articles,
         getArticle: (id: string): Article => {
-          const article = articles.find((article: Article) => article.id === id)
+          // Pass a sync version of `getArticle` to use in the templates
+          const article = articles.find((article) => article.id === id)
           return ensureArticle(id, article)
-      }
+        }
+      })
+    })
+    .get('/:id', async ({ api, params: { id }, ...ctx }) => {      
+      const article = ensureArticle(id, await api.getArticleById(id))
+
+      // Return index page
+      return theme.ArticlePage({
+        ctx,
+        article
       })
     })
 

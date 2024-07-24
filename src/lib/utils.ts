@@ -23,7 +23,9 @@ export const makeSecretPhrase = () => isDev ? 'Simple and same as always' : cryp
 export const ensureArticle = (id: string, data: Article|undefined): Article => {
   const template = {
     id: '<404>',
-    meta: {},
+    meta: {
+      intro: `<span>[404 - ${id}]</span>`
+    },
     body:`<span>[404 - ${id}]</span>`
   }
   return {
