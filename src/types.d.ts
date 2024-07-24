@@ -29,10 +29,15 @@ export type TemplateProps<P = {}> = P & {
 
 // Data types
 
+
+
 export type Article = {
     id: string | number    
-    title: string,
-    content: string,
+    body: string,
+    meta: Record<{
+        title?: string,
+        intro?: string
+    }>
 }
 
 export type Articles = Article[]

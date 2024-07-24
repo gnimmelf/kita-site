@@ -45,8 +45,6 @@ export const createApp = async ({ port }: AppParams) => {
 
       const articles = await api.getArticles();
 
-      console.log({ articles })
-
       // Return index page
       return theme.IndexPage({
         ctx,

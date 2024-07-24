@@ -1,6 +1,7 @@
 import { BunFile } from "bun";
 import { Octokit } from "@octokit/rest";
 import { parse } from "marked";
+import parseMD from 'parse-md'
 import DOMPurify from "isomorphic-dompurify";
 import slugify from "slugify";
 import { Database, Article, Articles } from "../types";
@@ -25,21 +26,15 @@ const parseId = (filename: string): string => {
     return slugify(filename.replace(/\.[^/.]+$/, "")).toLocaleLowerCase()
 }
 
-const parseContent = async (content: string): Promise<{
-    title: string
-    html: string
-}> => {
-    // Extract metadata from markdown structure?
-    const meta = {
-        title: 'TBD'
-    }
+const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id">> => {
+    const { metadata, content } = parseMD(fileContent)
 
-    let html = await parse(content)
-    html = DOMPurify.sanitize(html)
-    return {
-        ...meta,
-        html,
+    const html = await parse(content)
+    const parsed = {
+        meta: metadata,
+        body: DOMPurify.sanitize(html),
     }
+    return parsed
 }
 
 const getDbFile = (): BunFile => {
@@ -83,8 +78,27 @@ const createDb = async (dbFile: BunFile) => {
     console.log("DB-content fetched from github")  
 }
 
-export const connectDb = async (): Promise<Database> => {    
+const parseDb = async () => {
     const dbFile = getDbFile()
+
+    const db = await dbFile.json()
+
+    const parsed = await Promise.all(db.files.map(async (file: any) => {
+        const parsedContent = await parseFileContent(file.content)
+        return {
+            id: file.id,
+            ...parsedContent
+        }
+    }));
+
+    console.dir({ parsed}, { depth: null})
+
+    return parsed
+}
+
+export const connectDb = async (): Promise<Database> => {        
+    const dbFile = getDbFile()
+    let articles: Articles
 
     if (!dbFile.size) {
         await createDb(dbFile)              
@@ -92,17 +106,16 @@ export const connectDb = async (): Promise<Database> => {
     else {
         console.log("DB-content loaded from file")
     }
-    const db = await dbFile.json()
-
-    db.files.forEach(async (file: any) => {
-        file.parsed = await parseContent(file.content)
-    });
+    articles = await parseDb()    
 
     return {
-        refresh: () => createDb(getDbFile()),
-        getArticles: () => db.files,
+        refresh: async () => {
+            createDb(getDbFile())
+            articles = await parseDb()
+        },
+        getArticles: () => articles,
         getArticle: (id: string) => {
-            return db.articles.find((article: Article) => article.id === id)
+            return articles.find((article: Article) => article.id === id)
         }
     }
 }

@@ -54,9 +54,13 @@ export const IndexPage: Component<{
     ctx,
     articles
 }) => {
+    const intro = articles.find(({id}) => id === 'velkommen')
         return (
             <Layout ctx={ctx}>
-                <h1>Flemming</h1>
+                <h1>{intro.meta.title}</h1>
+                <h2>{intro.meta.intro}</h2>
+                {intro.body}
+                <hr />
                 <PreTag ctx={ctx} data={articles} />
             </Layout>
         )
