@@ -43,8 +43,37 @@ const PreTag: Component<{
 }> = ({
     data = {}
 }) => {
-    return (<pre>{Bun.escapeHTML(JSON.stringify(data, null, 2))}</pre>)
-}
+        return (<pre>{Bun.escapeHTML(JSON.stringify(data, null, 2))}</pre>)
+    }
+
+const Intro: Component<{
+    article: Article
+}> = ({
+    article
+}) => {
+        return (
+            <>
+                <h1>{article.meta.title}</h1>
+                <section>
+                    {article.body}
+                </section>
+            </>
+        )
+    }
+
+
+const Section: Component<{
+    article: Article
+}> = ({
+    article
+}) => {
+        return (
+            <section class={''}>
+                <h2>{article.meta.title}</h2>
+                <div>{article.body}</div>
+            </section>
+        )
+    }
 
 // Pages
 
@@ -56,14 +85,15 @@ export const IndexPage: Component<{
     articles,
     getArticle
 }) => {
-    const intro =  getArticle('naboskap')
         return (
             <Layout ctx={ctx}>
-                <h1>{intro.meta.title}</h1>
-                <h2>{intro.meta.intro}</h2>
-                {intro.body}
-                <hr />
-                <PreTag ctx={ctx} data={articles} />
+                <Intro ctx={ctx} article={getArticle('intro')} />
+                <Section ctx={ctx} article={getArticle('huldra-vel')} />
+                <Section ctx={ctx} article={getArticle('realsameiet')} />
+                <Section ctx={ctx} article={getArticle('naboskap')} />
+                <Section ctx={ctx} article={getArticle('destinasjonsgruppa')} />
+                <Section ctx={ctx} article={getArticle('gården')} />
+                {/* <PreTag ctx={ctx} data={articles} /> */}
             </Layout>
         )
     }
