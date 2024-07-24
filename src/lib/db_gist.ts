@@ -114,7 +114,7 @@ export const connectDb = async (): Promise<Database> => {
             articles = await parseDb()
         },
         getArticles: () => articles,
-        getArticle: (id: string) => {
+        getArticleById: (id: string) => {
             return articles.find((article: Article) => article.id === id)
         }
     }

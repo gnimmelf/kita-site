@@ -1,5 +1,4 @@
-import { Elysia } from 'elysia';
-import { Database, Articles } from '../types';
+import { Database, Articles, Article } from '../types';
 
 export const createApi = (dbConn: Database) => {
   const api = new Api(dbConn)

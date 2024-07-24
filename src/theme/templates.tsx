@@ -50,11 +50,13 @@ const PreTag: Component<{
 
 export const IndexPage: Component<{
     articles: Article[]
-}> = ({
+    getArticle: (id: string) => Article
+}> = async ({
     ctx,
-    articles
+    articles,
+    getArticle
 }) => {
-    const intro = articles.find(({id}) => id === 'velkommen')
+    const intro =  getArticle('naboskap')
         return (
             <Layout ctx={ctx}>
                 <h1>{intro.meta.title}</h1>

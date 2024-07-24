@@ -51,5 +51,5 @@ export type Profile = {
 export interface Database {
     refresh: () => Promise<void>
     getArticles: () => Articles
-    getArticle: (id: string) => Article | undefined
+    getArticleById: (id: string) => Article | undefined    
 }

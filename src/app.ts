@@ -4,9 +4,10 @@ import { staticPlugin } from '@elysiajs/static'
 
 import { connectDb } from './lib/db_gist'
 import { createApi } from './lib/api'
-import { isDev } from "./lib/utils";
+import { ensureArticle, isDev } from "./lib/utils";
 
 import * as theme from './theme/templates'
+import { Article } from "./types";
 
 type AppParams = {
   port: string | number
@@ -49,6 +50,10 @@ export const createApp = async ({ port }: AppParams) => {
       return theme.IndexPage({
         ctx,
         articles,
+        getArticle: (id: string): Article => {
+          const article = articles.find((article: Article) => article.id === id)
+          return ensureArticle(id, article)
+      }
       })
     })
 

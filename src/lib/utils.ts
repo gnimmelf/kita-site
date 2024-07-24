@@ -1,5 +1,4 @@
-
-
+import { Article } from "../types";
 
 
 const defaultDatetimeOptions = {
@@ -21,3 +20,14 @@ export const isDev = !!(process.env.NODE_ENV || '').startsWith('dev')
 
 export const makeSecretPhrase = () => isDev ? 'Simple and same as always' : crypto.randomUUID()
 
+export const ensureArticle = (id: string, data: Article|undefined): Article => {
+  const template = {
+    id: '<404>',
+    meta: {},
+    body:`<span>[404 - ${id}]</span>`
+  }
+  return {
+    ...template,
+    ...data
+  }
+}
