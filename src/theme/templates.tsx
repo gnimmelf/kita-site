@@ -55,7 +55,8 @@ const Intro: Component<{
             <>
                 <h1>{article.meta.title}</h1>
                 <section>
-                    {article.body}
+                    <div>{article.meta.intro}</div>
+                    <div>{article.body}</div>
                 </section>
             </>
         )
