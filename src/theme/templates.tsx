@@ -15,7 +15,6 @@ const Layout: Component<{
     headTags = [],
     endTags = []
 }) => {
-        headTags.push('<script src="https://unpkg.com/htmx.org@1.9.11"></script>')
         return (
             <html>
                 <head>
@@ -72,6 +71,7 @@ const Section: Component<{
             <section class={''}>
                 <h2>{article.meta.title}</h2>
                 <div>{article.meta.intro}</div>
+                <div><a href={`/${article.id}`}>Les mer</a></div>
             </section>
         )
     }

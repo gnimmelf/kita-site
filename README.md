@@ -32,14 +32,17 @@ These repo-files are cached to a json file on local disk, and updated by pinging
 
 - 200 implies updates to repo and fetches files anew
 
-Files are id'ed by their filename, and the content is `front-matter` markedown.
+Files are parsed to `articles`:
 
+- `id`'ed by their filename (minus extension, slugified), 
+- `meta` is `front-matter` by `parse-md`
+- `body` is html parsed by `marked` (no plugins) and `dompurify`.
 
 ### Still missing
 
 - Image storage
 
-- Some markdown plugins for ekstra bling
+- Maybe some markdown plugins for ekstra bling, or at least that better mimics github-flavoured markdown
 
 
 ## Getting Started
