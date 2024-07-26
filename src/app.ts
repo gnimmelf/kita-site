@@ -6,7 +6,8 @@ import { connectDb, setupDb } from './lib/db_github'
 import { createApi } from './lib/api'
 import { ensureArticle, isDev } from "./lib/utils";
 
-import * as theme from './theme/templates'
+import IndexPage from './theme/IndexPage'
+import ArticlePage from "./theme/ArticlePage";
 import { Article } from "./types";
 
 type AppParams = {
@@ -41,7 +42,7 @@ export const createApp = async ({ port }: AppParams) => {
     })
     .get('/', async ({ api, ...ctx }) => {
       const articles = await api.getArticles()
-      return theme.IndexPage({
+      return IndexPage({
         ctx,
         articles,
         getArticle: (id: string): Article => {
@@ -55,7 +56,7 @@ export const createApp = async ({ port }: AppParams) => {
       const article = ensureArticle(id, await api.getArticleById(id))
 
       // Return index page
-      return theme.ArticlePage({
+      return ArticlePage({
         ctx,
         article
       })
