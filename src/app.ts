@@ -25,13 +25,10 @@ export const createApp = async ({ port }: AppParams) => {
   const app = new Elysia()
     .onError((ctx) => {
       // TODO! Fix this better, including zod errors from api
-      console.error(ctx.error)
+      // console.dir(ctx, { depth: null })
+      // console.error(ctx.error)
       return 'Error'
     })
-    .use(staticPlugin({
-      prefix: '/public',
-      assets: 'public'
-    }))
     .use(html({
       autoDetect: true,
       isHtml: () => {
@@ -41,27 +38,32 @@ export const createApp = async ({ port }: AppParams) => {
     .decorate({
       siteTitle: 'Hurdalecovillage.org',
       api: createApi(dbConn)
-    })    
+    })
     .get('/', async ({ api, ...ctx }) => {
       const articles = await api.getArticles()
       return IndexPage({
         ctx,
         articles,
         getArticle: (id: string): Article => {
-          // Pass a sync version of `getArticle` to use in the templates
+          // A sync version of `getArticle` to use in the templates
           const article = articles.find((article) => article.id === id)
           return ensureArticle(id, article)
         }
       })
     })
+    .get('/public/*', ({ set, params }) => {
+      // NOTE! Bug workaround
+      const file = Bun.file(`${import.meta.dir}/../public/${params['*']}`)
+      set.headers['Content-Type'] = file.type
+      return file.text()
+    })
     .get('/styles.css', async ({ set: { headers } }) => {
       headers['Content-Type'] = 'text/css';
 
       const cssStr = stylesRegistry.toString()
-      console.log({ cssStr })
       return cssStr
     })
-    .get('/:id', async ({ api, params: { id }, ...ctx }) => {      
+    .get('/:id', async ({ api, params: { id }, ...ctx }) => {
       const article = ensureArticle(id, await api.getArticleById(id))
 
       // Return index page

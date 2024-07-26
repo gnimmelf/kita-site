@@ -13,24 +13,26 @@ If you ever needed a small site to hack away at for your own amusement and show-
 
 - Bun: A lean and nicely opinionated NodeJS
 
-- Elysia: Express replacemant
+- Elysia: Express replacement
 
-- Github: Filestorage
+- Github: Filestorage ("CMS")
 
 - Kita: JSX for server
+
+    - JSS (css-in-js): Old, but good for JSX + Kita
 
 The boon is using JSX + whatever serverside for a super-smooth DX.
 
 ### How
 
 "CMS" backend is github. `octokit` fetches all `.md` files from root of github repo on branch `main`.
-These repo-files are cached to a json file on local disk, and updated by pinging github tree for non-304:
+These repo-files are cached to a json file on local disk, and updated by pinging github tree for status:
 
-- 304 based on etag + last-modified headers
+- `304 - Not modified` based on etag + last-modified headers
 
-- 304 Doesn't deplete quota
+    -  Doesn't deplete quota
 
-- 200 implies updates to repo and fetches files anew
+- `200 - Ok` implies updates to repo and fetches files anew
 
 Files are parsed to `articles`:
 
@@ -40,7 +42,13 @@ Files are parsed to `articles`:
 
 ### Still missing
 
-- Image storage
+- [X] Css (JSS)
+
+- [ ] Image storage 
+
+    - [ ] For theme
+
+    - [ ] For articles
 
 - Maybe some markdown plugins for ekstra bling, or at least that better mimics github-flavoured markdown
 

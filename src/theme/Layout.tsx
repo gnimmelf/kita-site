@@ -5,10 +5,16 @@ import {
 
 import { createSheet } from './styles'
 
-const {classes} = createSheet({
-    body: {
-        backgroundColor: 'red',
-        color: 'green'
+const { classes } = createSheet({
+    '@global': {
+        body: {
+            backgroundColor: 'rgba(var(--background))',
+            color: 'rgba(var(--foreground))'
+        },
+        a: {
+            color: 'rgba(var(--foreground))',
+            textDecoration: 'none'
+        }
     }
 })
 
@@ -34,6 +40,7 @@ const Layout: Component<{
                         <meta http-equiv="Expires" content="0" />
                         {headTags.join('\n')}
                         <title>{ctx.siteTitle} {pageTitle ? `- ${pageTitle}` : ''}</title>
+                        <link rel="stylesheet" type="text/css" href="/public/vars.css" />
                         <link rel="stylesheet" type="text/css" href="/styles.css" />
                     </head>
                     <body class={classes.body}>
