@@ -1,6 +1,8 @@
-import { Elysia, redirect } from "elysia";
+import { Elysia, redirect, t } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
+
+import { Article } from "./types";
 
 import { connectDb, setupDb } from './lib/db_github'
 import { createApi } from './lib/api'
@@ -8,7 +10,8 @@ import { ensureArticle, isDev } from "./lib/utils";
 
 import IndexPage from './theme/IndexPage'
 import ArticlePage from "./theme/ArticlePage";
-import { Article } from "./types";
+
+import { stylesRegistry } from "./theme/styles";
 
 type AppParams = {
   port: string | number
@@ -38,8 +41,7 @@ export const createApp = async ({ port }: AppParams) => {
     .decorate({
       siteTitle: 'Hurdalecovillage.org',
       api: createApi(dbConn)
-
-    })
+    })    
     .get('/', async ({ api, ...ctx }) => {
       const articles = await api.getArticles()
       return IndexPage({
@@ -51,6 +53,13 @@ export const createApp = async ({ port }: AppParams) => {
           return ensureArticle(id, article)
         }
       })
+    })
+    .get('/styles.css', async ({ set: { headers } }) => {
+      headers['Content-Type'] = 'text/css';
+
+      const cssStr = stylesRegistry.toString()
+      console.log({ cssStr })
+      return cssStr
     })
     .get('/:id', async ({ api, params: { id }, ...ctx }) => {      
       const article = ensureArticle(id, await api.getArticleById(id))
