@@ -13,6 +13,17 @@ const { classes } = createSheet({
         padding: '10px',
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
+        backgroundColor: 'var(--card-bg)',
+        color: 'var(--card-fg)',
+        border: '2px solid',
+        borderColor: 'var(--card-accent)',
+        borderRadius: '10px',     
+        '& a': {
+            color: 'var(--card-accent)',
+        },
+    },
+    backLink: {
+        textAlign: 'center'
     }
 })
 
@@ -28,6 +39,9 @@ export const ArticlePage: Component<{
                 <section class={classes.article}>
                     <h1>{article.meta.title}</h1>
                     <div>{article.body}</div>
+                    <div class={classes.backLink}>
+                        <a href="/">Tilbake</a>
+                    </div>
                 </section>
             </Layout>
         )

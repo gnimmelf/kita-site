@@ -28,6 +28,7 @@ const { classes } = createSheet({
     main: {
         flexGrow: '1',
         margin: '1rem 0px',
+        padding: '10px'
     }
 })
 

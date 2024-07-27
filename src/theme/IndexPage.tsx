@@ -12,11 +12,10 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     grid: {
-            padding: '10px',
             maxWidth: 'var(--content-width)',
             margin: '0 auto',
             display: 'grid',
-            gap: '4rem',
+            gap: '3rem',
             gridTemplateColumns: '1fr',
             '@media (min-width: 860px)' : {                
                 gridTemplateColumns: '1fr 1fr',

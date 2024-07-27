@@ -11,16 +11,15 @@ const { classes } = createSheet({
     header: {
         backgroundColor: 'var(--header-bg)',
         color: 'var(--header-fg)',
-        textAlign: 'center',
-        marginBottom: '1rem',
+        textAlign: 'center',        
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
     },
     content: {
         maxWidth: 'var(--content-width)',
-        margin: '0 auto'
+        margin: '0 auto 1rem'
     },
-    title: {                             
+    title: {
         '& a': {
             color: 'var(--header-fg)',
         },
@@ -30,7 +29,7 @@ const { classes } = createSheet({
     }
 })
 
-const IntroSection: Component<{
+const IntroBody: Component<{
     article: Article
 }> = ({
     article
@@ -65,10 +64,10 @@ const Header: Component<{
                                 {/* When not `isIndexPage`, the page-title is the `h1` */}
                                 <h2><a href="/">{header.meta.title}</a></h2>
                             </Show>
-                            <div class={classes.intro}>{header.meta.intro}</div>
                         </div>
+                        <div class={classes.intro}>{header.meta.intro}</div>
                     </div>
-                    {isIndexPage ? <IntroSection article={header} /> : null}
+                    {isIndexPage ? <IntroBody article={header} /> : null}
                 </section>
             </>
         )

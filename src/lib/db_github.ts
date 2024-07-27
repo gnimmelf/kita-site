@@ -16,6 +16,8 @@ type EnvParams = {
     authToken: string
 }
 
+const DB_FILE_NAME = 'db.cache.json'
+
 const getDotEnvParams = (): EnvParams => {
     const env = {
         repoOwner: process.env.DB_USER,
@@ -47,7 +49,9 @@ const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id"
     const { metadata, content } = parseFrontMatter(fileContent)
 
     const html = await parseMarkdown(content)
-    const sanitizedHtml = DOMPurify.sanitize(html)
+    const sanitizedHtml = DOMPurify.sanitize(html, {
+        ADD_ATTR: ['target']
+    })
 
     const parsed = {
         meta: metadata,
@@ -75,7 +79,7 @@ class GithubDb {
         this.#octokit = new Octokit({
             auth: this.#env.authToken
         })
-        this.#dbFile = Bun.file("db.cache.json", { type: "application/json" })
+        this.#dbFile = Bun.file(DB_FILE_NAME, { type: "application/json" })
     }
 
     async #fecthUpdatedTree() {
@@ -92,7 +96,6 @@ class GithubDb {
                 repo: this.#env.repoName,
                 tree_sha: 'main',
                 headers
-
             })
 
         } catch (error: any) {
@@ -148,6 +151,8 @@ class GithubDb {
             return false
         }
 
+        console.log('Updating cache...')
+
         // We're here, so tree was modified with regards to the cache
         const filesList = githubTree
             // Only root-level Markdown-files
@@ -169,13 +174,18 @@ class GithubDb {
 
 
     async #readCache() {
-        if (!this.#dbFile.size) {
+        let result: any
+
+        try {
+            result = await this.#dbFile.json()
+        } catch (error) {
             this.#etag = ''
             this.#lastModified = ''
             return
         }
 
-        const { etag, lastModified, files } = await this.#dbFile.json()
+        const { etag, lastModified, files } = result
+
         this.#etag = etag
         this.#lastModified = lastModified
 
