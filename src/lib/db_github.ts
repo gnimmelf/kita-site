@@ -1,11 +1,13 @@
 import { BunFile } from "bun";
 import { Octokit } from "@octokit/rest";
-import { parse } from "marked";
-import parseMD from 'parse-md'
+import { OctokitResponse } from "@octokit/types";
+import parseFrontMatter from 'parse-md'
 import DOMPurify from "isomorphic-dompurify";
 import slugify from "slugify";
-import { Database, Article, Articles } from "../types";
-import { OctokitResponse } from "@octokit/types";
+
+import { Article, Articles } from "../types";
+
+import parseMarkdown from './markdown-parser'
 import { isDev } from "./utils";
 
 type EnvParams = {
@@ -42,12 +44,14 @@ const parseId = (filename: string): string => {
 }
 
 const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id">> => {
-    const { metadata, content } = parseMD(fileContent)
+    const { metadata, content } = parseFrontMatter(fileContent)
 
-    const html = await parse(content)
+    const html = await parseMarkdown(content)
+    const sanitizedHtml = DOMPurify.sanitize(html)
+
     const parsed = {
         meta: metadata,
-        body: DOMPurify.sanitize(html),
+        body: sanitizedHtml,
     }
     return parsed
 }
