@@ -3,7 +3,10 @@ import {
     Component,
     Article,
 } from '../types'
+
 import Layout from './Layout'
+import Header from './Header'
+
 
 export const ArticlePage: Component<{
     article: Article
@@ -12,7 +15,7 @@ export const ArticlePage: Component<{
     article
 }) => {
         return (
-            <Layout ctx={ctx}>
+            <Layout ctx={ctx} pageTitle={article.meta.title}>
                 <section class={''}>
                     <h1>{article.meta.title}</h1>
                     <div>{article.body}</div>

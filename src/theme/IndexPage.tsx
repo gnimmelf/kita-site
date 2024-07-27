@@ -2,26 +2,49 @@ import Html from '@kitajs/html'
 import {
     Component,
     Article,
+    Articles,
 } from '../types'
 
 import Layout from './Layout'
-import Intro from './IntroSection'
-import Teaser from './TeaserSection'
+import Header from './Header'
+import Footer from './Footer'
+import Teaser from './Teaser'
+
+import { createSheet } from './styles'
+
+const { classes } = createSheet({
+    grid: {
+            padding: '10px',
+            maxWidth: 'var(--content-width)',
+            margin: '0 auto',
+            display: 'grid',
+            gap: '4rem',
+            gridTemplateColumns: '1fr',
+            '@media (min-width: 860px)' : {                
+                gridTemplateColumns: '1fr 1fr',
+                justifyContent: 'space-around',
+            },            
+            '& > *': {
+                boxSizing: 'border-box',                                
+            }
+    },
+    intro: {
+
+    }
+})
 
 export const IndexPage: Component<{
-    getArticle: (id: string) => Promise<Article>
+    articles: Articles
 }> = async ({
     ctx,
-    getArticle
+    articles
 }) => {
+    articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight)
         return (
-            <Layout ctx={ctx}>
-                <Intro ctx={ctx} article={getArticle('intro')} />
-                <Teaser ctx={ctx} article={getArticle('realsameiet')} />
-                <Teaser ctx={ctx} article={getArticle('huldra-vel')} />
-                <Teaser ctx={ctx} article={getArticle('naboskap')} />
-                <Teaser ctx={ctx} article={getArticle('destinasjonsgruppa')} />
-                <Teaser ctx={ctx} article={getArticle('gården')} />
+            <Layout ctx={ctx} showHeaderIntro={true}>                
+                <div class={classes.grid}>
+                    {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
+                </div>                
             </Layout>
         )
     }

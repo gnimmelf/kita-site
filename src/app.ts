@@ -1,4 +1,4 @@
-import { Elysia, redirect, t } from "elysia";
+import { Elysia, NotFoundError, redirect, t } from "elysia";
 import { html } from '@elysiajs/html'
 import { staticPlugin } from '@elysiajs/static'
 
@@ -17,10 +17,18 @@ type AppParams = {
   port: string | number
 }
 
+
+
 export const createApp = async ({ port }: AppParams) => {
 
   const dbConn = await connectDb()
   await setupDb(dbConn)
+  const api = createApi(dbConn)
+
+  const loadArticle = async (id: string): Promise<Article> => {
+    const article = ensureArticle(id, await api.getArticleById(id))
+    return article
+  }
 
   const app = new Elysia()
     .onError((ctx) => {
@@ -36,19 +44,16 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .decorate({
-      siteTitle: 'Hurdalecovillage.org',
-      api: createApi(dbConn)
+      header: await loadArticle('__header'),
+      footer: await loadArticle('__footer'),
     })
-    .get('/', async ({ api, ...ctx }) => {
-      const articles = await api.getArticles()
+    .get('/', async (ctx) => {
+      const articles = (await api.getArticles())
+        .filter(({ id }) => !(id as String).startsWith('__'))
+
       return IndexPage({
         ctx,
         articles,
-        getArticle: (id: string): Article => {
-          // A sync version of `getArticle` to use in the templates
-          const article = articles.find((article) => article.id === id)
-          return ensureArticle(id, article)
-        }
       })
     })
     .get('/public/*', ({ set, params }) => {
@@ -63,8 +68,11 @@ export const createApp = async ({ port }: AppParams) => {
       const cssStr = stylesRegistry.toString()
       return cssStr
     })
-    .get('/:id', async ({ api, params: { id }, ...ctx }) => {
-      const article = ensureArticle(id, await api.getArticleById(id))
+    .get('/favicon.*', async (ctx) => {
+      throw new NotFoundError()
+    })
+    .get('/:id', async ({ params: { id }, ...ctx }) => {
+      const article = await loadArticle(id)
 
       // Return index page
       return ArticlePage({

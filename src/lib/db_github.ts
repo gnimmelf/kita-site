@@ -6,6 +6,7 @@ import DOMPurify from "isomorphic-dompurify";
 import slugify from "slugify";
 import { Database, Article, Articles } from "../types";
 import { OctokitResponse } from "@octokit/types";
+import { isDev } from "./utils";
 
 type EnvParams = {
     repoOwner: string
@@ -29,8 +30,8 @@ const getHeaders = (extra: Record<string, string> = {}) => {
         'accept': 'application/vnd.github+json',
     }
     for (const key in extra) {
-        if (extra[key]) { 
-            headers[key] = extra[key] 
+        if (extra[key]) {
+            headers[key] = extra[key]
         }
     }
     return headers
@@ -49,6 +50,11 @@ const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id"
         body: DOMPurify.sanitize(html),
     }
     return parsed
+}
+
+const skipCacheUpdate = (cachedContentCount: number) => {
+    const skipUpdate = isDev && process.env.NODE_ENV?.endsWith('cache-only') && cachedContentCount > 0
+    return skipUpdate
 }
 
 class GithubDb {
@@ -105,7 +111,7 @@ class GithubDb {
         return response!.data.tree
     }
 
-    async #fecthFiles(filesList: [{ url: string, path: string}]) {
+    async #fecthFiles(filesList: [{ url: string, path: string }]) {
         const headers = getHeaders({
             // Request raw content instead of base64 encoded
             'accept': 'application/vnd.github.v3.raw'
@@ -126,9 +132,14 @@ class GithubDb {
     }
 
     async #maybeUpdateCache(): Promise<Boolean> {
-        
+
+        if (skipCacheUpdate(this.#articles.length)) {
+            console.log('Skipping cache-update check')
+            return false
+        }
+
         const githubTree = await this.#fecthUpdatedTree()
-        if (!githubTree) { 
+        if (!githubTree) {
             // Noting to do
             return false
         }
@@ -154,10 +165,10 @@ class GithubDb {
 
 
     async #readCache() {
-        if (!this.#dbFile.size) { 
+        if (!this.#dbFile.size) {
             this.#etag = ''
             this.#lastModified = ''
-            return 
+            return
         }
 
         const { etag, lastModified, files } = await this.#dbFile.json()
@@ -195,5 +206,5 @@ export const connectDb = async () => {
 }
 
 export const setupDb = async (dbConn: GithubDb) => {
-    dbConn.setup()
+    await dbConn.setup()
 }

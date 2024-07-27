@@ -34,7 +34,9 @@ export type Article = {
     body: string,
     meta: Record<{
         title?: string,
-        intro?: string
+        intro?: string        
+        link?: string,
+        weight?: string
     }>
 }
 
