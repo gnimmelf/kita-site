@@ -9,7 +9,7 @@ import Footer from './Footer'
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
-    '@global': {        
+    '@global': {
         a: {
             color: 'var(--body-accent)',
             textDecoration: 'none'
@@ -26,10 +26,10 @@ const { classes } = createSheet({
         justifyContent: 'space-between',
     },
     main: {
-        flexGrow: '1'
+        flexGrow: '1',
+        margin: '1rem 0px',
     }
 })
-
 
 const Layout: Component<{
     pageTitle?: string
@@ -51,7 +51,7 @@ const Layout: Component<{
                 <html lang="en">
                     <head>
                         <style>
-                            @import url('https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&family=Josefin+Sans:ital,wght@0,100;1,100&display=swap');
+                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
                         </style>
                         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

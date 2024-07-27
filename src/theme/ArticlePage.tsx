@@ -5,7 +5,16 @@ import {
 } from '../types'
 
 import Layout from './Layout'
-import Header from './Header'
+
+import { createSheet } from './styles'
+
+const { classes } = createSheet({
+    article: {
+        padding: '10px',
+        maxWidth: 'var(--content-width)',
+        margin: '0 auto',
+    }
+})
 
 
 export const ArticlePage: Component<{
@@ -16,12 +25,12 @@ export const ArticlePage: Component<{
 }) => {
         return (
             <Layout ctx={ctx} pageTitle={article.meta.title}>
-                <section class={''}>
+                <section class={classes.article}>
                     <h1>{article.meta.title}</h1>
                     <div>{article.body}</div>
                 </section>
             </Layout>
         )
-    }    
+    }
 
 export default ArticlePage

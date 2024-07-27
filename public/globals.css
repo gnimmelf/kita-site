@@ -22,16 +22,21 @@
     --footer-fg: var(--text-dark);
     --footer-accent: var(--primary-500);
 
-    --card-bg: var(--primary-300); 
+    --card-bg: var(--primary-300);
     --card-fg: var(--text-dark);
     --card-accent: var(--primary-500);
 
     /* Globals */
     box-sizing: border-box;
+    font-size: 120%;
     --content-width: 800px;
 
-    /* Fonts */
-    font-size: 120%;
+    /* Font-family */
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
   }
 
   body.light {

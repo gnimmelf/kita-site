@@ -10,6 +10,8 @@ const { classes } = createSheet({
     header: {
         backgroundColor: 'var(--header-bg)',
         color: 'var(--header-fg)',
+        textAlign: 'center',
+        marginBottom: '1rem',
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
     },
@@ -17,37 +19,15 @@ const { classes } = createSheet({
         maxWidth: 'var(--content-width)',
         margin: '0 auto'
     },
-    title: {
-        'fontFamily': '"Arsenal Sans", sans-serif',
-        'fontPpticalSizing': 'auto',
-        'fontWeight': '700',
-        'fontStyle': 'normal',  
+    title: {                             
         '& a': {
             color: 'var(--header-fg)',
+        },
+        '& > h1': {
+            margin: '1rem'
         }
     }
 })
-
-export const Header: Component<{
-    showIntro: Boolean
-}> = ({
-    showIntro,
-    ctx,
-}) => {
-        const article: Article = ctx.header
-        return (
-            <>
-                <section class={classes.header}>
-                    <div class={classes.content}>
-                        <h1 class={classes.title}><a href="/">{article.meta.title}</a></h1>
-                        <div class={classes.intro}>{article.meta.intro}</div>
-                    </div>
-                </section>
-                {showIntro ? <IntroSection article={article}/> : null}
-            </>
-        )
-    }
-
 
 const IntroSection: Component<{
     article: Article
@@ -61,6 +41,28 @@ const IntroSection: Component<{
                 </div>
             </section>
 
+        )
+    }
+
+const Header: Component<{
+    showIntro: Boolean
+}> = ({
+    showIntro,
+    ctx,
+}) => {
+        const article: Article = ctx.header
+        return (
+            <>
+                <section class={classes.header}>
+                    <div class={classes.content}>
+                        <div class={classes.title}>
+                            <h1><a href="/">{article.meta.title}</a></h1>
+                            <div class={classes.intro}>{article.meta.intro}</div>
+                        </div>
+                    </div>
+                    {showIntro ? <IntroSection article={article} /> : null}
+                </section>
+            </>
         )
     }
 

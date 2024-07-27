@@ -6,8 +6,6 @@ import {
 } from '../types'
 
 import Layout from './Layout'
-import Header from './Header'
-import Footer from './Footer'
 import Teaser from './Teaser'
 
 import { createSheet } from './styles'
@@ -27,10 +25,7 @@ const { classes } = createSheet({
             '& > *': {
                 boxSizing: 'border-box',                                
             }
-    },
-    intro: {
-
-    }
+    }    
 })
 
 export const IndexPage: Component<{

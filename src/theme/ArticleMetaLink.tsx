@@ -21,7 +21,7 @@ const ArticleMetaLink: Component<{
     const isExternal = !!article.meta.link
 
     if (isExternal) {
-        return (<a target="_blank" href={article.meta.link}><span class={classes.vAlign}><span>Les mer</span><span><IconExternalLink /></span></span></a>)
+        return (<a target="_blank" href={article.meta.link}><span class={classes.vAlign}><span>Gå til</span><span><IconExternalLink /></span></span></a>)
     }
     else {
         return (<a href={`/${article.id}`}>Les mer</a>)

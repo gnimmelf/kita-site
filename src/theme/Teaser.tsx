@@ -23,6 +23,9 @@ const { classes } = createSheet({
             textDecoration: 'none',
         },     
     },
+    title: {
+        textTransform: 'capitalize'
+    },
     intro: {
         // Push link down to bottom of teaser card
         flexGrow: '1'
@@ -42,7 +45,7 @@ const Teaser: Component<{
         
         return (
             <section class={classes.teaser} data-id={article.id} data-weight={article.meta.weight}>
-                <h2>{article.meta.title}</h2>
+                <h2 class={classes.title}>{article.meta.title}</h2>
                 <div class={classes.intro}>{article.meta.intro}</div> 
                 <div class={classes.link}>
                     <Link article={article} />                

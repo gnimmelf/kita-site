@@ -8,9 +8,12 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     footer: {
+        textAlign: 'center',
         backgroundColor: 'var(--footer-bg)',
         color: 'var(--footer-fg)',
         overflow: 'auto',
+        marginTop: '1rem',
+        paddingTop: '1rem',
         '& a': {
             color: 'var(--footer-accent)',
         }
@@ -20,10 +23,7 @@ const { classes } = createSheet({
         margin: '0 auto'
     },
     title: {
-        'fontFamily': '"Arsenal Sans", sans-serif',
-        'fontPpticalSizing': 'auto',
-        'fontWeight': '700',
-        'fontStyle': 'normal',        
+
     }
 })
 
@@ -34,7 +34,7 @@ const Footer: Component<{}> = ({
     return (
         <section class={classes.footer}>
             <div class={classes.content}>
-                <div>{article.meta.title}</div>
+                <h3>{article.meta.title}</h3>
                 <div>{article.meta.intro}</div>
                 <div>{article.body}</div>
             </div>
