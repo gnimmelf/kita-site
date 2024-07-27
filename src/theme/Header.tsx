@@ -5,6 +5,7 @@ import {
 } from '../types'
 
 import { createSheet } from './styles'
+import { Show } from '../lib/components'
 
 const { classes } = createSheet({
     header: {
@@ -45,22 +46,29 @@ const IntroSection: Component<{
     }
 
 const Header: Component<{
-    showIntro: Boolean
+    isIndexPage: Boolean
 }> = ({
-    showIntro,
+    isIndexPage,
     ctx,
 }) => {
-        const article: Article = ctx.header
+        const header: Article = ctx.header
         return (
             <>
                 <section class={classes.header}>
                     <div class={classes.content}>
                         <div class={classes.title}>
-                            <h1><a href="/">{article.meta.title}</a></h1>
-                            <div class={classes.intro}>{article.meta.intro}</div>
+                            <Show when={isIndexPage}>
+                                {/* When `isIndexPage` intro, the page-titles are `h2` */}
+                                <h1><a href="/">{header.meta.title}</a></h1>
+                            </Show>
+                            <Show when={!isIndexPage}>
+                                {/* When not `isIndexPage`, the page-title is the `h1` */}
+                                <h2><a href="/">{header.meta.title}</a></h2>
+                            </Show>
+                            <div class={classes.intro}>{header.meta.intro}</div>
                         </div>
                     </div>
-                    {showIntro ? <IntroSection article={article} /> : null}
+                    {isIndexPage ? <IntroSection article={header} /> : null}
                 </section>
             </>
         )

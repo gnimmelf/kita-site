@@ -36,7 +36,7 @@ export const IndexPage: Component<{
 }) => {
     articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight)
         return (
-            <Layout ctx={ctx} showHeaderIntro={true}>                
+            <Layout ctx={ctx} isIndexPage={true}>                
                 <div class={classes.grid}>
                     {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
                 </div>                

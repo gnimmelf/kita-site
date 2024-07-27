@@ -35,12 +35,12 @@ const Layout: Component<{
     pageTitle?: string
     headTags?: string[]
     endTags?: string[]
-    showHeaderIntro: Boolean
+    isIndexPage: Boolean
 }> = ({
     ctx,
     children,
     pageTitle,
-    showHeaderIntro = false,
+    isIndexPage = false,
     headTags = [],
     endTags = []
 }) => {
@@ -65,7 +65,7 @@ const Layout: Component<{
                     <body class={classes.body}>
                         <Header
                             ctx={ctx}
-                            showIntro={showHeaderIntro}
+                            isIndexPage={isIndexPage}
                         />
                         <main class={classes.main}>{children}</main>
                         <Footer ctx={ctx} />
