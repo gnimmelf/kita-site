@@ -10,7 +10,7 @@
   "dependencies": {
     "@elysiajs/cookie": "^0.8.0",
     "@elysiajs/html": "^1.0.2",
-    "@kitajs/ts-html-plugin": "^1.3.4",
+    "@kitajs/ts-html-plugin": "^4.0.2",
     "@octokit/rest": "^21.0.1",
     "@types/dompurify": "^3.0.5",
     "elysia": "^1.0.13",
