@@ -68,7 +68,7 @@ export const createApp = async ({ port }: AppParams) => {
       if (etag && reqEtag === etag) {
         // Use cached results
         ctx.set.status = 304
-        return 'Not modified'
+        return ''
       }
       else {
         ctx.set.headers['etag'] = etag
