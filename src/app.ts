@@ -38,10 +38,7 @@ export const createApp = async ({ port }: AppParams) => {
     .use(staticPlugin({
       assets: './public',
       prefix: '/public',
-      // Bug: caching fails, so disable it
-      headers: {
-        'cache-control': 'public, max-age=3600'
-      },
+      // Bug: caching fails, so disable it      
       noCache: true,
     }))
     .use(html({
