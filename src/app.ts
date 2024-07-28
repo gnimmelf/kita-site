@@ -1,8 +1,7 @@
-import { Elysia, NotFoundError, redirect, t } from "elysia";
+import { Elysia, NotFoundError } from "elysia";
 import { html } from '@elysiajs/html'
-import { staticPlugin } from '@elysiajs/static'
 
-import { Article } from "./types";
+import { Article, Context } from "./types";
 
 import { connectDb, setupDb } from './lib/db_github'
 import { createApi } from './lib/api'
@@ -17,7 +16,17 @@ type AppParams = {
   port: string | number
 }
 
+const getStaticFile = async (ctx: Context) => {
+  const { params } = ctx
+  const rawPath = params['*']
+  const path = rawPath // TODO! Sanitize?
 
+  const file = Bun.file(`./public/${path}`)
+  if (!(await file.exists())) {
+    throw new NotFoundError()
+  }
+  return file
+}
 
 export const createApp = async ({ port }: AppParams) => {
 
@@ -35,12 +44,6 @@ export const createApp = async ({ port }: AppParams) => {
       console.error(error)
       return new Response(error.toString())
     })
-    .use(staticPlugin({
-      assets: './public',
-      prefix: '/public',
-      // Bug: caching fails, so disable it      
-      noCache: true,
-    }))
     .use(html({
       autoDetect: true,
       isHtml: () => {
@@ -54,14 +57,17 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
+      if (isDev) {
+        return
+      }
+
       // Set up caching based on db etag & lastModified
       const { etag, lastModified } = await api.getCacheControl()
-      
       // Pragma is deprecated: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
-      ctx.set.headers['pragma'] = '' 
+      ctx.set.headers['pragma'] = ''
       // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#directives
-      ctx.set.headers['cache-control'] = 'max-age=3600'
-      
+      ctx.set.headers['cache-control'] = 'public, max-age=3600'
+
       const reqEtag = ctx.request.headers.get('If-None-Match')
       if (etag && reqEtag === etag) {
         // Use cached results
@@ -91,13 +97,13 @@ export const createApp = async ({ port }: AppParams) => {
     })
     .get('/styles.css', async ({ set: { headers } }) => {
       headers['Content-Type'] = 'text/css';
-
       const cssStr = stylesRegistry.toString()
       return cssStr
     })
     .get('/favicon.*', async (ctx) => {
       return Bun.file('./favicon.ico')
     })
+    .get('/public/*', getStaticFile)
     .get('/:id', async ({ params: { id }, ...ctx }) => {
       const article = await loadArticle(id)
 
