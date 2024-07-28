@@ -1,8 +1,45 @@
 # Kita-site
 
-Bun + Elysia + Kita and github repo backend-storage.
+Bun + Elysia + Kita and a github repo for backend-storage.
 
-## Content files
+## Why
+
+No need to change mindset into that of an irritating static-site genereator with tons of restrictions. 
+
+Just learn more of the stuff you'd like to work with anyways
+
+If you ever needed a small site to hack away at for your own amusement and show-off, then this is it:
+
+- Bun: A lean and nicely opinionated NodeJS
+
+- Elysia: Express replacement*
+
+- Github: Filestorage ("CMS")
+
+- Kita: JSX for server
+
+    - JSS (css-in-js): Old, but good for JSX + Kita
+
+The boon is using JSX + whatever serverside for a super-smooth DX.
+
+## How
+
+"CMS" backend is github. `octokit` fetches all `.md` files from root of github repo on branch `main`.
+These repo-files are cached to a json file on local disk, and updated by pinging github tree for status:
+
+- `304 - Not modified` based on etag + last-modified headers
+
+    -  Doesn't deplete quota
+
+- `200 - Ok` implies updates to repo and fetches files anew
+
+Files are parsed to `articles`:
+
+- `id`'ed by their filename (minus extension, slugified), 
+- `meta` is `front-matter` by `parse-md`
+- `body` is html parsed by `marked` (no plugins) and `dompurify`.
+
+### Repo content files
 
 **Filenames** must have extension `.md`
 
@@ -24,71 +61,40 @@ weight: <INTEGER>
 
 Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
-## How
-
-"CMS" backend is github. `octokit` fetches all `.md` files from root of github repo on branch `main`.
-These repo-files are cached to a json file on local disk, and updated by pinging github tree for status:
-
-- `304 - Not modified` based on etag + last-modified headers
-
-    -  Doesn't deplete quota
-
-- `200 - Ok` implies updates to repo and fetches files anew
-
-Files are parsed to `articles`:
-
-- `id`'ed by their filename (minus extension, slugified), 
-- `meta` is `front-matter` by `parse-md`
-- `body` is html parsed by `marked` (no plugins) and `dompurify`.
-
-## Why
-
-No need to change mindset into that of an irritating static-site genereator with tons of restrictions. 
-
-Just learn more of the stuff you'd like to work with anyways
-
-If you ever needed a small site to hack away at for your own amusement and show-off, then this is it:
-
-- Bun: A lean and nicely opinionated NodeJS
-
-- Elysia: Express replacement
-
-- Github: Filestorage ("CMS")
-
-- Kita: JSX for server
-
-    - JSS (css-in-js): Old, but good for JSX + Kita
-
-The boon is using JSX + whatever serverside for a super-smooth DX.
-
 ### Still missing
+
+- [X] Agressive caching
+
+    - Set `etag` + `lastModified` headers to same as repo on *all* requests. - If no change in repo, then no need to fetch.
 
 - [X] Css (JSS)
 
-- [ ] Proper caching by Elysia
+- [X] Static file serving
 
-    - Use etag, last-modified from the db-cache ?
+    - Some bugs in Elysia plugins `html` & `static`, try reimplementing with version-ovrrerides
 
-- [ ] Static file serving
-
-    - Some bugs in Elysia plugins `html` & `static`, try reimplementing with version-ovreride
+        - See `package.json::overrides`
 
 - [ ] Image storage 
 
-    - [ ] For theme
+    - [X] For theme
+
+        - Since staticPlugin works with overrides, just use the `public` folder
 
     - [ ] For articles
 
-- Maybe some markdown plugins for ekstra bling, or at least that better mimics github-flavoured markdown
+- [ ] Maybe some markdown plugins for ekstra bling, or at least maybe support github-flavoured markdown?
 
 
 ## Getting Started
 
-[Install bun](https://bun.sh/docs/installation)
+1. [Install bun](https://bun.sh/docs/installation)
 
-```bash
-bun install 
-```
+2. Install packages 
+
+    ```bash
+    bun install 
+    ```
 
 
 ## Run
@@ -106,3 +112,7 @@ Open http://localhost:3000/ with your browser to see the result.
 ```bash
 bun run start
 ```
+
+---
+
+\* Elysia: As of July 2024, it has a few issues with its plugins. Hopefully that will be [ironed out](https://elysiajs.com/blog/elysia-11.html) during the year
