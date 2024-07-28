@@ -1,6 +1,5 @@
 import { Elysia, NotFoundError, redirect, t } from "elysia";
 import { html } from '@elysiajs/html'
-import { staticPlugin } from '@elysiajs/static'
 
 import { Article } from "./types";
 
@@ -31,11 +30,9 @@ export const createApp = async ({ port }: AppParams) => {
   }
 
   const app = new Elysia()
-    .onError((ctx) => {
-      // TODO! Fix this better, including zod errors from api
-      // console.dir(ctx, { depth: null })
-      // console.error(ctx.error)
-      return 'Error'
+    .onError(async ({ error }) => {
+      console.error(error)
+      return new Response(error.toString())
     })
     .use(html({
       autoDetect: true,
@@ -43,10 +40,12 @@ export const createApp = async ({ port }: AppParams) => {
         return true
       }
     }))
-    .decorate({
-      header: await loadArticle('__header'),
-      footer: await loadArticle('__footer'),
-    })
+    .derive(async () => ({
+      site: {
+        header: await loadArticle('__header'),
+        footer: await loadArticle('__footer'),
+      }
+    }))
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())
         .filter(({ id }) => !(id as String).startsWith('__'))

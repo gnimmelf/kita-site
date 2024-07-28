@@ -30,13 +30,13 @@ const { classes } = createSheet({
 const Footer: Component<{}> = ({
     ctx
 }) => {
-    const article: Article = ctx.footer
+    const { footer } = ctx.site
     return (
         <section class={classes.footer}>
             <div class={classes.content}>
-                <h3>{article.meta.title}</h3>
-                <div>{article.meta.intro}</div>
-                <div>{article.body}</div>
+                <h3>{footer.meta.title}</h3>
+                <div>{footer.meta.intro}</div>
+                <div>{footer.body}</div>
             </div>
         </section>
     )

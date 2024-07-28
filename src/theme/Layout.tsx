@@ -45,7 +45,7 @@ const Layout: Component<{
     headTags = [],
     endTags = []
 }) => {
-        const siteTitle = ctx.header.meta.title || 'Kita-site'
+        const siteTitle = ctx.site.header.meta.title || 'Kita-site'
         return (
             <>
                 {'<!doctype html>'}

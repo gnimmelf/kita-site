@@ -11,7 +11,7 @@ const { classes } = createSheet({
     header: {
         backgroundColor: 'var(--header-bg)',
         color: 'var(--header-fg)',
-        textAlign: 'center',        
+        textAlign: 'center',
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
     },
@@ -50,7 +50,7 @@ const Header: Component<{
     isIndexPage,
     ctx,
 }) => {
-        const header: Article = ctx.header
+        const { header } = ctx.site
         return (
             <>
                 <section class={classes.header}>
