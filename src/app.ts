@@ -6,6 +6,7 @@ import { Article, Context } from "./types";
 import { connectDb, setupDb } from './lib/db_github'
 import { createApi } from './lib/api'
 import { ensureArticle, isDev } from "./lib/utils";
+import { getStaticFile } from "./lib/handlers";
 
 import IndexPage from './theme/IndexPage'
 import ArticlePage from "./theme/ArticlePage";
@@ -14,18 +15,6 @@ import { stylesRegistry } from "./theme/styles";
 
 type AppParams = {
   port: string | number
-}
-
-const getStaticFile = async (ctx: Context) => {
-  const { params } = ctx
-  const rawPath = params['*']
-  const path = rawPath // TODO! Sanitize?
-
-  const file = Bun.file(`./public/${path}`)
-  if (!(await file.exists())) {
-    throw new NotFoundError()
-  }
-  return file
 }
 
 export const createApp = async ({ port }: AppParams) => {
@@ -57,12 +46,11 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
-      if (isDev) {
-        return
-      }
+      if (isDev) { return }
 
       // Set up caching based on db etag & lastModified
       const { etag, lastModified } = await api.getCacheControl()
+
       // Pragma is deprecated: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
       ctx.set.headers['pragma'] = ''
       // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#directives
@@ -81,10 +69,9 @@ export const createApp = async ({ port }: AppParams) => {
         return ''
       }
 
-      // Set up normal response
+      // Set headers for a non-chached
       ctx.set.headers['etag'] = etag
       ctx.set.headers['last-modified'] = lastModified
-
     })
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())

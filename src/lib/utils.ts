@@ -33,3 +33,4 @@ export const ensureArticle = (id: string, data: Article|undefined): Article => {
     ...data
   }
 }
+
