@@ -40,8 +40,12 @@ const getHeaders = (extra: Record<string, string> = {}) => {
     return headers
 }
 
-const parseId = (filename: string): string => {
-    return slugify(filename.replace(/\.[^/.]+$/, "")).toLocaleLowerCase()
+const parseId = (filename: string): string => {  
+    const id = slugify(filename.replace(/\.[^/.]+$/, "")).toLocaleLowerCase()
+    return filename.startsWith('--') 
+        // If filename starts with two dashes, keep them, it means "not published"
+        ? `--${id}`
+        : id
 }
 
 const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id">> => {
@@ -51,17 +55,12 @@ const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id"
 
     const parsed = {
         meta: {
-            weight: 9999,
+            weight: Number.MAX_SAFE_INTEGER,
             ...metadata as object
         },
         body: html,
     }
     return parsed
-}
-
-const skipCacheUpdate = (cachedContentCount: number) => {
-    const skipUpdate = isDev && process.env.NODE_ENV?.endsWith('cache-only') && cachedContentCount > 0
-    return skipUpdate
 }
 
 class GithubDb {
@@ -139,11 +138,6 @@ class GithubDb {
 
     async #maybeUpdateCache(): Promise<Boolean> {
 
-        if (skipCacheUpdate(this.#articles.length)) {
-            console.log('Skipping cache-update check')
-            return false
-        }
-
         const githubTree = await this.#fecthUpdatedTree()
         if (!githubTree) {
             // Noting to do
@@ -189,11 +183,18 @@ class GithubDb {
         this.#lastModified = lastModified
 
         this.#articles = files.filter((file: any) => {
-            const show = !!(file.id.startsWith('__') || file.meta.published)
+            const show = file.id.startsWith('__') || !file.id.startsWith('--')
             console.log(file.id, { show })
             return show
         })
         console.log('Articles read from cache')
+    }
+
+    async getCacheControl() {
+        return {
+            lastModified: this.#lastModified,
+            etag: this.#etag
+        }
     }
 
     async getArticles() {

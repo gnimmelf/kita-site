@@ -6,25 +6,20 @@ import {
 
 type Context = {
     siteTitle: string
-    profile?: Profile
-    articleGroupPath?: string
 } & ElysiaContext
 
 
-export type KitaProps<T = {}> = {
+type KitaProps<T = {}> = {
     children?: Children
     ctx: Context
 } & Omit<T, Parameters, query>;
 
 export type Component<T = {}> = (this: void, props: KitaProps<T>) => JSX.Element;
 
-export type FormErrors = string | Record<string, unknown>
 
-export type TemplateProps<P = {}> = P & {
-    ctx: {
-        profile?: Profile
-        articleGroupPath?: string
-    } & Context
+export type CacheControl = {
+    etag: string, 
+    lastModified: string
 }
 
 // Data types
@@ -42,13 +37,10 @@ export type Article = {
 
 export type Articles = Article[]
 
-export type Profile = {
-    email: string
-}
-
 // Interfaces
 
 export interface Database {
+    getCacheControl: () => Promise<>
     getArticles: () => Promise<Articles>
     getArticleById: (id: string) => Promise<Article | undefined>
 }

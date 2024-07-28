@@ -1,5 +1,6 @@
 import { Elysia, NotFoundError, redirect, t } from "elysia";
 import { html } from '@elysiajs/html'
+import { staticPlugin } from '@elysiajs/static'
 
 import { Article } from "./types";
 
@@ -34,6 +35,15 @@ export const createApp = async ({ port }: AppParams) => {
       console.error(error)
       return new Response(error.toString())
     })
+    .use(staticPlugin({
+      assets: './public',
+      prefix: '/public',
+      // Bug: caching fails, so disable it
+      headers: {
+        'cache-control': 'public, max-age=3600'
+      },
+      noCache: true,
+    }))
     .use(html({
       autoDetect: true,
       isHtml: () => {
@@ -46,6 +56,25 @@ export const createApp = async ({ port }: AppParams) => {
         footer: await loadArticle('__footer'),
       }
     }))
+    .onRequest(async (ctx) => {
+      // Set up caching based on db etag & lastModified
+      const { etag, lastModified } = await api.getCacheControl()
+      // Pragma is deprecated: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
+      ctx.set.headers['pragma'] = 'no-cache' 
+      // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#directives
+      ctx.set.headers['cache-control'] = 'no-cache'
+
+      const reqEtag = ctx.request.headers.get('If-None-Match')
+      if (etag && reqEtag === etag) {
+        // Use cached results
+        ctx.set.status = 304
+        return 'Not modified'
+      }
+      else {
+        ctx.set.headers['etag'] = etag
+        ctx.set.headers['last-modified'] = lastModified
+      }
+    })
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())
         .filter(({ id }) => !(id as String).startsWith('__'))
@@ -55,12 +84,6 @@ export const createApp = async ({ port }: AppParams) => {
         articles,
       })
     })
-    .get('/public/*', ({ set, params }) => {
-      // NOTE! Bug workaround
-      const file = Bun.file(`${import.meta.dir}/../public/${params['*']}`)
-      set.headers['Content-Type'] = file.type
-      return file.text()
-    })
     .get('/styles.css', async ({ set: { headers } }) => {
       headers['Content-Type'] = 'text/css';
 
@@ -68,7 +91,7 @@ export const createApp = async ({ port }: AppParams) => {
       return cssStr
     })
     .get('/favicon.*', async (ctx) => {
-      throw new NotFoundError()
+      return Bun.file('./favicon.ico')
     })
     .get('/:id', async ({ params: { id }, ...ctx }) => {
       const article = await loadArticle(id)
@@ -79,7 +102,6 @@ export const createApp = async ({ port }: AppParams) => {
         article
       })
     })
-
 
   app.listen(port)
 

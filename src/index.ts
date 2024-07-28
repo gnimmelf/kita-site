@@ -2,7 +2,7 @@ import { createApp } from './app'
 
 
 const bootstrap = async () => {
-    const app = createApp({ port: process.env.PORT || 3000 })
+    const app = createApp({ port: parseInt(process.env.PORT as string) || 3000 })
 }
 
 bootstrap();

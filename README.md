@@ -2,6 +2,44 @@
 
 Bun + Elysia + Kita and github repo backend-storage.
 
+## Content files
+
+**Filenames** must have extension `.md`
+
+- `__header.md` and `__footer.md` are required for site header and footer content.
+
+- Filename starting with two dashes (`--*.md`) are considered to be unpublished.
+
+**front-matter**
+
+```yaml
+---
+title: <TITLE>
+intro: <INTRO TEXT>
+weight: <INTEGER>
+---
+
+<MD CONTENT>
+```
+
+Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
+
+## How
+
+"CMS" backend is github. `octokit` fetches all `.md` files from root of github repo on branch `main`.
+These repo-files are cached to a json file on local disk, and updated by pinging github tree for status:
+
+- `304 - Not modified` based on etag + last-modified headers
+
+    -  Doesn't deplete quota
+
+- `200 - Ok` implies updates to repo and fetches files anew
+
+Files are parsed to `articles`:
+
+- `id`'ed by their filename (minus extension, slugified), 
+- `meta` is `front-matter` by `parse-md`
+- `body` is html parsed by `marked` (no plugins) and `dompurify`.
 
 ## Why
 
@@ -23,26 +61,17 @@ If you ever needed a small site to hack away at for your own amusement and show-
 
 The boon is using JSX + whatever serverside for a super-smooth DX.
 
-### How
-
-"CMS" backend is github. `octokit` fetches all `.md` files from root of github repo on branch `main`.
-These repo-files are cached to a json file on local disk, and updated by pinging github tree for status:
-
-- `304 - Not modified` based on etag + last-modified headers
-
-    -  Doesn't deplete quota
-
-- `200 - Ok` implies updates to repo and fetches files anew
-
-Files are parsed to `articles`:
-
-- `id`'ed by their filename (minus extension, slugified), 
-- `meta` is `front-matter` by `parse-md`
-- `body` is html parsed by `marked` (no plugins) and `dompurify`.
-
 ### Still missing
 
 - [X] Css (JSS)
+
+- [ ] Proper caching by Elysia
+
+    - Use etag, last-modified from the db-cache ?
+
+- [ ] Static file serving
+
+    - Some bugs in Elysia plugins `html` & `static`, try reimplementing with version-ovreride
 
 - [ ] Image storage 
 
