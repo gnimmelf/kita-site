@@ -31,7 +31,8 @@
     "bun-types": "latest"
   },  
   "overrides": {
-    "@kitajs/html": "4.1.0"
+    "@kitajs/html": "4.1.0",
+    "@polka/url": "1.0.0-next.20"
   },
   "module": "src/index.ts"
 }
