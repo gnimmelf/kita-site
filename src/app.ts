@@ -46,7 +46,10 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
-      if (isDev) { return }
+      if (isDev) { 
+        // No caching
+        return 
+      }
 
       // Set up caching based on db etag & lastModified
       const { etag, lastModified } = await api.getCacheControl()

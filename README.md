@@ -67,6 +67,8 @@ Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
     - Set `etag` + `lastModified` headers to same as repo on *all* requests. - If no change in repo, then no need to fetch.
 
+    - Only in `production`, `dev*` bypasses caching
+
 - [X] Css (JSS)
 
 - [X] Static file serving
