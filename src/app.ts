@@ -56,21 +56,29 @@ export const createApp = async ({ port }: AppParams) => {
     .onRequest(async (ctx) => {
       // Set up caching based on db etag & lastModified
       const { etag, lastModified } = await api.getCacheControl()
+      
       // Pragma is deprecated: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Pragma
-      ctx.set.headers['pragma'] = 'no-cache' 
+      ctx.set.headers['pragma'] = '' 
       // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control#directives
-      ctx.set.headers['cache-control'] = 'no-cache'
-
+      ctx.set.headers['cache-control'] = 'max-age=3600'
+      
       const reqEtag = ctx.request.headers.get('If-None-Match')
       if (etag && reqEtag === etag) {
         // Use cached results
         ctx.set.status = 304
         return ''
       }
-      else {
-        ctx.set.headers['etag'] = etag
-        ctx.set.headers['last-modified'] = lastModified
+      const reqModifiedSince = ctx.request.headers.get('If-Modified-Since')
+      if (lastModified && reqModifiedSince === lastModified) {
+        // Use cached results
+        ctx.set.status = 304
+        return ''
       }
+
+      // Set up normal response
+      ctx.set.headers['etag'] = etag
+      ctx.set.headers['last-modified'] = lastModified
+
     })
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())

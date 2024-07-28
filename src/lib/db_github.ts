@@ -184,7 +184,7 @@ class GithubDb {
 
         this.#articles = files.filter((file: any) => {
             const show = file.id.startsWith('__') || !file.id.startsWith('--')
-            console.log(file.id, { show })
+            // console.log(file.id, { show })
             return show
         })
         console.log('Articles read from cache')
