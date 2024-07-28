@@ -188,7 +188,11 @@ class GithubDb {
         this.#etag = etag
         this.#lastModified = lastModified
 
-        this.#articles = files
+        this.#articles = files.filter((file: any) => {
+            const show = !!(file.id.startsWith('__') || file.meta.published)
+            console.log(file.id, { show })
+            return show
+        })
         console.log('Articles read from cache')
     }
 
