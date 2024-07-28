@@ -101,6 +101,17 @@ Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
 ## Run
 
+**env vars**
+
+```
+DB_USER=<GIT_USER>
+DB_NAME=<REPO_NAME>
+DB_PASS=<GITHUB-PAT_FINE-GRAINED_REPO-CONTENTS-READ>
+PORT=<PORT || 3000>
+```
+
+
+
 **Development**
 
 ```bash
