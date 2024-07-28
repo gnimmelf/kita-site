@@ -22,6 +22,9 @@ const { classes } = createSheet({
             color: 'var(--card-accent)',
         },
     },
+    title: {
+        textTransform: 'capitalize'
+    },
     backLink: {
         textAlign: 'center'
     }
@@ -37,7 +40,7 @@ export const ArticlePage: Component<{
         return (
             <Layout ctx={ctx} pageTitle={article.meta.title}>
                 <section class={classes.article}>
-                    <h1>{article.meta.title}</h1>
+                    <h1 class={classes.title}>{article.meta.title}</h1>
                     <div>{article.body}</div>
                     <div class={classes.backLink}>
                         <a href="/">Tilbake</a>

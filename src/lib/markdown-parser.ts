@@ -1,8 +1,11 @@
-import { marked, RendererThis, Tokens } from 'marked';
+import DOMPurify from "isomorphic-dompurify";
+import { marked, MarkedExtension, RendererThis, Tokens } from 'marked';
+import { mangle } from "marked-mangle";
 
 const HEADING_OFFSET = 2;
 
-const extension = {
+const customExtension = (): MarkedExtension => {
+  return {
     useNewRenderer: true,
     renderer: {
       heading(this: RendererThis, token: Tokens.Heading): string {
@@ -11,15 +14,28 @@ const extension = {
         const level = token.depth + HEADING_OFFSET;
         return `<h${level}>${text}</h${level}>`;
       },
-      link(this: RendererThis, token: Tokens.Link): string {        
+      link(this: RendererThis, token: Tokens.Link): string {
         const text = this.parser.parseInline(token.tokens);
         const isExternal = token.href.startsWith('http')
-        const html = `<a ${isExternal ? 'target="_blank"' : ''} href="${token.href}">${text}</a>`       
+        const html = `<a ${isExternal ? 'target="_blank"' : ''} href="${token.href}">${text}</a>`
         return html
       }
     }
-  };
-  
-  marked.use(extension);
+  }
+}
 
-  export default marked.parse
+marked.use(mangle());
+marked.use(customExtension());
+
+export default async (mdStr: string , options = { sanitizeHtml: false }) => {
+  let html = await marked.parse(mdStr)
+
+  if (options.sanitizeHtml) {
+    console.log('Sanitizing rendered markdown')
+    html = DOMPurify.sanitize(html, {
+      ADD_ATTR: ['target']
+    })
+  }
+
+  return html
+}

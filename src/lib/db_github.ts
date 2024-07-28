@@ -2,7 +2,6 @@ import { BunFile } from "bun";
 import { Octokit } from "@octokit/rest";
 import { OctokitResponse } from "@octokit/types";
 import parseFrontMatter from 'parse-md'
-import DOMPurify from "isomorphic-dompurify";
 import slugify from "slugify";
 
 import { Article, Articles } from "../types";
@@ -49,13 +48,13 @@ const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id"
     const { metadata, content } = parseFrontMatter(fileContent)
 
     const html = await parseMarkdown(content)
-    const sanitizedHtml = DOMPurify.sanitize(html, {
-        ADD_ATTR: ['target']
-    })
 
     const parsed = {
-        meta: metadata,
-        body: sanitizedHtml,
+        meta: {
+            weight: 9999,
+            ...metadata as object
+        },
+        body: html,
     }
     return parsed
 }
