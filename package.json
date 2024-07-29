@@ -12,7 +12,6 @@
     "@kitajs/html": "^4.2.0",
     "@kitajs/ts-html-plugin": "^4.0.2",
     "@octokit/rest": "^21.0.1",
-    "@types/dompurify": "^3.0.5",
     "elysia": "^1.0.13",
     "isomorphic-dompurify": "^2.13.0",
     "jss": "^10.10.0",
