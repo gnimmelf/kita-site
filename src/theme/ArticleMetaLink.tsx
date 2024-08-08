@@ -11,7 +11,7 @@ import { createSheet } from './styles'
 const { classes } = createSheet({
     vAlign: {
         display: 'flex',
-        alignItems: 'base-line',        
+        alignItems: 'center',        
     }
 })
 
@@ -21,7 +21,9 @@ const ArticleMetaLink: Component<{
     const isExternal = !!article.meta.link
 
     if (isExternal) {
-        return (<a target="_blank" href={article.meta.link}><span class={classes.vAlign}><span>Gå til</span><span><IconExternalLink /></span></span></a>)
+        return (<a 
+            target="_blank" 
+            href={article.meta.link}><span class={classes.vAlign}><span>Gå til</span><IconExternalLink /></span></a>)
     }
     else {
         return (<a href={`/${article.id}`}>Les mer</a>)

@@ -114,6 +114,8 @@ PORT=<PORT || 3000>
 
 **Development**
 
+Running in dev-mode does not add any cache-headers on responses.
+
 ```bash
 bun run dev
 ```

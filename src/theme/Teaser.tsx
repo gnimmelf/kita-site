@@ -13,7 +13,7 @@ const { classes } = createSheet({
         backgroundColor: 'var(--card-bg)',
         color: 'var(--card-fg)',
         border: '2px solid',
-        borderColor: 'var(--card-accent)',
+        borderColor: 'var(--card-border)',
         borderRadius: '10px',
         padding: '0px 10px 10px',        
         display: 'flex',
