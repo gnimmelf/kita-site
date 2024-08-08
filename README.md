@@ -85,6 +85,10 @@ Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
     - [ ] For articles
 
+        - [ ] Set content-repo as 'public' to be able to use images uploaded through github md-editor
+
+        - [ ] Use another public storage and manually copy the src-url into the github md-editor
+
 - [ ] Maybe some markdown plugins for ekstra bling, or at least maybe support github-flavoured markdown?
 
 
