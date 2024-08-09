@@ -11,11 +11,16 @@ import { MdiGithub, MdiLinkedin } from './Icons'
 const { classes } = createSheet({
     header: {
         backgroundColor: 'var(--header-bg)',
-        color: 'var(--header-fg)',
         borderBottom: '2px solid var(--card-border)',
         textAlign: 'center',
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
+        '& a': {
+            color: 'var(--footer-fg)',
+            '&:hover': {
+                color: 'var(--primary-300)',
+            }
+        },
     },
     content: {
         width: '100%',
@@ -42,10 +47,6 @@ const { classes } = createSheet({
         },
     },
     svg: {
-        color: 'var(--primary-400)',
-        '&:hover': {
-            color: 'var(--primary-300)',
-        },
         '& > *': {
             height: '100px',
             width: 'auto'

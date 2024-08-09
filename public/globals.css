@@ -17,14 +17,14 @@
     --header-fg: var(--primary-500);
     --header-accent: var(--dark);
 
-    --footer-bg: var(--dark);
-    --footer-fg: var(--primary-400);
-    --footer-accent: var(--primary-100);
-
     --card-bg: var(--dark);
     --card-fg: var(--primary-100);
     --card-accent: var(--light);
     --card-border: var(--primary-400);
+
+    --footer-bg: var(--dark);
+    --footer-fg: var(--primary-400);
+    --footer-accent: var(--primary-100);
 
     /* Globals */
     font-size: 120%;
