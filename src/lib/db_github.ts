@@ -181,12 +181,8 @@ class GithubDb {
 
         this.#etag = etag
         this.#lastModified = lastModified
+        this.#articles = files
 
-        this.#articles = files.filter((file: any) => {
-            const show = file.id.startsWith('__') || !file.id.startsWith('--')
-            // console.log(file.id, { show })
-            return show
-        })
         console.log('Articles read from cache')
     }
 
@@ -198,10 +194,15 @@ class GithubDb {
     }
 
     async getArticles() {
-        if (await this.#maybeUpdateCache()) {
+        if (isDev('css') && this.#etag) {
+            // Rely on local cache if it exists
             await this.#readCache()
         }
-        return structuredClone(this.#articles)
+        else if (await this.#maybeUpdateCache()) {
+            await this.#readCache()
+        }
+
+        return structuredClone(this.#articles.filter(({ id }) => !(id.startsWith('__') || id.startsWith('--'))))
     }
 
     async getArticleById(id: string) {
@@ -210,7 +211,7 @@ class GithubDb {
     }
 
     async setup() {
-        await this.#readCache()
+        await this.#readCache()        
         if (await this.#maybeUpdateCache()) {
             // Read it again
             await this.#readCache()

@@ -46,8 +46,8 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
-      if (isDev) { 
-        // No caching
+      if (isDev()) { 
+        // Do not set caching headers
         return 
       }
 
@@ -72,13 +72,12 @@ export const createApp = async ({ port }: AppParams) => {
         return ''
       }
 
-      // Set headers for a non-chached
+      // Set headers for a non-chached response
       ctx.set.headers['etag'] = etag
       ctx.set.headers['last-modified'] = lastModified
     })
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())
-        .filter(({ id }) => !(id as String).startsWith('__'))
 
       return IndexPage({
         ctx,
@@ -86,6 +85,7 @@ export const createApp = async ({ port }: AppParams) => {
       })
     })
     .get('/styles.css', async ({ set: { headers } }) => {
+      // Parse component styles from JSS-registry to a string
       headers['Content-Type'] = 'text/css';
       const cssStr = stylesRegistry.toString()
       return cssStr
@@ -107,7 +107,7 @@ export const createApp = async ({ port }: AppParams) => {
   app.listen(port)
 
   console.log(
-    `🦊 Elysia (${isDev ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
+    `🦊 Elysia (${isDev() ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
   );
   console.log('With features', process.features)
 

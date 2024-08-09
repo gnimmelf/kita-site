@@ -25,7 +25,7 @@ export type CacheControl = {
 // Data types
 
 export type Article = {
-    id: string | number
+    id: string
     body: string,
     meta: Record<{
         title?: string,

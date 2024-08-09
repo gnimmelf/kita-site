@@ -16,9 +16,19 @@ export const datetimeStr = (date: Date, options={}): string => {
     return new Intl.DateTimeFormat('no', options).format(date)
 }
 
-export const isDev = !!(process.env.NODE_ENV || '').startsWith('dev')
+export const isDev = (substring?: string) => {
+  const env = process.env.NODE_ENV
+  let isDev = !!(env || '').startsWith('dev')
 
-export const makeSecretPhrase = () => isDev ? 'Simple and same as always' : crypto.randomUUID()
+  if (isDev && substring) {
+    // Check if we need to match on substring
+    isDev = !!env?.includes(substring)
+  }
+  
+  return isDev
+} 
+
+export const makeSecretPhrase = () => isDev() ? 'Simple and same as always' : crypto.randomUUID()
 
 export const ensureArticle = (id: string, data: Article|undefined): Article => {
   const template = {
