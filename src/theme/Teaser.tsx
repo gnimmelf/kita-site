@@ -14,14 +14,10 @@ const { classes } = createSheet({
         color: 'var(--card-fg)',
         border: '2px solid',
         borderColor: 'var(--card-border)',
-        borderRadius: '10px',
+        borderRadius: 'var(--border-radius)',
         padding: '0px 10px 10px',        
         display: 'flex',
-        flexDirection: 'column',
-        '& a': {
-            color: 'var(--card-accent)',
-            textDecoration: 'none',
-        },     
+        flexDirection: 'column',  
     },
     title: {
         textTransform: 'capitalize'

@@ -8,12 +8,13 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     footer: {
+        fontSize: 'medium',
         textAlign: 'center',
         backgroundColor: 'var(--footer-bg)',
         color: 'var(--footer-fg)',
         overflow: 'auto',
         marginTop: '1rem',
-        paddingTop: '1rem',
+        padding: '1rem',
         '& a': {
             color: 'var(--footer-accent)',
         }

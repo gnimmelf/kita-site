@@ -4,7 +4,7 @@
   "scripts": {
     "dev:css": "NODE_ENV=dev_css bun --watch src/index.ts",
     "dev": "NODE_ENV=dev bun --watch src/index.ts",
-    "start": "NODE_ENV=production bun src/index.ts",    
+    "start": "NODE_ENV=production bun src/index.ts",
     "test": "bun test"
   },
   "dependencies": {
@@ -14,7 +14,6 @@
     "@kitajs/ts-html-plugin": "^4.0.2",
     "@octokit/rest": "^21.0.1",
     "elysia": "^1.0.13",
-    "isomorphic-dompurify": "^2.13.0",
     "jss": "^10.10.0",
     "jss-plugin-extend": "^10.10.0",
     "jss-plugin-global": "^10.10.0",
@@ -27,7 +26,7 @@
   },
   "devDependencies": {
     "bun-types": "latest"
-  },  
+  },
   "overrides": {
     "@kitajs/html": "4.1.0",
     "@polka/url": "1.0.0-next.20"

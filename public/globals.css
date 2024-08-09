@@ -1,8 +1,8 @@
 @layer base {
   :root {
     /* Default theme */    
-    --text-dark: rgb(29, 29, 29);
-    --text-light: rgb(240, 240, 240);
+    --dark: rgb(54, 52, 82);
+    --light: rgb(240, 240, 240);
     --primary-100: hsla(6, 72%, 89%, 1);
     --primary-200: hsla(347, 45%, 84%, 1);
     --primary-300: hsla(326, 25%, 76%, 1);
@@ -10,26 +10,27 @@
     --primary-500: hsla(289, 13%, 42%, 1);
 
     --body-bg: var(--primary-500);
-    --body-fg: var(--text-dark);
+    --body-fg: var(--dark);
     --body-accent: var(--primary-300);
 
-    --header-bg: var(--primary-400);
-    --header-fg: var(--text-dark);
-    --header-accent: var(--primary-500);
+    --header-bg: var(--dark);
+    --header-fg: var(--primary-500);
+    --header-accent: var(--dark);
 
-    --footer-bg: var(--primary-200);
-    --footer-fg: var(--text-dark);
-    --footer-accent: var(--primary-500);
+    --footer-bg: var(--dark);
+    --footer-fg: var(--primary-400);
+    --footer-accent: var(--primary-100);
 
-    --card-bg: var(--primary-300);
-    --card-fg: var(--text-dark);
-    --card-accent: var(--primary-500);
-    --card-border: var(--primary-200);
+    --card-bg: var(--dark);
+    --card-fg: var(--primary-100);
+    --card-accent: var(--light);
+    --card-border: var(--primary-400);
 
     /* Globals */
     font-size: 120%;
     box-sizing: border-box;
     --content-width: 760px;
+    --border-radius: 4px;
     img {
       max-width: 100%;
     }
@@ -45,7 +46,7 @@
   body.light {
     /* Light theme */
     --bg: var(--primary-100);
-    --fg: var(--text-dark);
+    --fg: var(--dark);
 
     --accent: var(var(--primary-300))
     /* ...etc, etc */

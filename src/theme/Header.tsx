@@ -5,7 +5,8 @@ import {
 } from '../types'
 
 import { createSheet } from './styles'
-import { Show } from '../lib/components'
+import { Show, Svg } from '../lib/components'
+import { MdiGithub, MdiLinkedin } from './Icons'
 
 const { classes } = createSheet({
     header: {
@@ -17,36 +18,74 @@ const { classes } = createSheet({
         overflow: 'auto',
     },
     content: {
+        width: '100%',
         maxWidth: 'var(--content-width)',
         margin: '0 auto 1rem'
     },
     title: {
-        '& a': {
-            color: 'var(--header-fg)',
+        '& > h1, h2': {
+            margin: '1rem',
         },
-        '& > h1': {
-            margin: '1rem'
+    },
+    introWrapper: {
+        margin: '1rem 10px'
+    },
+    intro: {
+        color: 'var(--card-fg)',
+        backgroundColor: 'var(--card-bg)',
+        border: '2px solid',
+        borderColor: 'var(--card-border)',
+        borderRadius: 'var(--border-radius)',
+        textAlign: 'center',
+        '& h1': {
+            margin: '1rem',
+        },
+    },
+    svg: {
+        color: 'var(--primary-400)',
+        '&:hover': {
+            color: 'var(--primary-300)',
+        },
+        '& > *': {
+            height: '100px',
+            width: 'auto'
         }
     }
 })
 
-const IntroBody: Component<{
+const Intro: Component<{
     article: Article
+    isIndexPage: boolean
 }> = ({
-    article
+    article,
+    isIndexPage
 }) => {
         return (
-            <section class={classes.intro}>
+            <section class={classes.introWrapper}>
                 <div class={classes.content}>
-                    <div class={classes.body}>{article.body}</div>
+                    <div class={classes.intro}>
+                        <Show when={isIndexPage}>
+                            {/* When `isIndexPage` intro, the page-titles are `h2` */}
+                            <h1>{article.meta.title}</h1>
+                        </Show>
+                        <Show when={!isIndexPage}>
+                            {/* When not `isIndexPage`, the page-title is the `h1` */}
+                            <h2>{article.meta.title}</h2>
+                        </Show>
+                        <div class={classes.body}>{article.meta.intro}</div>
+                        <div class={classes.body}>{article.body}</div>
+
+                    </div>
                 </div>
             </section>
-
         )
     }
 
+
+
+
 const Header: Component<{
-    isIndexPage: Boolean
+    isIndexPage: boolean
 }> = ({
     isIndexPage,
     ctx,
@@ -57,19 +96,16 @@ const Header: Component<{
                 <section class={classes.header}>
                     <div class={classes.content}>
                         <div class={classes.title}>
-                            <Show when={isIndexPage}>
-                                {/* When `isIndexPage` intro, the page-titles are `h2` */}
-                                <h1><a href="/">{header.meta.title}</a></h1>
-                            </Show>
-                            <Show when={!isIndexPage}>
-                                {/* When not `isIndexPage`, the page-title is the `h1` */}
-                                <h2><a href="/">{header.meta.title}</a></h2>
-                            </Show>
+                            <a class={classes.svg} href="/"><Svg path="./public/logo.svg" /></a>
+                            <a target="_blank" href={header.meta.social.linkedin}><MdiLinkedin /></a>
+                            <a target="_blank" href={header.meta.social.github}><MdiGithub /></a>
                         </div>
-                        <div class={classes.intro}>{header.meta.intro}</div>
                     </div>
-                    {isIndexPage ? <IntroBody article={header} /> : null}
                 </section>
+
+                <Show when={isIndexPage}>
+                    <Intro article={header} isIndexPage={isIndexPage} />
+                </Show>
             </>
         )
     }

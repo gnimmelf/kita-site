@@ -17,7 +17,7 @@ const { classes } = createSheet({
         color: 'var(--card-fg)',
         border: '2px solid',
         borderColor: 'var(--card-accent)',
-        borderRadius: '10px',     
+        borderRadius: 'var(--border-radius)',    
         '& a': {
             color: 'var(--card-accent)',
         },
@@ -43,7 +43,7 @@ export const ArticlePage: Component<{
                     <h1 class={classes.title}>{article.meta.title}</h1>
                     <div>{article.body}</div>
                     <div class={classes.backLink}>
-                        <a href="/">Tilbake</a>
+                        <a href="/">Back</a>
                     </div>
                 </section>
             </Layout>

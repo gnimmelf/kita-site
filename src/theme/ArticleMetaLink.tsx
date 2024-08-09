@@ -4,11 +4,17 @@ import {
     Article,
 } from '../types'
 
-import { IconExternalLink } from './Icons'
+import { MdiExternalLink } from './Icons'
 
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
+    link: {
+        color: 'var(--light)',
+        '&:hover': {
+            color: 'white'
+        }
+    },
     vAlign: {
         display: 'flex',
         alignItems: 'center',        
@@ -22,11 +28,12 @@ const ArticleMetaLink: Component<{
 
     if (isExternal) {
         return (<a 
+            class={classes.link}
             target="_blank" 
-            href={article.meta.link}><span class={classes.vAlign}><span>Gå til</span><IconExternalLink /></span></a>)
+            href={article.meta.link}><span class={classes.vAlign}><span>Open</span><MdiExternalLink /></span></a>)
     }
     else {
-        return (<a href={`/${article.id}`}>Les mer</a>)
+        return (<a class={classes.link} href={`/${article.id}`}>Read more</a>)
     }
 }
 
