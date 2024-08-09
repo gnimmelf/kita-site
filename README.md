@@ -37,7 +37,7 @@ Files are parsed to `articles`:
 
 - `id`'ed by their filename (minus extension, slugified), 
 - `meta` is `front-matter` by `parse-md`
-- `body` is html parsed by `marked` (no plugins) and `dompurify`.
+- `body` is html parsed by `marked` (no plugins).
 
 ### Repo content files
 

@@ -5,12 +5,10 @@ After=network.target
 
 [Service]
 Type=simple
-User=<YOUR_USER>
-# Env vars, overridden by `.env` file (one var per line?)
-Environment="PORT=<PORT>"
+User=<SYSTEM-USER_ID>
 WorkingDirectory=<DIR_CONTAINING_PACKAGE-JSON>
 # WorkingDirectory is cwd for `bun run`
-ExecStart=/home/<YOUR_USER>/.bun/bin/bun run src/index.ts
+ExecStart=/home/<SYSTEM-USER_NAME>/.bun/bin/bun run src/index.ts
 Restart=always
 
 [Install]
