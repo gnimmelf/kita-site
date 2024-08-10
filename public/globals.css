@@ -31,9 +31,6 @@
     box-sizing: border-box;
     --content-width: 760px;
     --border-radius: 4px;
-    img {
-      max-width: 100%;
-    }
 
     /* Font-family */
     font-family: "Noto Sans", sans-serif;
@@ -41,6 +38,10 @@
     font-weight: 400;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   body.light {

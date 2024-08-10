@@ -52,14 +52,47 @@ Files are parsed to `articles`:
 ```yaml
 ---
 title: <TITLE>
-intro: <INTRO TEXT>
-weight: <INTEGER>
+intro: <INTRO_TEXT>
+weight?: <INTEGER>
+link?: <URL>
 ---
 
 <MD CONTENT>
 ```
 
-Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
+- If link is present, no body is needed
+
+-  Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
+
+#### Specials
+
+* `__header.md`
+
+    ```yaml
+    ---
+    title: <SITE_TITLE>
+    intro: <INTRO_TEXT>
+    social?: 
+        github: <URL>
+        linkedin: <URL>
+    ---
+
+    <MD CONTENT>
+    ```
+
+    Tailor this to suit your theme templates
+
+
+* `__footer.md`
+
+    ```yaml
+    ---
+    title: <TITLE>
+    intro: <INTRO_TEXT>
+    ---
+
+    <MD CONTENT>
+    ```
 
 ### Still missing
 
