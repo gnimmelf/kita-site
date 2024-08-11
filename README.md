@@ -114,13 +114,13 @@ link?: <URL>
 
     - [X] For theme
 
-        - Since staticPlugin works with overrides, just use the `public` folder
+        - Use the `public` folder
 
-    - [ ] For articles
+    - [X] For articles
 
-        - [ ] Set content-repo as 'public' to be able to use images uploaded through github md-editor
+        - [X] Set content-repo as 'public' to be able to use images uploaded through github md-editor
 
-        - [ ] Use another public storage and manually copy the src-url into the github md-editor
+        - [X] Use another public storage and manually copy the src-url into the github md-editor
 
 - [ ] Maybe some markdown plugins for ekstra bling, or at least maybe support github-flavoured markdown?
 
@@ -136,7 +136,7 @@ link?: <URL>
     ```
 
 
-## Run
+### Run
 
 **env vars**
 
@@ -147,15 +147,24 @@ DB_PASS=<GITHUB-PAT_FINE-GRAINED_REPO-CONTENTS-READ>
 PORT=<PORT || 3000>
 ```
 
-
-
 **Development**
 
-Running in dev-mode does not add any cache-headers on responses.
+- Plain dev: No cach-headers on responses.
 
-```bash
-bun run dev
-```
+    ```bash
+    bun run dev
+    ```
+
+    Use when developing the app.
+
+- Theme dev: Always prefer local cache file.
+
+    ```bash
+    bun run dev:css
+    ```
+
+    Use for theming.
+
 
 Open http://localhost:3000/ with your browser to see the result.
 

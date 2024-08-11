@@ -31,13 +31,15 @@ const { classes } = createSheet({
 const Footer: Component<{}> = ({
     ctx
 }) => {
-    const { footer } = ctx.site
+    const { footer, header } = ctx.site
+    const year = new Date().getFullYear()
     return (
         <section class={classes.footer}>
             <div class={classes.content}>
                 <h3>{footer.meta.title}</h3>
                 <div>{footer.meta.intro}</div>
                 <div>{footer.body}</div>
+                <small>© {year} {footer.meta.copyright}</small>
             </div>
         </section>
     )
