@@ -16,7 +16,7 @@ const { classes } = createSheet({
         backgroundColor: 'var(--card-bg)',
         color: 'var(--card-fg)',
         border: '2px solid',
-        borderColor: 'var(--card-accent)',
+        borderColor: 'var(--card-border)',
         borderRadius: 'var(--border-radius)',    
         '& a': {
             color: 'var(--card-accent)',

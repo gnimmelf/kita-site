@@ -34,8 +34,12 @@ export const IndexPage: Component<{
     articles
 }) => {
     articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight)
+    const headTags = [
+        '<script src="//unpkg.com/@alpinejs/collapse"></script>',
+        '<script src="//unpkg.com/alpinejs" defer></script>'
+    ]
         return (
-            <Layout ctx={ctx} isIndexPage={true} endTags={['<script src="//unpkg.com/alpinejs" defer></script>']}>                
+            <Layout ctx={ctx} isIndexPage={true} headTags={headTags}>                
                 <div class={classes.grid}>
                     {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
                 </div>                

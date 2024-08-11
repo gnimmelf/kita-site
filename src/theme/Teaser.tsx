@@ -4,7 +4,7 @@ import {
     Article,
 } from '../types'
 
-import Link from './ArticleMetaLink'
+import Link from './TeaserMetaLink'
 
 import { createSheet } from './styles'
 

@@ -10,10 +10,7 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     link: {
-        color: 'var(--light)',
-        '&:hover': {
-            color: 'white'
-        }
+        color: 'var(--card-accent)',
     },
     vAlign: {
         display: 'flex',
@@ -21,7 +18,7 @@ const { classes } = createSheet({
     }
 })
 
-const ArticleMetaLink: Component<{
+const TeaserMetaLink: Component<{
     article: Article
 }> = ({ article }) => {
     const isExternal = !!article.meta.link
@@ -37,4 +34,4 @@ const ArticleMetaLink: Component<{
     }
 }
 
-export default ArticleMetaLink
+export default TeaserMetaLink

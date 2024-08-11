@@ -1,37 +1,14 @@
 import Html from '@kitajs/html'
-import * as cheerio from 'cheerio';
 
 import {
     Component,
-    Article,
 } from '../types'
 
 import { createSheet } from './styles'
 import { Show, Svg } from '../lib/components'
 import { MdiGithub, MdiLinkedin } from './Icons'
 
-const parseBody = (body: string) => {
-    const $ = cheerio.load(body, {}, false);   
-
-    $('h2').each((_idx, el) => {
-        const $headWrapper = $('<div>')
-        const $contentWrapper = $('<div>')
-        
-        const $head = $(el)
-        const $content = $head.nextUntil('h2') 
-
-        $head.wrap($headWrapper)                
-        $head.after($contentWrapper)  
-        $contentWrapper.append($content)
-
-        $headWrapper.attr('x-data', '{ expanded: false }')
-        $head.attr('@click', 'expanded = ! expanded')
-        $contentWrapper.attr('x-show', 'expanded').prop('x-collapse')
-    })
-    
-    return $.html()
-}
-
+import About from './About'
 
 const { classes } = createSheet({
     header: {
@@ -43,7 +20,7 @@ const { classes } = createSheet({
         '& a': {
             color: 'var(--footer-fg)',
             '&:hover': {
-                color: 'var(--primary-300)',
+                color: 'var(--header-accent)',
             }
         },
     },
@@ -52,13 +29,16 @@ const { classes } = createSheet({
         maxWidth: 'var(--content-width)',
         margin: '0 auto 1rem'
     },
+    section: {
+        margin: '1rem 10px'
+    },
     title: {
         '& > h1, h2': {
             margin: '1rem',
         },
     },
-    section: {
-        margin: '1rem 10px'
+    intro: {
+        marginBottom: '1rem'
     },
     box: {
         color: 'var(--card-fg)',
@@ -76,29 +56,8 @@ const { classes } = createSheet({
             height: '100px',
             width: 'auto'
         }
-    },
-    intro: {},
-    body: {
-        padding: '0 10px'
-        // TODO! Accordion for headers
-    },
-
-})
-
-const About: Component<{
-    article: Article
-}> = ({
-    article,
-}) => {        
-        return (
-            <>
-                {parseBody(article.body)}
-            </>
-        )
     }
-
-
-
+})
 
 const Header: Component<{
     isIndexPage: boolean
@@ -132,7 +91,7 @@ const Header: Component<{
                                     <h2>{header.meta.title}</h2>
                                 </Show>
                                 <div class={classes.intro}>{header.meta.intro}</div>
-                                <About article={ header} />
+                                <About article={header} />
                             </div>
                         </div>
                     </section>

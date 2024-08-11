@@ -22,6 +22,7 @@ h2 {
     /* Default theme */
     --dark: rgb(54, 52, 82);
     --light: rgb(240, 240, 240);
+    --accent: #ffb8f3;
     --primary-100: hsla(6, 72%, 89%, 1);
     --primary-200: hsla(347, 45%, 84%, 1);
     --primary-300: hsla(326, 25%, 76%, 1);
@@ -30,15 +31,15 @@ h2 {
 
     --body-bg: var(--primary-500);
     --body-fg: var(--dark);
-    --body-accent: var(--primary-300);
+    --body-accent: var(--accent);
 
     --header-bg: var(--dark);
     --header-fg: var(--primary-500);
-    --header-accent: var(--dark);
+    --header-accent: var(--primary-100);
 
     --card-bg: var(--dark);
     --card-fg: var(--primary-100);
-    --card-accent: var(--light);
+    --card-accent: var(--accent);
     --card-border: var(--primary-400);
 
     --footer-bg: var(--dark);
@@ -54,14 +55,5 @@ h2 {
 
   img {
     max-width: 100%;
-  }
-
-  body.light {
-    /* Light theme */
-    --bg: var(--primary-100);
-    --fg: var(--dark);
-
-    --accent: var(var(--primary-300))
-      /* ...etc, etc */
   }
 }
