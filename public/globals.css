@@ -1,6 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+h1,
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @layer base {
   :root {
-    /* Default theme */    
+    /* Default theme */
     --dark: rgb(54, 52, 82);
     --light: rgb(240, 240, 240);
     --primary-100: hsla(6, 72%, 89%, 1);
@@ -31,13 +50,6 @@
     box-sizing: border-box;
     --content-width: 760px;
     --border-radius: 4px;
-
-    /* Font-family */
-    font-family: "Noto Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
   }
 
   img {
@@ -50,6 +62,6 @@
     --fg: var(--dark);
 
     --accent: var(var(--primary-300))
-    /* ...etc, etc */
+      /* ...etc, etc */
   }
 }
