@@ -35,7 +35,7 @@ export const IndexPage: Component<{
 }) => {
     articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight)
         return (
-            <Layout ctx={ctx} isIndexPage={true}>                
+            <Layout ctx={ctx} isIndexPage={true} endTags={['<script src="//unpkg.com/alpinejs" defer></script>']}>                
                 <div class={classes.grid}>
                     {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
                 </div>                

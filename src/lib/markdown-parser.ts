@@ -2,7 +2,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { marked, MarkedExtension, RendererThis, Tokens } from 'marked';
 import { mangle } from "marked-mangle";
 
-const HEADING_OFFSET = 2;
+const HEADING_OFFSET = 1;
 
 const customExtension = (): MarkedExtension => {
   return {

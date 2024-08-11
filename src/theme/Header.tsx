@@ -1,4 +1,6 @@
 import Html from '@kitajs/html'
+import * as cheerio from 'cheerio';
+
 import {
     Component,
     Article,
@@ -7,6 +9,29 @@ import {
 import { createSheet } from './styles'
 import { Show, Svg } from '../lib/components'
 import { MdiGithub, MdiLinkedin } from './Icons'
+
+const parseBody = (body: string) => {
+    const $ = cheerio.load(body, {}, false);   
+
+    $('h2').each((_idx, el) => {
+        const $headWrapper = $('<div>')
+        const $contentWrapper = $('<div>')
+        
+        const $head = $(el)
+        const $content = $head.nextUntil('h2') 
+
+        $head.wrap($headWrapper)                
+        $head.after($contentWrapper)  
+        $contentWrapper.append($content)
+
+        $headWrapper.attr('x-data', '{ expanded: false }')
+        $head.attr('@click', 'expanded = ! expanded')
+        $contentWrapper.attr('x-show', 'expanded').prop('x-collapse')
+    })
+    
+    return $.html()
+}
+
 
 const { classes } = createSheet({
     header: {
@@ -32,10 +57,10 @@ const { classes } = createSheet({
             margin: '1rem',
         },
     },
-    introWrapper: {
+    section: {
         margin: '1rem 10px'
     },
-    intro: {
+    box: {
         color: 'var(--card-fg)',
         backgroundColor: 'var(--card-bg)',
         border: '2px solid',
@@ -51,34 +76,24 @@ const { classes } = createSheet({
             height: '100px',
             width: 'auto'
         }
-    }
+    },
+    intro: {},
+    body: {
+        padding: '0 10px'
+        // TODO! Accordion for headers
+    },
+
 })
 
-const Intro: Component<{
+const About: Component<{
     article: Article
-    isIndexPage: boolean
 }> = ({
     article,
-    isIndexPage
-}) => {
+}) => {        
         return (
-            <section class={classes.introWrapper}>
-                <div class={classes.content}>
-                    <div class={classes.intro}>
-                        <Show when={isIndexPage}>
-                            {/* When `isIndexPage` intro, the page-titles are `h2` */}
-                            <h1>{article.meta.title}</h1>
-                        </Show>
-                        <Show when={!isIndexPage}>
-                            {/* When not `isIndexPage`, the page-title is the `h1` */}
-                            <h2>{article.meta.title}</h2>
-                        </Show>
-                        <div class={classes.body}>{article.meta.intro}</div>
-                        <div class={classes.body}>{article.body}</div>
-
-                    </div>
-                </div>
-            </section>
+            <>
+                {parseBody(article.body)}
+            </>
         )
     }
 
@@ -105,7 +120,22 @@ const Header: Component<{
                 </section>
 
                 <Show when={isIndexPage}>
-                    <Intro article={header} isIndexPage={isIndexPage} />
+                    <section class={classes.section}>
+                        <div class={classes.content}>
+                            <div class={classes.box}>
+                                <Show when={isIndexPage}>
+                                    {/* When `isIndexPage` intro, the page-titles are `h2` */}
+                                    <h1>{header.meta.title}</h1>
+                                </Show>
+                                <Show when={!isIndexPage}>
+                                    {/* When not `isIndexPage`, the page-title is the `h1` */}
+                                    <h2>{header.meta.title}</h2>
+                                </Show>
+                                <div class={classes.intro}>{header.meta.intro}</div>
+                                <About article={ header} />
+                            </div>
+                        </div>
+                    </section>
                 </Show>
             </>
         )
