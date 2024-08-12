@@ -8,12 +8,14 @@ import {
 
 import { createSheet } from './styles'
 
+// Head Tag for accordion
 const HTAG = 'h2'
 
 const { classes } = createSheet({
     accordion: {
         cursor: 'pointer', 
         [`& > ${HTAG}`]: {
+            /* Format head tag*/
             fontSize: '105%',
             padding: '5px',
             margin: '5px 0px',
@@ -25,15 +27,20 @@ const { classes } = createSheet({
     }
 })
 
+/**
+ * Restructures body markup to incorporate AlpineJs accordion
+ * @param body string
+ * @returns string
+ */
 const parseBody = (body: string) => {
     const $ = cheerio.load(body, {}, false);
 
-    $('h2').each((_idx, el) => {
+    $(HTAG).each((_idx, el) => {
         const $headWrapper = $('<div>')
         const $contentWrapper = $('<div>')
 
         const $head = $(el)
-        const $content = $head.nextUntil('h2')
+        const $content = $head.nextUntil(HTAG)
 
         $head.wrap($headWrapper)
         $head.after($contentWrapper)
