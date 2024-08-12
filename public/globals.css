@@ -14,10 +14,11 @@ body * {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
 }
 

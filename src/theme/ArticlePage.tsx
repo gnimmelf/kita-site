@@ -14,7 +14,7 @@ const { classes } = createSheet({
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
         backgroundColor: 'var(--card-bg)',
-        color: 'var(--card-fg)',
+        color: 'var(--light)',
         border: '2px solid',
         borderColor: 'var(--card-border)',
         borderRadius: 'var(--border-radius)',
