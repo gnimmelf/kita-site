@@ -9,12 +9,20 @@ body {
   font-variation-settings: "wdth" 100;
 }
 
+body * {
+  box-sizing: border-box;
+}
+
 h1,
 h2 {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+img {
+  max-width: 100%;
 }
 
 @layer base {
@@ -47,13 +55,7 @@ h2 {
     --footer-accent: var(--primary-100);
 
     /* Globals */
-    font-size: 120%;
-    box-sizing: border-box;
     --content-width: 760px;
     --border-radius: 4px;
-  }
-
-  img {
-    max-width: 100%;
-  }
+  }  
 }
