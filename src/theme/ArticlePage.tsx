@@ -32,7 +32,7 @@ const { classes } = createSheet({
         },
         '& > pre': {
             padding: '5px',
-            overflowX: 'scroll',
+            overflowX: 'auto',
         }
     },
     backLink: {
