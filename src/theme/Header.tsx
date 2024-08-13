@@ -13,8 +13,6 @@ import About from './About'
 const { classes } = createSheet({
     header: {
         backgroundColor: 'var(--header-bg)',
-        borderBottom: '2px solid var(--card-border)',
-        textAlign: 'center',
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
         '& a': {
@@ -33,6 +31,8 @@ const { classes } = createSheet({
         margin: '1rem 10px'
     },
     title: {
+        display: 'flex',     
+        justifyContent: 'center',
         '& > h1, h2': {
             margin: '1rem',
         },
@@ -56,6 +56,12 @@ const { classes } = createSheet({
             height: '100px',
             width: 'auto'
         }
+    },
+    social: {
+        fontSize: '30px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
     }
 })
 
@@ -72,8 +78,10 @@ const Header: Component<{
                     <div class={classes.content}>
                         <div class={classes.title}>
                             <a class={classes.svg} href="/"><Svg path="./public/logo.svg" /></a>
-                            <a target="_blank" href={header.meta.social.linkedin}><MdiLinkedin /></a>
-                            <a target="_blank" href={header.meta.social.github}><MdiGithub /></a>
+                            <div class={classes.social}>
+                                <a target="_blank" href={header.meta.social.github}><MdiGithub /></a>
+                                <a target="_blank" href={header.meta.social.linkedin}><MdiLinkedin /></a>
+                            </div>
                         </div>
                     </div>
                 </section>
