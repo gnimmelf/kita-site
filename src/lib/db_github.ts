@@ -40,9 +40,9 @@ const getHeaders = (extra: Record<string, string> = {}) => {
     return headers
 }
 
-const parseId = (filename: string): string => {  
+const parseId = (filename: string): string => {
     const id = slugify(filename.replace(/\.[^/.]+$/, "")).toLocaleLowerCase()
-    return filename.startsWith('--') 
+    return filename.startsWith('--')
         // If filename starts with two dashes, keep them, it means "not published"
         ? `--${id}`
         : id
@@ -74,9 +74,6 @@ class GithubDb {
 
     constructor() {
         this.#env = getDotEnvParams();
-        this.#octokit = new Octokit({
-            auth: this.#env.authToken
-        })
         this.#dbFile = Bun.file(DB_FILE_NAME, { type: "application/json" })
     }
 
@@ -138,9 +135,17 @@ class GithubDb {
 
     async #maybeUpdateCache(): Promise<Boolean> {
 
+        if (!this.#octokit) {
+            this.#octokit = new Octokit({
+                auth: this.#env.authToken
+            })
+        }
+
+        console.log('Cheking for updates...')
+
         const githubTree = await this.#fecthUpdatedTree()
         if (!githubTree) {
-            // Noting to do
+            console.log('No updates!')
             return false
         }
 
@@ -161,10 +166,13 @@ class GithubDb {
             etag: this.#etag,
             files: files
         }
+        
         await Bun.write(this.#dbFile, JSON.stringify(db, null, 2))
+
+        console.log('Cache updated!')
+
         return true
     }
-
 
     async #readCache() {
         let result: any
@@ -174,7 +182,7 @@ class GithubDb {
         } catch (error) {
             this.#etag = ''
             this.#lastModified = ''
-            return
+            return false
         }
 
         const { etag, lastModified, files } = result
@@ -184,6 +192,22 @@ class GithubDb {
         this.#articles = files
 
         console.log('Articles read from cache')
+
+        return true
+    }
+
+    async #setArticles() {
+        let isCached = await this.#readCache()
+        
+        if (isDev('css') && isCached) {
+            // Cache is read succesfully, and we're not gonna update it
+            return
+        }
+
+        if (await this.#maybeUpdateCache()) {
+            // Cache is was updated, and we have to re-read it
+            await this.#readCache()
+        }
     }
 
     async getCacheControl() {
@@ -194,28 +218,18 @@ class GithubDb {
     }
 
     async getArticles() {
-        if (isDev('css') && this.#etag) {
-            // Rely on local cache if it exists
-            await this.#readCache()
-        }
-        else if (await this.#maybeUpdateCache()) {
-            await this.#readCache()
-        }
-
+        this.#setArticles()
         return structuredClone(this.#articles.filter(({ id }) => !(id.startsWith('__') || id.startsWith('--'))))
     }
 
     async getArticleById(id: string) {
+        this.#setArticles()
         const article = this.#articles.find((article: Article) => article.id === id)
         return structuredClone(article)
     }
 
     async setup() {
-        await this.#readCache()        
-        if (await this.#maybeUpdateCache()) {
-            // Read it again
-            await this.#readCache()
-        }
+        this.#setArticles()
     }
 }
 
