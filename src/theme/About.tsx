@@ -13,22 +13,30 @@ const HTAG = 'h2'
 
 const { classes } = createSheet({
     accordion: {
-        cursor: 'pointer', 
+        cursor: 'pointer',
+        borderTop: '2px solid var(--card-border)',
         [`& > ${HTAG}`]: {
             /* Format head tag*/
             fontSize: '105%',
-            padding: '5px',
-            margin: '5px 0px',
-            borderTop: '2px solid var(--card-border)',
-        }
+            padding: '10px',
+            margin: '0px 0px'
+        },
+        '& .state-icon': {
+            transformOrigin: '0px 8px',
+            '&.opened': {
+                transform: 'rotateX(180deg)'
+            },
+        },
+        '& .content': {
+            padding: '2px 10px',
+        },
     },
-    content: {
-        padding: '2px 10px',        
-    }
+
+
 })
 
 /**
- * Restructures body markup to incorporate AlpineJs accordion
+ * Restructure body markup to incorporate AlpineJs accordion
  * @param body string
  * @returns string
  */
@@ -36,24 +44,30 @@ const parseBody = (body: string) => {
     const $ = cheerio.load(body, {}, false);
 
     $(HTAG).each((_idx, el) => {
-        const $headWrapper = $('<div>')
-        const $contentWrapper = $('<div>')
+        const $accoridion = $(`<div class="${classes.accordion}">`)
+        const $stateIcon = $('<div class="state-icon">﹀</div>')
+        const $contentWrapper = $('<div class="content">')
 
         const $head = $(el)
         const $content = $head.nextUntil(HTAG)
 
-        $head.wrap($headWrapper)
+        $head.wrap($accoridion)
         $head.after($contentWrapper)
+        $head.after($stateIcon)
         $contentWrapper.append($content)
 
-        $headWrapper
+        $accoridion
             .attr('x-data', '{ expanded: false }')
-            .addClass(classes.accordion)
+
         $head
             .attr('@click', 'expanded = ! expanded')
+
+        $stateIcon
+            .attr('@click', 'expanded = ! expanded')
+            .attr(':class', "expanded ? 'opened' : 'closed'")
+            
         $contentWrapper
             .attr('x-show', 'expanded')
-            .addClass(classes.content)
             .attr('x-collapse.duration.200ms', '')
     })
 
