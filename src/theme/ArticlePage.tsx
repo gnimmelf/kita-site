@@ -27,8 +27,11 @@ const { classes } = createSheet({
         fontSize: '1.7rem'
     },
     body: {
+        '& > h3': {
+            borderBottom: '1px solid'
+        },
         '& > p': {
-            fontSize: '1rem'            
+            fontSize: '1rem'
         },
         '& > pre': {
             padding: '5px',
