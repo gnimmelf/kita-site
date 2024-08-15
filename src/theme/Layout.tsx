@@ -8,13 +8,7 @@ import Footer from './Footer'
 
 import { createSheet } from './styles'
 
-const { classes } = createSheet({
-    '@global': {
-        a: {
-            color: 'var(--body-accent)',
-            textDecoration: 'none'
-        },
-    },
+const { classes } = createSheet({    
     body: {
         backgroundColor: 'var(--body-bg)',
         color: 'var(--body-fg)',
@@ -28,7 +22,8 @@ const { classes } = createSheet({
     main: {
         flexGrow: '1',
         margin: '1rem 0px',
-        padding: '10px'
+        padding: '10px',
+        filter: 'var(--drop-shadow-filter)',
     }
 })
 
@@ -63,7 +58,7 @@ const Layout: Component<{
                         <Header
                             ctx={ctx}
                             isIndexPage={isIndexPage}
-                        />
+                        />                        
                         <main class={classes.main}>{children}</main>
                         <Footer ctx={ctx} />
                         {endTags.join('\n')}

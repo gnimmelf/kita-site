@@ -14,7 +14,7 @@ const HTAG = 'h2'
 const { classes } = createSheet({
     accordion: {
         cursor: 'pointer',
-        borderTop: '2px solid var(--card-border)',
+        borderTop: 'var(--border-style)',
         [`& > ${HTAG}`]: {
             /* Format head tag*/
             fontSize: '105%',

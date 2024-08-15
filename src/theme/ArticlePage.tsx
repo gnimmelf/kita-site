@@ -10,21 +10,24 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     article: {
-        padding: '10px 15px',
+        '& > *': {
+            padding: '0px 15px',
+        },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
         backgroundColor: 'var(--card-bg)',
         color: 'var(--light)',
-        border: '2px solid',
-        borderColor: 'var(--card-border)',
-        borderRadius: 'var(--border-radius)',
-        '& a': {
-            color: 'var(--card-accent)',
-        }
+        border: 'var(--border-style)',
+        borderRadius: 'var(--border-radius)'        
     },
-    title: {
+    title: {        
+        padding: '20px 0px',
+        margin: '0px',
+        borderBottom: 'var(--border-style)',
+        textAlign: 'center',
         textTransform: 'capitalize',
-        fontSize: '1.7rem'
+        fontSize: '1.7rem',
+
     },
     body: {
         '& > h3': {
@@ -39,6 +42,8 @@ const { classes } = createSheet({
         }
     },
     backLink: {
+        padding: '20px 0px',
+        borderTop: 'var(--border-style)',
         textAlign: 'center'
     }
 })

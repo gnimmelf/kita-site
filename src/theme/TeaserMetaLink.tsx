@@ -9,9 +9,6 @@ import { MdiExternalLink } from './Icons'
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
-    link: {
-        color: 'var(--card-accent)',
-    },
     vAlign: {
         display: 'flex',
         alignItems: 'center',        
@@ -25,12 +22,11 @@ const TeaserMetaLink: Component<{
 
     if (isExternal) {
         return (<a 
-            class={classes.link}
             target="_blank" 
             href={article.meta.link}><span class={classes.vAlign}><span>Open</span><MdiExternalLink /></span></a>)
     }
     else {
-        return (<a class={classes.link} href={`/${article.id}`}>Read more</a>)
+        return (<a href={`/${article.id}`}>Read more</a>)
     }
 }
 

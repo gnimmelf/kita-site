@@ -5,7 +5,7 @@ import {
 } from '../types'
 
 import { createSheet } from './styles'
-import { Show, Svg } from '../lib/components'
+import { Show, SvgFile } from '../lib/components'
 import { MdiGithub, MdiLinkedin } from './Icons'
 
 import About from './About'
@@ -15,53 +15,63 @@ const { classes } = createSheet({
         backgroundColor: 'var(--header-bg)',
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
-        '& a': {
-            color: 'var(--footer-fg)',
-            '&:hover': {
-                color: 'var(--header-accent)',
-            }
-        },
+    },
+    dropShadow: {
+        filter: 'var(--drop-shadow-filter)',
     },
     content: {
         width: '100%',
         maxWidth: 'var(--content-width)',
         margin: '0 auto 1rem'
     },
-    section: {
-        margin: '1rem 10px'
+    intro: {
+        margin: '1rem 10px',        
+        '& a': {
+            color: 'var(--header-fg)',
+            '&:hover': {
+                color: 'var(--header-accent)',
+            }
+        },
+        '& .text': {
+            marginBottom: '1rem'
+        },
     },
     title: {
-        display: 'flex',     
-        justifyContent: 'center',
+        display: 'flex',
+        justifyContent: 'center',    
+        paddingTop: '2rem',
         '& > h1, h2': {
             margin: '1rem',
         },
     },
-    intro: {
-        marginBottom: '1rem'
-    },
     box: {
         color: 'var(--card-fg)',
         backgroundColor: 'var(--card-bg)',
-        border: '2px solid',
-        borderColor: 'var(--card-border)',
+        border: 'var(--border-style)',
         borderRadius: 'var(--border-radius)',
         textAlign: 'center',
         '& h1': {
             margin: '1rem',
         },
     },
-    svg: {
-        '& > *': {
+    logo: {
+        color: 'var(--logo)',
+        '& > a': {
+            color: 'var(--logo)',
+        },
+        '& > a:hover': {
+            color: 'var(--logo-accent)',
+        },
+        '& svg': {
             height: '100px',
-            width: 'auto'
+            width: 'auto',            
         }
     },
     social: {
         fontSize: '30px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'center',        
     }
 })
 
@@ -77,8 +87,10 @@ const Header: Component<{
                 <section class={classes.header}>
                     <div class={classes.content}>
                         <div class={classes.title}>
-                            <a class={classes.svg} href="/"><Svg path="./public/logo.svg" /></a>
-                            <div class={classes.social}>
+                            <div class={[classes.logo, classes.dropShadow].join(' ')}><a href="/">                                
+                                <SvgFile file="./public/logo.svg" />
+                            </a></div>
+                            <div class={[classes.social, classes.dropShadow].join(' ')}>
                                 <a target="_blank" href={header.meta.social.github}><MdiGithub /></a>
                                 <a target="_blank" href={header.meta.social.linkedin}><MdiLinkedin /></a>
                             </div>
@@ -87,9 +99,9 @@ const Header: Component<{
                 </section>
 
                 <Show when={isIndexPage}>
-                    <section class={classes.section}>
+                    <section class={classes.intro}>
                         <div class={classes.content}>
-                            <div class={classes.box}>
+                            <div class={[classes.box, classes.dropShadow].join(' ')}>
                                 <Show when={isIndexPage}>
                                     {/* When `isIndexPage` intro, the page-titles are `h2` */}
                                     <h1>{header.meta.title}</h1>
@@ -98,7 +110,7 @@ const Header: Component<{
                                     {/* When not `isIndexPage`, the page-title is the `h1` */}
                                     <h2>{header.meta.title}</h2>
                                 </Show>
-                                <div class={classes.intro}>{header.meta.intro}</div>
+                                <div class="text">{header.meta.intro}</div>
                                 <About article={header} />
                             </div>
                         </div>

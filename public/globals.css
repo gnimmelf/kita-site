@@ -3,37 +3,57 @@
 
 @layer base {
   :root {
-    /* Default theme */
-    --dark: rgb(54, 52, 82);
-    --light: rgb(240, 240, 240);
-    --accent: #ffb8f3;
-    --primary-100: hsla(6, 72%, 89%, 1);
-    --primary-200: hsla(347, 45%, 84%, 1);
-    --primary-300: hsla(326, 25%, 76%, 1);
-    --primary-400: hsla(313, 18%, 64%, 1);
-    --primary-500: hsla(289, 13%, 42%, 1);
-
-    --body-bg: var(--primary-500);
-    --body-fg: var(--dark);
-    --body-accent: var(--accent);
-
-    --header-bg: var(--dark);
-    --header-fg: var(--primary-500);
-    --header-accent: var(--primary-100);
-
-    --card-bg: var(--dark);
-    --card-fg: var(--primary-100);
-    --card-accent: var(--accent);
-    --card-border: var(--primary-400);
-
-    --footer-bg: var(--dark);
-    --footer-fg: var(--primary-400);
-    --footer-accent: var(--primary-100);
-
     /* Globals */
     --content-width: 760px;
-    --border-radius: 4px;
+    
+    /* Color setup */ 
+    --light-1: #b0b39d;;
+    --light-2: #caceb5;
+    --light-3: #6f7259;
+
+    --dark-1: #3c3f44;
+    --dark-2: #0c1a0c;
+    --dark-3: #071604;
+
+    --accent-1: #fff09d;
+    --accent-2: #a19551;
+    --accent-3: #a19551;
+    
+    --accent-alt-1: #68c298;
+    --accent-alt-2: #2d4f3f;
+
+    --logo-1: #f9e67d;
+    --logo-2: #f9e67d;
+
+    /* Default theme */    
+    --body-bg: var(--dark-3);
+    --body-fg: var(--light-1);
+    --body-accent: var(--accent-1);
+
+    --header-bg: var(--dark-3);
+    --header-fg: var(--accent-2);
+    --header-accent: var(--accent-1);
+
+    --logo: var(--logo-1);
+    --logo-accent: var(--logo-2); 
+
+    --card-bg: var(--dark-2);
+    --card-fg: var(--body-fg);
+    --card-accent: var(--accent-1);
+
+    --footer-bg: var(--header-bg);
+    --footer-fg: var(--light-3);
+    --footer-accent: var(--accent-1);
+
+    --border-style: solid var(--accent-alt-2) 1px;
+    --border-radius: 10px;
+    --drop-shadow-filter: drop-shadow(0px 0px 10px var(--accent-alt-2))
   }  
+}
+
+body, body > section {
+  /* Background noise */
+  background-image: repeating-radial-gradient(circle at 17% 32%, var(--dark-2), var(--dark-3) 0.00085px);
 }
 
 body {
@@ -51,29 +71,37 @@ body * {
 h1,
 h2,
 h3 {
+  color: var(--light-2);
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
 }
 
+a {
+    color: var(--accent-2);
+    text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-1);
+}
 img {
   max-width: 100%;
 }
 
 ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
+
 }
 
 li {
-  padding-left: 1em; 
-  text-indent: -.7em;
+  text-indent: -23px;
+  margin-bottom: .8rem;
 }
 
 li::before {
-  content: "✽ ";
-  color: var(--accent);
-  padding-right: .5rem;
+  content: "∴";
+  color: var(--accent-alt-1);
+  padding-right: 10px;
 }

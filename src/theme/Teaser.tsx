@@ -12,8 +12,7 @@ const { classes } = createSheet({
     teaser: {
         backgroundColor: 'var(--card-bg)',
         color: 'var(--card-fg)',
-        border: '2px solid',
-        borderColor: 'var(--card-border)',
+        border: 'var(--border-style)',
         borderRadius: 'var(--border-radius)',
         padding: '0px 10px 10px',        
         display: 'flex',

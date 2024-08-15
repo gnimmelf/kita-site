@@ -17,6 +17,9 @@ const { classes } = createSheet({
         padding: '1rem',
         '& a': {
             color: 'var(--footer-accent)',
+        },
+        '& h3': {
+            color: 'var(--footer-fg)',
         }
     },
     content: {
