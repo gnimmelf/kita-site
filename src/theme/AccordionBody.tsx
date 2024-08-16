@@ -17,7 +17,7 @@ const { classes } = createSheet({
         borderTop: 'var(--border-style)',
         [`& > ${HTAG}`]: {
             /* Format head tag*/
-            fontSize: '105%',
+            fontSize: '1.2rem',
             padding: '10px',
             margin: '0px 0px',
         },
@@ -74,7 +74,7 @@ const parseBody = (body: string) => {
     return $.html()
 }
 
-const About: Component<{
+const AccordionBody: Component<{
     article: Article
 }> = ({
     article,
@@ -84,4 +84,4 @@ const About: Component<{
         )
     }
 
-export default About
+export default AccordionBody
