@@ -4,9 +4,9 @@ Bun + Elysia + Kita and a github repo for backend-storage.
 
 ## Why
 
-No need to change mindset into that of an irritating static-site genereator with tons of restrictions. 
+No need to change mindset into that of an irritating static-site genereator with tons of restrictions.
 
-Just learn more of the stuff you'd like to work with anyways
+Just learn more of the stuff you'd like to work with anyways.
 
 If you ever needed a small site to hack away at for your own amusement and show-off, then this is it:
 
@@ -35,7 +35,7 @@ These repo-files are cached to a json file on local disk, and updated by pinging
 
 Files are parsed to `articles`:
 
-- `id`'ed by their filename (minus extension, slugified), 
+- `id`'ed by their filename (minus extension, slugified),
 - `meta` is `front-matter` by `parse-md`
 - `body` is html parsed by `marked` (no plugins).
 
@@ -72,7 +72,7 @@ link?: <URL>
     ---
     title: <SITE_TITLE>
     intro: <INTRO_TEXT>
-    social?: 
+    social?:
         github: <URL>
         linkedin: <URL>
     ---
@@ -110,7 +110,7 @@ link?: <URL>
 
         - See `package.json::overrides`
 
-- [ ] Image storage 
+- [ ] Image storage
 
     - [X] For theme
 
@@ -129,10 +129,10 @@ link?: <URL>
 
 1. [Install bun](https://bun.sh/docs/installation)
 
-2. Install packages 
+2. Install packages
 
     ```bash
-    bun install 
+    bun install
     ```
 
 

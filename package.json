@@ -1,6 +1,6 @@
 {
   "name": "kita-site",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "scripts": {
     "dev:css": "NODE_ENV=dev_css bun --watch src/index.ts",
     "dev": "NODE_ENV=dev bun --watch src/index.ts",
