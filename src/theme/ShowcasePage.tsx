@@ -11,31 +11,36 @@ import { createSheet } from './styles'
 const { classes } = createSheet({
     article: {
         '& > *': {
-            padding: '0px 15px',
+            padding: '10px 0px',
+            margin: '0px',
+            textAlign: 'center',
+            textTransform: 'capitalize',
+        },
+        '& > h2': {
+            color: 'var(--light-3)',
+            fontSize: '1.5rem'
+        },
+        '& > h1': {
+            fontSize: '1.7rem'
         },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
     },
-    title: {
-        padding: '20px 0px',
-        margin: '0px',
-        textAlign: 'center',
-        textTransform: 'capitalize',
-        fontSize: '1.7rem',
-
-    }
 })
 
 export const ShowcasePage: Component<{
     meta: ArticleMeta
 }> = async ({
     ctx,
-    meta
+    meta,
 }) => {
+    // TODO! Figure out to load the individual showcases, they will be almost exclusively browser-code
         return (
             <Layout ctx={ctx} pageTitle={meta.title}>
                 <section class={classes.article}>
-                    <h1 class={classes.title}>{meta.title}</h1>
+                    <h2>~ Showcase ~</h2>
+                    <h1>{meta.title}</h1>
+
                 </section>
             </Layout>
         )
