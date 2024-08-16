@@ -12,7 +12,7 @@ import CardSection from './CardSection'
 const { classes } = createSheet({
     article: {
         '& > *': {
-            padding: '0px 15px',
+            padding: '0px 1rem',
         },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
@@ -28,6 +28,7 @@ const { classes } = createSheet({
     },
     body: {
         '& > h3': {
+            paddingBottom: '0.5rem',
             borderBottom: '1px solid'
         },
         '& > p': {

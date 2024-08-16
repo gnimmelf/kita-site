@@ -21,10 +21,10 @@ const { classes } = createSheet({
     content: {
         width: '100%',
         maxWidth: 'var(--content-width)',
-        margin: '0 auto 1rem',        
+        margin: '0 auto 1rem',
     },
     intro: {
-        margin: '1rem 10px',        
+        margin: '1rem 10px',
         '& a': {
             color: 'var(--header-fg)',
             '&:hover': {
@@ -37,7 +37,7 @@ const { classes } = createSheet({
     },
     title: {
         display: 'flex',
-        justifyContent: 'center',    
+        justifyContent: 'center',
         paddingTop: '2rem',
         '& > h1, h2': {
             margin: '1rem',
@@ -51,6 +51,8 @@ const { classes } = createSheet({
     },
     logo: {
         color: 'var(--logo)',
+        willChange: 'filter',
+        animation: 'drop-shadow-pulse 20s infinite',
         filter: 'var(--drop-shadow-filter)',
         '& > a': {
             color: 'var(--logo)',
@@ -60,7 +62,7 @@ const { classes } = createSheet({
         },
         '& svg': {
             height: '100px',
-            width: 'auto',            
+            width: 'auto',
         }
     },
     social: {
@@ -68,7 +70,7 @@ const { classes } = createSheet({
         fontSize: '30px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',        
+        justifyContent: 'center',
     }
 })
 
@@ -84,7 +86,7 @@ const Header: Component<{
                 <section class={classes.header}>
                     <div class={classes.content}>
                         <div class={classes.title}>
-                            <div class={[classes.logo, classes.dropShadow].join(' ')}><a href="/">                                
+                            <div class={[classes.logo, classes.dropShadow].join(' ')}><a href="/">
                                 <SvgFile file="./public/logo.svg" />
                             </a></div>
                             <div class={[classes.social, classes.dropShadow].join(' ')}>

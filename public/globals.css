@@ -5,8 +5,8 @@
   :root {
     /* Globals */
     --content-width: 760px;
-    
-    /* Color setup */ 
+
+    /* Color setup */
     --light-1: #b0b39d;;
     --light-2: #caceb5;
     --light-3: #6f7259;
@@ -18,14 +18,14 @@
     --accent-1: #fff09d;
     --accent-2: #a19551;
     --accent-3: #a19551;
-    
+
     --accent-alt-1: #68c298;
     --accent-alt-2: #2d4f3f;
 
     --logo-1: #f9e67d;
     --logo-2: #f9e67d;
 
-    /* Default theme */    
+    /* Default theme */
     --body-bg: var(--dark-3);
     --body-fg: var(--light-1);
     --body-accent: var(--accent-1);
@@ -35,7 +35,7 @@
     --header-accent: var(--accent-1);
 
     --logo: var(--logo-1);
-    --logo-accent: var(--logo-2); 
+    --logo-accent: var(--logo-2);
 
     --card-bg: var(--dark-2);
     --card-fg: var(--body-fg);
@@ -47,11 +47,11 @@
 
     --border-style: solid var(--accent-alt-2) 1px;
     --border-radius: 10px;
-    --drop-shadow-filter: drop-shadow(0px 0px 10px var(--accent-alt-2))
-  }  
+    --drop-shadow-filter: drop-shadow(0px 0px 5px var(--accent-alt-2))
+  }
 }
 
-html {  
+html {
   /* Base font-size for subsequent rem units */
   font-size: 18px;
   @media (min-width: 860px) {
@@ -69,7 +69,7 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  font-variation-settings: "wdth" 100; 
+  font-variation-settings: "wdth" 100;
   font-size: 1rem;
 }
 
@@ -116,4 +116,12 @@ li::before {
   content: "∴";
   color: var(--accent-alt-1);
   padding-right: 10px;
+}
+
+/* Fluff */
+
+@keyframes drop-shadow-pulse {
+  50% {
+    filter: drop-shadow(0px 0px 5px red)
+  }
 }
