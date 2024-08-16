@@ -23,7 +23,7 @@ const { classes } = createSheet({
         },
         '& .state-icon': {
             transformOrigin: '0px 8px',
-            '&.opened': {
+            '&.expanded': {
                 transform: 'rotateX(180deg)'
             },
         },
@@ -64,7 +64,7 @@ const parseBody = (body: string) => {
 
         $stateIcon
             .attr('@click', 'expanded = ! expanded')
-            .attr(':class', "expanded ? 'opened' : 'closed'")
+            .attr(':class', "expanded ? 'expanded' : 'collapsed'")
             
         $contentWrapper
             .attr('x-show', 'expanded')

@@ -16,11 +16,15 @@ export const Show: Component<{ when: any }> = ({ when, children }) => (
 )
 
 /**
- * Create an Svg component based on file-path
- * @param param0 
+ * Create an Svg component based on an svg-file-path. 
+ * For `filterId`, see: 
+ *  - https://benfrain.com/applying-multiple-svg-filter-effects-defined-in-css-or-html/
+ *  - https://w3cplus.medium.com/in-depth-exploration-of-svg-techniques-and-advanced-techniques-f2d183a44b2b
+ * @param file string filepath relative to `package.json`
+ * @param filterId string reference to a svg-filter tag
  * @returns 
  */
-export const SvgFile: Component<{ file: string, filter?: string }> = async ({ file, filter, children }) => {
+export const SvgFile: Component<{ file: string, filterId?: string }> = async ({ file, filter, children }) => {
     const bunFile = Bun.file(file)    
     const xml = await bunFile.text()
     const $ = cheerio.load(xml, {}, false);
@@ -34,7 +38,7 @@ export const SvgFile: Component<{ file: string, filter?: string }> = async ({ fi
     // Add
     $svg.append(`<defs>${defs || ''}</defs>`)
 
-    $svg.append($('g').attr('filter', filter ?? ''))
+    $svg.append($('g').attr('filter', filter ? 'url(#filterId)' : ''))
 
     return $svg.toString()
 }
