@@ -11,18 +11,22 @@ import Teaser from './Teaser'
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
-    grid: {
+    flex: {
             maxWidth: 'var(--content-width)',
-            margin: '0 auto',
-            display: 'grid',
-            gap: '3rem',
-            gridTemplateColumns: '1fr',
-            '@media (min-width: 860px)' : {                
-                gridTemplateColumns: '1fr 1fr',
-                justifyContent: 'space-around',
-            },            
+            margin: '0 auto',            
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '3rem',  
+            justifyContent: 'center',
             '& > *': {
-                boxSizing: 'border-box',                                
+                boxSizing: 'border-box',   
+                width: '100%',   
+                          
+            },
+            '@media (min-width: 860px)' : {                                
+                '& > *': {
+                    width: 'calc((100% / 2) - 1.5rem)',
+                }
             }
     }    
 })
@@ -40,7 +44,7 @@ export const IndexPage: Component<{
     ]
         return (
             <Layout ctx={ctx} isIndexPage={true} headTags={headTags}>                
-                <div class={classes.grid}>
+                <div class={classes.flex}>
                     {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
                 </div>                
             </Layout>
