@@ -51,6 +51,14 @@
   }  
 }
 
+html {  
+  /* Base font-size for subsequent rem units */
+  font-size: 18px;
+  @media (min-width: 860px) {
+    font-size: 16px;
+  }
+}
+
 body, body > section {
   /* Background noise */
   background-image: repeating-radial-gradient(circle at 17% 32%, var(--dark-2), var(--dark-3) 0.00085px);
@@ -61,7 +69,8 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  font-variation-settings: "wdth" 100;
+  font-variation-settings: "wdth" 100; 
+  font-size: 1rem;
 }
 
 body * {
