@@ -5,7 +5,8 @@ import {
 } from '../types'
 
 import { createSheet } from './styles'
-import { Show, SvgFile } from '../lib/components'
+import { Show } from '../lib/components'
+import { SvgFile } from './Svg'
 import { MdiGithub, MdiLinkedin } from './Icons'
 
 import About from './About'
@@ -16,13 +17,13 @@ const { classes } = createSheet({
         // Keep h1 top-margin from creating space above parent
         overflow: 'auto',
     },
-    dropShadow: {
-        filter: 'var(--drop-shadow-filter)',
-    },
     content: {
         width: '100%',
         maxWidth: 'var(--content-width)',
-        margin: '0 auto 1rem'
+        margin: '0 auto 1rem',        
+    },
+    dropShadow: {
+        filter: 'var(--drop-shadow-filter)',        
     },
     intro: {
         margin: '1rem 10px',        

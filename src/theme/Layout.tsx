@@ -3,12 +3,14 @@ import {
     Component,
 } from '../types'
 
+import { SvgFilters } from './Svg'
+
 import Header from './Header'
 import Footer from './Footer'
 
 import { createSheet } from './styles'
 
-const { classes } = createSheet({    
+const { classes } = createSheet({
     body: {
         backgroundColor: 'var(--body-bg)',
         color: 'var(--body-fg)',
@@ -23,7 +25,6 @@ const { classes } = createSheet({
         flexGrow: '1',
         margin: '1rem 0px',
         padding: '10px',
-        filter: 'var(--drop-shadow-filter)',
     }
 })
 
@@ -55,10 +56,11 @@ const Layout: Component<{
                         <link rel="stylesheet" type="text/css" href="/styles.css" />
                     </head>
                     <body class={classes.body}>
+                        <SvgFilters />
                         <Header
                             ctx={ctx}
                             isIndexPage={isIndexPage}
-                        />                        
+                        />
                         <main class={classes.main}>{children}</main>
                         <Footer ctx={ctx} />
                         {endTags.join('\n')}

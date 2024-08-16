@@ -19,7 +19,7 @@ const { classes } = createSheet({
             /* Format head tag*/
             fontSize: '105%',
             padding: '10px',
-            margin: '0px 0px'
+            margin: '0px 0px',
         },
         '& .state-icon': {
             transformOrigin: '0px 8px',

@@ -14,9 +14,10 @@ const { classes } = createSheet({
         color: 'var(--card-fg)',
         border: 'var(--border-style)',
         borderRadius: 'var(--border-radius)',
-        padding: '0px 10px 10px',        
+        padding: '0px 10px 10px',
         display: 'flex',
-        flexDirection: 'column',  
+        flexDirection: 'column',
+        filter: 'var(--drop-shadow-filter)',
     },
     title: {
         textTransform: 'capitalize'
@@ -37,13 +38,12 @@ const Teaser: Component<{
 }> = ({
     article
 }) => {
-        
         return (
             <section class={classes.teaser} data-id={article.id} data-weight={article.meta.weight}>
                 <h2 class={classes.title}>{article.meta.title}</h2>
-                <div class={classes.intro}>{article.meta.intro}</div> 
+                <div class={classes.intro}>{article.meta.intro}</div>
                 <div class={classes.link}>
-                    <Link article={article} />                
+                    <Link article={article} />
                 </div>
             </section>
         )
