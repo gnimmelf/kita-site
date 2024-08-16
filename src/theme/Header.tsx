@@ -10,6 +10,7 @@ import { SvgFile } from './Svg'
 import { MdiGithub, MdiLinkedin } from './Icons'
 
 import AccordionBody from './AccordionBody'
+import CardSection from './CardSection'
 
 const { classes } = createSheet({
     header: {
@@ -21,9 +22,6 @@ const { classes } = createSheet({
         width: '100%',
         maxWidth: 'var(--content-width)',
         margin: '0 auto 1rem',        
-    },
-    dropShadow: {
-        filter: 'var(--drop-shadow-filter)',        
     },
     intro: {
         margin: '1rem 10px',        
@@ -45,11 +43,7 @@ const { classes } = createSheet({
             margin: '1rem',
         },
     },
-    box: {
-        color: 'var(--card-fg)',
-        backgroundColor: 'var(--card-bg)',
-        border: 'var(--border-style)',
-        borderRadius: 'var(--border-radius)',
+    wrapperBox: {
         textAlign: 'center',
         '& h1': {
             margin: '1rem',
@@ -57,6 +51,7 @@ const { classes } = createSheet({
     },
     logo: {
         color: 'var(--logo)',
+        filter: 'var(--drop-shadow-filter)',
         '& > a': {
             color: 'var(--logo)',
         },
@@ -69,6 +64,7 @@ const { classes } = createSheet({
         }
     },
     social: {
+        filter: 'var(--drop-shadow-filter)',
         fontSize: '30px',
         display: 'flex',
         flexDirection: 'column',
@@ -102,7 +98,7 @@ const Header: Component<{
                 <Show when={isIndexPage}>
                     <section class={classes.intro}>
                         <div class={classes.content}>
-                            <div class={[classes.box, classes.dropShadow].join(' ')}>
+                            <CardSection class={classes.wrapperBox}>
                                 <Show when={isIndexPage}>
                                     {/* When `isIndexPage` intro, the page-titles are `h2` */}
                                     <h1>{header.meta.title}</h1>
@@ -113,7 +109,7 @@ const Header: Component<{
                                 </Show>
                                 <div class="text">{header.meta.intro}</div>
                                 <AccordionBody article={header} />
-                            </div>
+                            </CardSection>
                         </div>
                     </section>
                 </Show>

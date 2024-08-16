@@ -2,22 +2,19 @@ import Html from '@kitajs/html'
 import {
     Component,
     Article,
+    Context,
 } from '../types'
 
+import CardSection from './CardSection'
 import Link from './TeaserMetaLink'
 
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
     teaser: {
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--card-fg)',
-        border: 'var(--border-style)',
-        borderRadius: 'var(--border-radius)',
-        padding: '0px 10px 10px',
         display: 'flex',
         flexDirection: 'column',
-        filter: 'var(--drop-shadow-filter)',
+        padding: '0px 10px 10px',
     },
     title: {
         textTransform: 'capitalize'
@@ -29,23 +26,25 @@ const { classes } = createSheet({
     link: {
         display: 'inline-flex',
         justifyContent: 'end',
-        paddingTop: '5px'
+        paddingTop: '1rem'
     }
 })
 
 const Teaser: Component<{
-    article: Article
+    article: Article,
+    ctx: Context
 }> = ({
-    article
+    article,
+    ctx
 }) => {
         return (
-            <section class={classes.teaser} data-id={article.id} data-weight={article.meta.weight}>
+            <CardSection class={classes.teaser} data-id={article.id} data-weight={article.meta.weight}>
                 <h2 class={classes.title}>{article.meta.title}</h2>
                 <div class={classes.intro}>{article.meta.intro}</div>
                 <div class={classes.link}>
-                    <Link article={article} />
+                    <Link ctx={ctx} article={article} />
                 </div>
-            </section>
+            </CardSection>
         )
     }
 

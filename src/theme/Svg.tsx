@@ -11,7 +11,11 @@ import {
 
 
 /**
- * Static Svg-filters defintions
+ * Static Svg-filters defintions.
+ * NOTE! 
+ *  - *NOT* for filter-effects that:
+ *      - Are more easily implemented in css
+ *      - Relies on css-custom-properties (this is a pickle not yet solved adequatly)
  * @returns Component
  */
 export const SvgFilters: Component = () => {
@@ -49,8 +53,7 @@ export const SvgFilters: Component = () => {
     )
 }
 
-const SvgRect: Component<{ filterId?: string }> = ({ filterId }) => {
-
+export const SvgRect: Component<{ filterId?: string }> = ({ filterId }) => {
     return (
         <rect width='100%' height='100%' filter={filterId ? `url(#${filterId})` : ''} />
     )

@@ -141,7 +141,7 @@ class GithubDb {
             })
         }
 
-        console.log('Cheking for updates...')
+        console.log('Checking for updates...')
 
         const githubTree = await this.#fecthUpdatedTree()
         if (!githubTree) {
@@ -166,7 +166,7 @@ class GithubDb {
             etag: this.#etag,
             files: files
         }
-        
+
         await Bun.write(this.#dbFile, JSON.stringify(db, null, 2))
 
         console.log('Cache updated!')
@@ -198,7 +198,7 @@ class GithubDb {
 
     async #setArticles() {
         let isCached = await this.#readCache()
-        
+
         if (isDev('css') && isCached) {
             // Cache is read succesfully, and we're not gonna update it
             return

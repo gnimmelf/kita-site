@@ -28,7 +28,7 @@ const { classes } = createSheet({
     }
 })
 
-const Layout: Component<{
+export const Layout: Component<{
     pageTitle?: string
     headTags?: string[]
     endTags?: string[]

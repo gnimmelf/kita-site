@@ -18,21 +18,23 @@ export type Component<T = {}> = (this: void, props: KitaProps<T>) => JSX.Element
 
 
 export type CacheControl = {
-    etag: string, 
+    etag: string,
     lastModified: string
 }
 
 // Data types
 
+export type ArticleMeta =  Record<{
+    title?: string,
+    intro?: string
+    link?: string,
+    weight?: string
+}>
+
 export type Article = {
     id: string
     body: string,
-    meta: Record<{
-        title?: string,
-        intro?: string        
-        link?: string,
-        weight?: string
-    }>
+    meta: ArticleMeta
 }
 
 export type Articles = Article[]

@@ -13,22 +13,22 @@ import { createSheet } from './styles'
 const { classes } = createSheet({
     flex: {
             maxWidth: 'var(--content-width)',
-            margin: '0 auto',            
+            margin: '0 auto',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '3rem',  
+            gap: '3rem',
             justifyContent: 'center',
             '& > *': {
-                boxSizing: 'border-box',   
-                width: '100%',   
-                          
+                boxSizing: 'border-box',
+                width: '100%',
+
             },
-            '@media (min-width: 860px)' : {                                
+            '@media (min-width: 860px)' : {
                 '& > *': {
                     width: 'calc((100% / 2) - 1.5rem)',
                 }
             }
-    }    
+    }
 })
 
 export const IndexPage: Component<{
@@ -38,15 +38,16 @@ export const IndexPage: Component<{
     articles
 }) => {
     articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight)
+
     const headTags = [
         '<script src="//unpkg.com/@alpinejs/collapse"></script>',
         '<script src="//unpkg.com/alpinejs" defer></script>'
     ]
         return (
-            <Layout ctx={ctx} isIndexPage={true} headTags={headTags}>                
+            <Layout ctx={ctx} isIndexPage={true} headTags={headTags}>
                 <div class={classes.flex}>
-                    {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}                                     
-                </div>                
+                    {articles.map((article: Article) => (<Teaser ctx={ctx} article={article} />))}
+                </div>
             </Layout>
         )
     }

@@ -10,8 +10,10 @@ import { getStaticFile } from "./lib/handlers";
 
 import IndexPage from './theme/IndexPage'
 import ArticlePage from "./theme/ArticlePage";
+import ShowcasePage from "./theme/ShowcasePage";
 
 import { stylesRegistry } from "./theme/styles";
+
 
 type AppParams = {
   port: string | number
@@ -46,9 +48,9 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
-      if (isDev()) { 
+      if (isDev()) {
         // Do not set caching headers
-        return 
+        return
       }
 
       // Set up caching based on db etag & lastModified
@@ -84,23 +86,33 @@ export const createApp = async ({ port }: AppParams) => {
         articles,
       })
     })
+    .get('/favicon.*', async (ctx) => {
+      return Bun.file('./favicon.ico')
+    })
+    .get('/public/*', getStaticFile)
     .get('/styles.css', async ({ set: { headers } }) => {
       // Parse component styles from JSS-registry to a string
       headers['Content-Type'] = 'text/css';
       const cssStr = stylesRegistry.toString()
       return cssStr
     })
-    .get('/favicon.*', async (ctx) => {
-      return Bun.file('./favicon.ico')
-    })
-    .get('/public/*', getStaticFile)
-    .get('/:id', async ({ params: { id }, ...ctx }) => {
+    .get('/blog/:id', async ({ params: { id }, ...ctx }) => {
       const article = await loadArticle(id)
 
       // Return index page
       return ArticlePage({
         ctx,
         article
+      })
+    })
+    .get('/showcase/:id', async ({ params: { id }, ...ctx }) => {
+      const { meta } = await loadArticle(id)
+
+      console.log({ meta })
+
+      return ShowcasePage({
+        ctx,
+        meta,
       })
     })
 

@@ -7,6 +7,7 @@ import {
 import Layout from './Layout'
 
 import { createSheet } from './styles'
+import CardSection from './CardSection'
 
 const { classes } = createSheet({
     article: {
@@ -15,12 +16,8 @@ const { classes } = createSheet({
         },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--light)',
-        border: 'var(--border-style)',
-        borderRadius: 'var(--border-radius)'        
     },
-    title: {        
+    title: {
         padding: '20px 0px',
         margin: '0px',
         borderBottom: 'var(--border-style)',
@@ -57,14 +54,14 @@ export const ArticlePage: Component<{
 }) => {
         return (
             <Layout ctx={ctx} pageTitle={article.meta.title}>
-                <section class={classes.article}>
+                <CardSection class={classes.article}>
                     <h1 class={classes.title}>{article.meta.title}</h1>
                     <div class={classes.body}>{article.body}</div>
                     <div class={classes.backLink}>
                         <div>~ ~ ~</div>
                         <a href="/">Back</a>
                     </div>
-                </section>
+                </CardSection>
             </Layout>
         )
     }
