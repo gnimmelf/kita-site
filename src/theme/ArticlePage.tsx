@@ -7,25 +7,41 @@ import {
 import Layout from './Layout'
 
 import { createSheet } from './styles'
+import CardSection from './CardSection'
 
 const { classes } = createSheet({
     article: {
-        padding: '10px',
+        '& > *': {
+            padding: '0px 1rem',
+        },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--card-fg)',
-        border: '2px solid',
-        borderColor: 'var(--card-accent)',
-        borderRadius: '10px',     
-        '& a': {
-            color: 'var(--card-accent)',
-        },
     },
     title: {
-        textTransform: 'capitalize'
+        padding: '20px 0px',
+        margin: '0px',
+        borderBottom: 'var(--border-style)',
+        textAlign: 'center',
+        textTransform: 'capitalize',
+        fontSize: '1.7rem',
+
+    },
+    body: {
+        '& > h3': {
+            paddingBottom: '0.5rem',
+            borderBottom: '1px solid'
+        },
+        '& > p': {
+            fontSize: '1rem'
+        },
+        '& > pre': {
+            padding: '5px',
+            overflowX: 'auto',
+        }
     },
     backLink: {
+        padding: '20px 0px',
+        borderTop: 'var(--border-style)',
         textAlign: 'center'
     }
 })
@@ -39,13 +55,14 @@ export const ArticlePage: Component<{
 }) => {
         return (
             <Layout ctx={ctx} pageTitle={article.meta.title}>
-                <section class={classes.article}>
+                <CardSection class={classes.article}>
                     <h1 class={classes.title}>{article.meta.title}</h1>
-                    <div>{article.body}</div>
+                    <div class={classes.body}>{article.body}</div>
                     <div class={classes.backLink}>
-                        <a href="/">Tilbake</a>
+                        <div>~ ~ ~</div>
+                        <a href="/">Back</a>
                     </div>
-                </section>
+                </CardSection>
             </Layout>
         )
     }

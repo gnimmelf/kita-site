@@ -10,8 +10,10 @@ import { getStaticFile } from "./lib/handlers";
 
 import IndexPage from './theme/IndexPage'
 import ArticlePage from "./theme/ArticlePage";
+import ShowcasePage from "./theme/ShowcasePage";
 
 import { stylesRegistry } from "./theme/styles";
+
 
 type AppParams = {
   port: string | number
@@ -46,9 +48,9 @@ export const createApp = async ({ port }: AppParams) => {
       }
     }))
     .onRequest(async (ctx) => {
-      if (isDev) { 
-        // No caching
-        return 
+      if (isDev()) {
+        // Do not set caching headers
+        return
       }
 
       // Set up caching based on db etag & lastModified
@@ -72,29 +74,29 @@ export const createApp = async ({ port }: AppParams) => {
         return ''
       }
 
-      // Set headers for a non-chached
+      // Set headers for a non-chached response
       ctx.set.headers['etag'] = etag
       ctx.set.headers['last-modified'] = lastModified
     })
     .get('/', async (ctx) => {
       const articles = (await api.getArticles())
-        .filter(({ id }) => !(id as String).startsWith('__'))
 
       return IndexPage({
         ctx,
         articles,
       })
     })
-    .get('/styles.css', async ({ set: { headers } }) => {
-      headers['Content-Type'] = 'text/css';
-      const cssStr = stylesRegistry.toString()
-      return cssStr
-    })
     .get('/favicon.*', async (ctx) => {
       return Bun.file('./favicon.ico')
     })
     .get('/public/*', getStaticFile)
-    .get('/:id', async ({ params: { id }, ...ctx }) => {
+    .get('/styles.css', async ({ set: { headers } }) => {
+      // Parse component styles from JSS-registry to a string
+      headers['Content-Type'] = 'text/css';
+      const cssStr = stylesRegistry.toString()
+      return cssStr
+    })
+    .get('/blog/:id', async ({ params: { id }, ...ctx }) => {
       const article = await loadArticle(id)
 
       // Return index page
@@ -103,11 +105,21 @@ export const createApp = async ({ port }: AppParams) => {
         article
       })
     })
+    .get('/showcase/:id', async ({ params: { id }, ...ctx }) => {
+      const { meta } = await loadArticle(id)
+
+      console.log({ meta })
+
+      return ShowcasePage({
+        ctx,
+        meta,
+      })
+    })
 
   app.listen(port)
 
   console.log(
-    `🦊 Elysia (${isDev ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
+    `🦊 Elysia (${isDev() ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
   );
   console.log('With features', process.features)
 

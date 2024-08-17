@@ -1,53 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 @layer base {
   :root {
-    /* Default theme */    
-    --text-dark: rgb(29, 29, 29);
-    --text-light: rgb(240, 240, 240);
-    --primary-100: hsla(6, 72%, 89%, 1);
-    --primary-200: hsla(347, 45%, 84%, 1);
-    --primary-300: hsla(326, 25%, 76%, 1);
-    --primary-400: hsla(313, 18%, 64%, 1);
-    --primary-500: hsla(289, 13%, 42%, 1);
-
-    --body-bg: var(--primary-500);
-    --body-fg: var(--text-dark);
-    --body-accent: var(--primary-300);
-
-    --header-bg: var(--primary-400);
-    --header-fg: var(--text-dark);
-    --header-accent: var(--primary-500);
-
-    --footer-bg: var(--primary-200);
-    --footer-fg: var(--text-dark);
-    --footer-accent: var(--primary-500);
-
-    --card-bg: var(--primary-300);
-    --card-fg: var(--text-dark);
-    --card-accent: var(--primary-500);
-    --card-border: var(--primary-200);
-
     /* Globals */
-    font-size: 120%;
-    box-sizing: border-box;
     --content-width: 760px;
-    img {
-      max-width: 100%;
-    }
 
-    /* Font-family */
-    font-family: "Noto Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
+    /* Color setup */
+    --light-1: #b0b39d;;
+    --light-2: #caceb5;
+    --light-3: #6f7259;
+
+    --dark-1: #3c3f44;
+    --dark-2: #0c1a0c;
+    --dark-3: #071604;
+
+    --accent-1: #fff09d;
+    --accent-2: #a19551;
+    --accent-3: #a19551;
+
+    --accent-alt-1: #68c298;
+    --accent-alt-2: #2d4f3f;
+
+    --logo-1: #f9e67d;
+    --logo-2: #f9e67d;
+
+    /* Default theme */
+    --body-bg: var(--dark-3);
+    --body-fg: var(--light-1);
+    --body-accent: var(--accent-1);
+
+    --header-bg: var(--dark-3);
+    --header-fg: var(--accent-2);
+    --header-accent: var(--accent-1);
+
+    --logo: var(--logo-1);
+    --logo-accent: var(--logo-2);
+
+    --card-bg: var(--dark-2);
+    --card-fg: var(--body-fg);
+    --card-accent: var(--accent-1);
+
+    --footer-bg: var(--header-bg);
+    --footer-fg: var(--light-3);
+    --footer-accent: var(--accent-1);
+
+    --border-style: solid var(--accent-alt-2) 1px;
+    --border-radius: 10px;
+    --drop-shadow-filter: drop-shadow(0px 0px 5px var(--accent-alt-2))
   }
+}
 
-  body.light {
-    /* Light theme */
-    --bg: var(--primary-100);
-    --fg: var(--text-dark);
+html {
+  /* Base font-size for subsequent rem units */
+  font-size: 18px;
+  @media (min-width: 860px) {
+    font-size: 16px;
+  }
+}
 
-    --accent: var(var(--primary-300))
-    /* ...etc, etc */
+body, body > section {
+  /* Background noise */
+  background-image: repeating-radial-gradient(circle at 17% 32%, var(--dark-2), var(--dark-3) 0.00085px);
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-size: 1rem;
+}
+
+body * {
+  box-sizing: border-box;
+  /* https://stackoverflow.com/a/29961714/1008905 */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--light-2);
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+a {
+    color: var(--accent-2);
+    text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-1);
+}
+img {
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+
+}
+
+li {
+  text-indent: -23px;
+  margin-bottom: .8rem;
+}
+
+li::before {
+  content: "∴";
+  color: var(--accent-alt-1);
+  padding-right: 10px;
+}
+
+/* Fluff */
+
+@keyframes drop-shadow-pulse {
+  50% {
+    filter: drop-shadow(0px 0px 5px red)
   }
 }

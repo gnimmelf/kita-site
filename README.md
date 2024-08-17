@@ -4,9 +4,9 @@ Bun + Elysia + Kita and a github repo for backend-storage.
 
 ## Why
 
-No need to change mindset into that of an irritating static-site genereator with tons of restrictions. 
+No need to change mindset into that of an irritating static-site genereator with tons of restrictions.
 
-Just learn more of the stuff you'd like to work with anyways
+Just learn more of the stuff you'd like to work with anyways.
 
 If you ever needed a small site to hack away at for your own amusement and show-off, then this is it:
 
@@ -35,9 +35,9 @@ These repo-files are cached to a json file on local disk, and updated by pinging
 
 Files are parsed to `articles`:
 
-- `id`'ed by their filename (minus extension, slugified), 
+- `id`'ed by their filename (minus extension, slugified),
 - `meta` is `front-matter` by `parse-md`
-- `body` is html parsed by `marked` (no plugins) and `dompurify`.
+- `body` is html parsed by `marked` (no plugins).
 
 ### Repo content files
 
@@ -52,14 +52,47 @@ Files are parsed to `articles`:
 ```yaml
 ---
 title: <TITLE>
-intro: <INTRO TEXT>
-weight: <INTEGER>
+intro: <INTRO_TEXT>
+weight?: <INTEGER>
+link?: <URL>
 ---
 
 <MD CONTENT>
 ```
 
-Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
+- If link is present, no body is needed
+
+-  Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
+
+#### Specials
+
+* `__header.md`
+
+    ```yaml
+    ---
+    title: <SITE_TITLE>
+    intro: <INTRO_TEXT>
+    social?:
+        github: <URL>
+        linkedin: <URL>
+    ---
+
+    <MD CONTENT>
+    ```
+
+    Tailor this to suit your theme templates
+
+
+* `__footer.md`
+
+    ```yaml
+    ---
+    title: <TITLE>
+    intro: <INTRO_TEXT>
+    ---
+
+    <MD CONTENT>
+    ```
 
 ### Still missing
 
@@ -77,13 +110,17 @@ Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
         - See `package.json::overrides`
 
-- [ ] Image storage 
+- [ ] Image storage
 
     - [X] For theme
 
-        - Since staticPlugin works with overrides, just use the `public` folder
+        - Use the `public` folder
 
-    - [ ] For articles
+    - [X] For articles
+
+        - [X] Set content-repo as 'public' to be able to use images uploaded through github md-editor
+
+        - [X] Use another public storage and manually copy the src-url into the github md-editor
 
 - [ ] Maybe some markdown plugins for ekstra bling, or at least maybe support github-flavoured markdown?
 
@@ -92,14 +129,14 @@ Articles are sorted by `weight` ascending, default is `Number.MAX_SAFE_INTEGER`.
 
 1. [Install bun](https://bun.sh/docs/installation)
 
-2. Install packages 
+2. Install packages
 
     ```bash
-    bun install 
+    bun install
     ```
 
 
-## Run
+### Run
 
 **env vars**
 
@@ -110,15 +147,24 @@ DB_PASS=<GITHUB-PAT_FINE-GRAINED_REPO-CONTENTS-READ>
 PORT=<PORT || 3000>
 ```
 
-
-
 **Development**
 
-Running in dev-mode does not add any cache-headers on responses.
+- Plain dev: No cach-headers on responses.
 
-```bash
-bun run dev
-```
+    ```bash
+    bun run dev
+    ```
+
+    Use when developing the app.
+
+- Theme dev: Always prefer local cache file.
+
+    ```bash
+    bun run dev:css
+    ```
+
+    Use for theming.
+
 
 Open http://localhost:3000/ with your browser to see the result.
 

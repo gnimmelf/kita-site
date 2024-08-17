@@ -8,14 +8,18 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     footer: {
+        fontSize: 'medium',
         textAlign: 'center',
         backgroundColor: 'var(--footer-bg)',
         color: 'var(--footer-fg)',
         overflow: 'auto',
         marginTop: '1rem',
-        paddingTop: '1rem',
+        padding: '1rem',
         '& a': {
             color: 'var(--footer-accent)',
+        },
+        '& h3': {
+            color: 'var(--footer-fg)',
         }
     },
     content: {
@@ -30,13 +34,15 @@ const { classes } = createSheet({
 const Footer: Component<{}> = ({
     ctx
 }) => {
-    const { footer } = ctx.site
+    const { footer, header } = ctx.site
+    const year = new Date().getFullYear()
     return (
         <section class={classes.footer}>
             <div class={classes.content}>
                 <h3>{footer.meta.title}</h3>
                 <div>{footer.meta.intro}</div>
                 <div>{footer.body}</div>
+                <small>© {year} {footer.meta.copyright}</small>
             </div>
         </section>
     )

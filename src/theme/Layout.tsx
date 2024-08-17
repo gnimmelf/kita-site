@@ -3,18 +3,14 @@ import {
     Component,
 } from '../types'
 
+import { SvgFilters } from './Svg'
+
 import Header from './Header'
 import Footer from './Footer'
 
 import { createSheet } from './styles'
 
 const { classes } = createSheet({
-    '@global': {
-        a: {
-            color: 'var(--body-accent)',
-            textDecoration: 'none'
-        },
-    },
     body: {
         backgroundColor: 'var(--body-bg)',
         color: 'var(--body-fg)',
@@ -28,11 +24,11 @@ const { classes } = createSheet({
     main: {
         flexGrow: '1',
         margin: '1rem 0px',
-        padding: '10px'
+        padding: '10px',
     }
 })
 
-const Layout: Component<{
+export const Layout: Component<{
     pageTitle?: string
     headTags?: string[]
     endTags?: string[]
@@ -51,9 +47,6 @@ const Layout: Component<{
                 {'<!doctype html>'}
                 <html lang="en">
                     <head>
-                        <style>
-                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-                        </style>                        
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta http-equiv="Pragma" content="no-cache" />
                         <meta http-equiv="Expires" content="0" />
@@ -63,6 +56,7 @@ const Layout: Component<{
                         <link rel="stylesheet" type="text/css" href="/styles.css" />
                     </head>
                     <body class={classes.body}>
+                        <SvgFilters />
                         <Header
                             ctx={ctx}
                             isIndexPage={isIndexPage}
