@@ -1,9 +1,10 @@
 {
   "name": "kita-site",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "NODE_ENV=dev bun --watch src/index.ts",
-    "start": "NODE_ENV=production bun src/index.ts",    
+    "start": "NODE_ENV=production bun src/index.ts",
+    "versiontags": "bun scripts/versions-2-tags.ts",
     "test": "bun test"
   },
   "dependencies": {
@@ -26,7 +27,7 @@
   },
   "devDependencies": {
     "bun-types": "latest"
-  },  
+  },
   "overrides": {
     "@kitajs/html": "4.1.0",
     "@polka/url": "1.0.0-next.20"
