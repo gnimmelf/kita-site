@@ -106,13 +106,11 @@ export const createApp = async ({ port }: AppParams) => {
       })
     })
     .get('/showcase/:id', async ({ params: { id }, ...ctx }) => {
-      const { meta } = await loadArticle(id)
-
-      console.log({ meta })
+      const article = await loadArticle(id)
 
       return ShowcasePage({
         ctx,
-        meta,
+        article,
       })
     })
 
