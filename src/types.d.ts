@@ -4,6 +4,8 @@ import {
     type Children,
 } from '@kitajs/html'
 
+// Tech types
+
 type Context = {
     siteTitle: string
 } & ElysiaContext
@@ -22,7 +24,7 @@ export type CacheControl = {
     lastModified: string
 }
 
-// Data types
+// Record types
 
 export type ArticleMeta =  Record<{
     title?: string,
@@ -42,7 +44,7 @@ export type Articles = Article[]
 // Interfaces
 
 export interface Database {
-    getCacheControl: () => Promise<>
+    getCacheControl: () => Promise<CacheControl>
     getArticles: () => Promise<Articles>
     getArticleById: (id: string) => Promise<Article | undefined>
 }
