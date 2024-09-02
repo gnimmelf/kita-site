@@ -13,7 +13,6 @@ const { classes } = createSheet({
         '& > *': {
             margin: '0px',
             textAlign: 'center',
-            textTransform: 'capitalize',
         },
         '& > h2': {
             color: 'var(--light-3)',
@@ -22,12 +21,14 @@ const { classes } = createSheet({
         },
         '& > h1': {
             fontSize: '1.7rem',
-            margin: '1rem 0'
+            margin: '1rem 0',
+            textTransform: 'capitalize',
         },
         maxWidth: 'var(--content-width)',
         margin: '0 auto',
     },
     body: {
+        textAlign: 'unset',
         '& > *': {
 
         }
