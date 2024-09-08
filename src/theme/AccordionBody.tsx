@@ -13,15 +13,16 @@ const HTAG = 'h2'
 
 const { classes } = createSheet({
     accordion: {
-        cursor: 'pointer',
         borderTop: 'var(--border-style)',
         [`& > ${HTAG}`]: {
+            cursor: 'pointer',
             /* Format head tag*/
             fontSize: '1.2rem',
             padding: '10px',
             margin: '0px 0px',
         },
         '& .state-icon': {
+            cursor: 'pointer',
             transformOrigin: '0px 8px',
             '&.expanded': {
                 transform: 'rotateX(180deg)'
@@ -65,7 +66,7 @@ const parseBody = (body: string) => {
         $stateIcon
             .attr('@click', 'expanded = ! expanded')
             .attr(':class', "expanded ? 'expanded' : 'collapsed'")
-            
+
         $contentWrapper
             .attr('x-show', 'expanded')
             .attr('x-collapse.duration.200ms', '')

@@ -7,7 +7,8 @@
     --content-width: 760px;
 
     /* Color setup */
-    --light-1: #b0b39d;;
+    --light-1: #b0b39d;
+    ;
     --light-2: #caceb5;
     --light-3: #6f7259;
 
@@ -24,6 +25,9 @@
 
     --logo-1: #f9e67d;
     --logo-2: #f9e67d;
+
+    --text-selection-fg: yellow;
+    --text-selection-bg: black;
 
     /* Default theme */
     --body-bg: var(--dark-3);
@@ -54,12 +58,14 @@
 html {
   /* Base font-size for subsequent rem units */
   font-size: 18px;
+
   @media (min-width: 860px) {
     font-size: 16px;
   }
 }
 
-body, body > section {
+body,
+body>section {
   /* Background noise */
   background-image: repeating-radial-gradient(circle at 17% 32%, var(--dark-2), var(--dark-3) 0.00085px);
 }
@@ -76,7 +82,7 @@ body {
 body * {
   box-sizing: border-box;
   /* https://stackoverflow.com/a/29961714/1008905 */
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -91,13 +97,14 @@ h3 {
 }
 
 a {
-    color: var(--accent-2);
-    text-decoration: none;
+  color: var(--accent-2);
+  text-decoration: none;
 }
 
 a:hover {
   color: var(--accent-1);
 }
+
 img {
   max-width: 100%;
 }
@@ -124,4 +131,15 @@ li::before {
   50% {
     filter: drop-shadow(0px 0px 5px red)
   }
+}
+
+body::-moz-selection {
+  /* Code for Firefox */
+  color: var(--text-selection-fg);
+  background: var(--text-selection-bg);
+}
+
+body::selection {
+  color: var(--text-selection-fg);
+  background: var(--text-selection-bg);
 }
