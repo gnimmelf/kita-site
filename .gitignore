@@ -6,6 +6,10 @@ mydb.sqlite
 db
 db.cache.json
 
+# SSL Certs
+
+.certs
+
 # Systemd service
 
 *.service

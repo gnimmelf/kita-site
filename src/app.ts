@@ -15,11 +15,7 @@ import ShowcasePage from "./theme/ShowcasePage";
 import { stylesRegistry } from "./theme/styles";
 
 
-type AppParams = {
-  port: string | number
-}
-
-export const createApp = async ({ port }: AppParams) => {
+export const createApp = async () => {
 
   const dbConn = await connectDb()
   await setupDb(dbConn)
@@ -113,13 +109,6 @@ export const createApp = async ({ port }: AppParams) => {
         article,
       })
     })
-
-  app.listen(port)
-
-  console.log(
-    `🦊 Elysia (${isDev() ? 'dev' : 'prod'}) is running at ${app.server?.hostname}:${app.server?.port}`
-  );
-  console.log('With features', process.features)
 
   return app
 }
