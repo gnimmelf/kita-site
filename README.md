@@ -100,15 +100,27 @@ link?: <URL>
 
     - Set `etag` + `lastModified` headers to same as repo on *all* requests. - If no change in repo, then no need to fetch.
 
-    - Only in `production`, `dev*` bypasses caching
+    - Only in `production`, `dev` bypasses caching
 
-- [X] Css (JSS)
+        - `dev:css` always uses cache, as it assumes you are not working on content. - Or you can just edit the cache file's content directly
 
 - [X] Static file serving
 
     - Some bugs in Elysia plugins `html` & `static`, try reimplementing with version-ovrrerides
 
         - See `package.json::overrides`
+
+- [ ] Elysia is overkill? - No need for logins, cookies or API.
+
+    - [ ] [Stric](https://stricjs.netlify.app/)
+
+    - [ ] [Hono](https://hono.dev/docs/getting-started/bun)
+
+- [X] Css (JSS)
+
+    - [ ] Too old, check alternatives 
+
+        - [ ] [Aphrodite](https://github.com/Khan/aphrodite)
 
 - [ ] Image storage
 
