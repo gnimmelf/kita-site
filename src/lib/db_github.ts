@@ -4,7 +4,7 @@ import { OctokitResponse } from "@octokit/types";
 import parseFrontMatter from 'parse-md'
 import slugify from "slugify";
 
-import { Article, Articles } from "../types";
+import { Article, Articles, Datafile, Datafiles, FileExtensions } from "../types.d";
 
 import parseMarkdown from './markdown-parser'
 import { isDev } from "./utils";
@@ -43,12 +43,13 @@ const getHeaders = (extra: Record<string, string> = {}) => {
 const parseId = (filename: string): string => {
     const id = slugify(filename.replace(/\.[^/.]+$/, "")).toLocaleLowerCase()
     return filename.startsWith('--')
-        // If filename starts with two dashes, keep them, it means "not published"
+        // If filename starts with two dashes, keep the dashes, it means "not published"
         ? `--${id}`
         : id
 }
 
-const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id">> => {
+const parseMdContent = async (fileContent: string): Promise<Omit<Article, "id" | "ext">> => {
+
     const { metadata, content } = parseFrontMatter(fileContent)
 
     const html = await parseMarkdown(content)
@@ -64,10 +65,11 @@ const parseFileContent = async (fileContent: string): Promise<Omit<Article, "id"
 }
 
 class GithubDb {
-    #octokit: Octokit
+    #octokit!: Octokit
     #env: EnvParams
     #dbFile: BunFile
     #articles: Articles = []
+    #datafiles: Datafiles = []
     #etag: string = ''
     #lastModified: string = ''
 
@@ -124,9 +126,25 @@ class GithubDb {
                 url: file.url,
                 headers
             })
+
+            const fileExtension: FileExtensions = file.path.split('.').pop().toLowerCase()
+
+            let content;
+            switch (fileExtension) {
+                case FileExtensions.JSON:
+                    content = {
+                        data: JSON.parse(response.data)
+                    }
+                    break;
+                case FileExtensions.Markdown:
+                default:
+                    content = await parseMdContent(response.data)                
+            }
+            
             return {
                 id: parseId(file.path),
-                ...(await parseFileContent(response.data))
+                ext: fileExtension,
+                ...content
             }
         }))
 
@@ -155,7 +173,7 @@ class GithubDb {
         const filesList = githubTree
             // Only root-level Markdown-files
             .filter(({ type }: any) => type === 'blob')
-            .filter(({ path }: any) => path.split('.').pop().toLowerCase() === 'md')
+            .filter(({ path }: any) => Object.values(FileExtensions).includes(path.split('.').pop().toLowerCase()))
             .map(({ url, path }: any) => ({ path, url }))
 
         const files = await this.#fecthFiles(filesList)
@@ -189,14 +207,15 @@ class GithubDb {
 
         this.#etag = etag
         this.#lastModified = lastModified
-        this.#articles = files
+        this.#articles = files.filter((file: Article) => file.ext === FileExtensions.Markdown)
+        this.#datafiles = files.filter((file: Datafile) => file.ext === FileExtensions.JSON)
 
         console.log('Articles read from cache')
 
         return true
     }
 
-    async #setArticles() {
+    async #parseDbFiles() {
         let isCached = await this.#readCache()
 
         if (isDev('css') && isCached) {
@@ -217,19 +236,25 @@ class GithubDb {
         }
     }
 
+    async getDatafileById(id: string) {
+        this.#parseDbFiles()
+        const datafile = this.#datafiles.find((datafile: Datafile) => datafile.id === id)
+        return structuredClone(datafile)
+    }
+
     async getArticles() {
-        this.#setArticles()
+        this.#parseDbFiles()
         return structuredClone(this.#articles.filter(({ id }) => !(id.startsWith('__') || id.startsWith('--'))))
     }
 
     async getArticleById(id: string) {
-        this.#setArticles()
+        this.#parseDbFiles()
         const article = this.#articles.find((article: Article) => article.id === id)
         return structuredClone(article)
     }
 
     async setup() {
-        this.#setArticles()
+        this.#parseDbFiles()
     }
 }
 

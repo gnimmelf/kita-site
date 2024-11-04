@@ -1,4 +1,4 @@
-import { Article } from "../types";
+import { Article, FileExtensions } from "../types.d";
 
 
 const defaultDatetimeOptions = {
@@ -33,6 +33,7 @@ export const makeSecretPhrase = () => isDev() ? 'Simple and same as always' : cr
 export const ensureArticle = (id: string, data: Article|undefined): Article => {
   const template = {
     id: '<404>',
+    ext: FileExtensions.Markdown,
     meta: {
       intro: `<span>[404 - ${id}]</span>`
     },

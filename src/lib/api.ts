@@ -1,4 +1,4 @@
-import { CacheControl, Database, Articles, Article } from '../types';
+import { CacheControl, Database, Articles, Article, Datafile } from '../types.d';
 
 export const createApi = (dbConn: Database) => {
   const api = new Api(dbConn)
@@ -16,6 +16,9 @@ export class Api {
     return this.#db.getCacheControl()
   }
 
+  async getDatafileById(id: string): Promise<Datafile | undefined> {
+    return this.#db.getDatafileById(id)
+  } 
 
   async getArticles(): Promise<Articles> {
     return this.#db.getArticles()

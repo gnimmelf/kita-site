@@ -8,6 +8,8 @@ import Layout from './Layout'
 
 import { createSheet } from './styles'
 import CardSection from './CardSection'
+import { BackLink } from './BackLink'
+import { Show } from '../lib/components'
 
 const { classes } = createSheet({
     article: {
@@ -38,30 +40,24 @@ const { classes } = createSheet({
             padding: '5px',
             overflowX: 'auto',
         }
-    },
-    backLink: {
-        padding: '20px 0px',
-        borderTop: 'var(--border-style)',
-        textAlign: 'center'
     }
 })
 
 
 export const ArticlePage: Component<{
-    article: Article
+    article: Article    
 }> = async ({
     ctx,
-    article
+    article,
+    children
 }) => {
         return (
             <Layout ctx={ctx} pageTitle={article.meta.title}>
                 <CardSection class={classes.article}>
                     <h1 class={classes.title}>{article.meta.title}</h1>
                     <div class={classes.body}>{article.body}</div>
-                    <div class={classes.backLink}>
-                        <div>~ ~ ~</div>
-                        <a href="/">Back</a>
-                    </div>
+                    <Show when={children}>{children}</Show>
+                    <BackLink />
                 </CardSection>
             </Layout>
         )

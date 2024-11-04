@@ -7,6 +7,7 @@ import {
 import Layout from './Layout'
 
 import { createSheet } from './styles'
+import { BackLink } from './BackLink'
 
 const { classes } = createSheet({
     article: {
@@ -51,6 +52,7 @@ export const ShowcasePage: Component<{
                     <div class={classes.body}>
                         {article.body}
                     </div>
+                    <BackLink noBorder />
                 </section>
             </Layout>
         )

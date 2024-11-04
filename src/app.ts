@@ -13,6 +13,7 @@ import ArticlePage from "./theme/ArticlePage";
 import ShowcasePage from "./theme/ShowcasePage";
 
 import { stylesRegistry } from "./theme/styles";
+import { AboutMePage } from "./theme/AboutMePage";
 
 
 export const createApp = async () => {
@@ -91,6 +92,16 @@ export const createApp = async () => {
       headers['Content-Type'] = 'text/css';
       const cssStr = stylesRegistry.toString()
       return cssStr
+    })
+    .get('/about-flemming', async (ctx) => {
+      const article = await loadArticle('__about-me')
+      const cvData =  await api.getDatafileById('quadim-profile')
+
+      return AboutMePage({
+        ctx,
+        article,
+        cvData
+      })
     })
     .get('/blog/:id', async ({ params: { id }, ...ctx }) => {
       const article = await loadArticle(id)

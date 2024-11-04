@@ -24,9 +24,14 @@ export type CacheControl = {
     lastModified: string
 }
 
+export enum FileExtensions {
+    Markdown = 'md',
+    JSON = 'json'
+}
+
 // Record types
 
-export type ArticleMeta =  Record<{
+export type ArticleMeta = Record<{
     title?: string,
     intro?: string
     link?: string,
@@ -35,11 +40,20 @@ export type ArticleMeta =  Record<{
 
 export type Article = {
     id: string
+    ext: FileExtensions.Markdown
     body: string,
     meta: ArticleMeta
 }
 
 export type Articles = Article[]
+
+export type Datafile = {
+    id: string
+    ext: FileExtensions.JSON
+    data: Record<string, any>
+}
+
+type Datafiles = Datafile[]
 
 // Interfaces
 
@@ -47,4 +61,5 @@ export interface Database {
     getCacheControl: () => Promise<CacheControl>
     getArticles: () => Promise<Articles>
     getArticleById: (id: string) => Promise<Article | undefined>
+    getDatafileById: (id: string) => Promise<Datafile | undefined>
 }

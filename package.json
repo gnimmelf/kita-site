@@ -16,6 +16,7 @@
     "@octokit/rest": "^21.0.1",
     "cheerio": "^1.0.0",
     "elysia": "^1.0.13",
+    "isomorphic-dompurify": "^2.16.0",
     "jss": "^10.10.0",
     "jss-plugin-extend": "^10.10.0",
     "jss-plugin-global": "^10.10.0",
