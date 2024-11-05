@@ -10,7 +10,7 @@ import Footer from './Footer'
 
 import { createSheet } from './styles'
 
-const { classes } = createSheet({
+export const { classes } = createSheet({
     body: {
         backgroundColor: 'var(--body-bg)',
         color: 'var(--body-fg)',
@@ -41,7 +41,7 @@ export const Layout: Component<{
     headTags = [],
     endTags = []
 }) => {
-        const siteTitle = ctx.site.header.meta.title || 'Kita-site'
+        const siteTitle = ctx?.site?.header?.meta?.title || 'Kita-site'
         return (
             <>
                 {'<!doctype html>'}

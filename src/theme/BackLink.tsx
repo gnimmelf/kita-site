@@ -33,3 +33,5 @@ export const BackLink: Component<{
             </div>
         )
     }
+
+export default BackLink

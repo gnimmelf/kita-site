@@ -1,4 +1,4 @@
-import { Elysia, NotFoundError } from "elysia";
+import { Elysia, NotFoundError, StatusMap } from "elysia";
 import { html } from '@elysiajs/html'
 
 import { Article, Context } from "./types";
@@ -13,7 +13,8 @@ import ArticlePage from "./theme/ArticlePage";
 import ShowcasePage from "./theme/ShowcasePage";
 
 import { stylesRegistry } from "./theme/styles";
-import { AboutMePage } from "./theme/AboutMePage";
+import AboutMePage from "./theme/AboutMePage";
+import ErrorPage from "./theme/ErrorPage";
 
 
 export const createApp = async () => {
@@ -28,13 +29,18 @@ export const createApp = async () => {
   }
 
   const app = new Elysia()
-    .onError(async ({ error }) => {
+    .onError(async ({code, error, ...ctx}) => {      
+      // Deriveds not available for 404, so cannot present a 404 insie the Layout-template
       console.error(error)
-      return new Response(error.toString())
+      if (code === 'UNKNOWN') {
+        ctx.set.status = StatusMap["Internal Server Error"]      
+        return ErrorPage({ ctx, error })
+      }      
     })
     .use(html({
       autoDetect: true,
       isHtml: () => {
+        // Assume only serve html pages
         return true
       }
     }))
@@ -95,7 +101,7 @@ export const createApp = async () => {
     })
     .get('/about-flemming', async (ctx) => {
       const article = await loadArticle('__about-me')
-      const cvData =  await api.getDatafileById('quadim-profile')
+      const cvData = await api.getDatafileById('quadim-profile')
 
       return AboutMePage({
         ctx,
