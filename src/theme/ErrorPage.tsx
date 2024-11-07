@@ -19,7 +19,7 @@ const ErrorPage: Component<{
     ctx,
     error
 }) => {
-        console.dir(ctx)
+        // console.dir(ctx)
         const pageTitle = `Error - ${ctx.set.status}`
         return (
             <Layout ctx={ctx} pageTitle={pageTitle}>
@@ -27,7 +27,7 @@ const ErrorPage: Component<{
                     <p>
                         {error.name}
                     </p>
-                    <p>                        
+                    <p>
                         {error.message}
                     </p>
 

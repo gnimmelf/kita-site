@@ -9,7 +9,7 @@ import { Show } from '../lib/components'
 import { SvgFile } from './Svg'
 import { MdiGithub, MdiLinkedin } from './Icons'
 
-import AccordionBody from './AccordionBody'
+import AccordionArticleBody from './AccordionArticleBody'
 import CardSection from './CardSection'
 
 const { classes } = createSheet({
@@ -110,7 +110,7 @@ const Header: Component<{
                                     <h2>{header.meta.title}</h2>
                                 </Show>
                                 <div class="text">{header.meta.intro}</div>
-                                <AccordionBody article={header} />
+                                <AccordionArticleBody article={header} />
                             </CardSection>
                         </div>
                     </section>

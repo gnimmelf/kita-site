@@ -101,7 +101,7 @@ class GithubDb {
                 return
             }
             else if (error.status === 401) {
-                console.log('Access denied - Check github PAT expiery')
+                console.log('Access denied - Check github PAT expiry')
                 return
             }
             throw error
@@ -138,9 +138,9 @@ class GithubDb {
                     break;
                 case FileExtensions.Markdown:
                 default:
-                    content = await parseMdContent(response.data)                
+                    content = await parseMdContent(response.data)
             }
-            
+
             return {
                 id: parseId(file.path),
                 ext: fileExtension,

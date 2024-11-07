@@ -32,7 +32,7 @@ export const Layout: Component<{
     pageTitle?: string
     headTags?: string[]
     endTags?: string[]
-    isIndexPage: Boolean
+    isIndexPage?: Boolean
 }> = ({
     ctx,
     children,

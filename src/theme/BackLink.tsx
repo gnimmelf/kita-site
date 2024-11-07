@@ -9,7 +9,7 @@ import { createSheet } from './styles'
 
 const { classes } = createSheet({
     backLink: {
-        padding: '20px 0px',        
+        padding: '20px 0px',
         textAlign: 'center'
     },
     borderTop: {
@@ -18,7 +18,7 @@ const { classes } = createSheet({
 })
 
 export const BackLink: Component<{
-    noBorder: boolean
+    noBorder?: boolean
 }> = async ({
     noBorder,
 }) => {

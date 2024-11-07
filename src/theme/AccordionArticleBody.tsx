@@ -11,7 +11,7 @@ import { createSheet } from './styles'
 // Head Tag for accordion
 const HTAG = 'h2'
 
-const { classes } = createSheet({
+export const { classes } = createSheet({
     accordion: {
         borderTop: 'var(--border-style)',
         [`& > ${HTAG}`]: {
@@ -32,8 +32,6 @@ const { classes } = createSheet({
             padding: '2px 10px',
         },
     },
-
-
 })
 
 /**
@@ -75,7 +73,7 @@ const parseBody = (body: string) => {
     return $.html()
 }
 
-const AccordionBody: Component<{
+const AccordionArticleBody: Component<{
     article: Article
 }> = ({
     article,
@@ -85,4 +83,4 @@ const AccordionBody: Component<{
         )
     }
 
-export default AccordionBody
+export default AccordionArticleBody

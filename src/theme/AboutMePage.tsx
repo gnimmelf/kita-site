@@ -6,7 +6,6 @@
  */
 import Html from '@kitajs/html'
 
-import jsonpath from 'jsonpath'
 import { format } from 'date-fns';
 
 import {
@@ -15,7 +14,36 @@ import {
     Datafile,
 } from '../types'
 
-import ArticlePage from './ArticlePage'
+import CardSection from './CardSection'
+import Layout from './Layout';
+import { classes as articlePageClasses} from './ArticlePage'
+import AccordionArticleBody, { classes as accordionClasses} from './AccordionArticleBody'
+import BackLink from './BackLink';
+import { createSheet } from './styles';
+
+const { classes } = createSheet({
+    content: {
+        textAlign: 'center',
+        padding: '0px',
+        '& h3': {
+            display: 'inline-block',
+            borderBottom: '1px dashed',
+            borderBottomWidth: '1px',
+            borderBottomColor: 'currentColor',
+            paddingBottom: '3px',
+            borderImage: `repeating-linear-gradient(
+                to right,
+                currentColor 0,
+                currentColor 8px,
+                transparent 8px,
+                transparent 12px
+            ) 1`,
+        }
+    },
+    accordionContent: {
+        padding: '0 15px'
+    }
+})
 
 interface DateRange {
     frommonth: number;
@@ -43,6 +71,12 @@ interface Education extends DateRange {
     degree: string;
     description: string;
     school: string;
+}
+
+interface Employment extends DateRange {
+    company: string;
+    title: string;
+    description: string;
 }
 
 interface Expertise {
@@ -75,22 +109,21 @@ interface EducationProps extends TitleProps {
     educations: Education[];
 }
 
+interface EmploymentProps extends TitleProps {
+    employments: Employment[];
+}
+
 interface ExpertiseProps extends TitleProps {
     expertises: Expertise[]
-    experiences: Experience[]
-    skills: Skill[]
-
 }
 
 interface ExperienceProps extends TitleProps {
-    expertises: Expertise[]
     experiences: Experience[]
     skills: Skill[]
 }
 
-interface SkillsUsageProps extends TitleProps {
-    usageId: string
-    skills: Skill[];
+interface SkillPillProps {
+    skill: Skill;
 }
 
 interface PersonalInfoProps {
@@ -109,9 +142,22 @@ const sortByDate = (a: DateRange, b: DateRange): number => {
     return b.frommonth - a.frommonth;
 };
 
+const filterExperienceSkills = (experienceId: string, skills: Skill[]) => {
+    const filtered = skills
+        .filter((skill: Skill) => {
+            return skill.readOnlyCompactExperienceList
+                .some((exp: Experience) => exp.id === experienceId)
+        })
+        .sort((a, b) => b.skillLevel - a.skillLevel)
+    return filtered
+}
+
+/**
+ * Components
+ */
 
 const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
-    <section>
+    <section style={{padding: '10px'}}>
         <div>
             {/* <img
                 src={data.image}
@@ -131,115 +177,80 @@ const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
     </section>
 );
 
-const Education: Component<EducationProps> = ({ title, educations }) => (
-    <section>
-        <h2>{title}</h2>
-        <div>
-            {[...educations].sort(sortByDate).map((edu, index) => (
-                <div>
-                    <h3>{edu.school}</h3>
-                    <p>
-                        {format(new Date(edu.fromyear, edu.frommonth - 1), 'MMM yyyy')}
-                        {' - '}
-                        {format(new Date(edu.toyear, edu.tomonth - 1), 'MMM yyyy')}
-                    </p>
-                    <p>{edu.description}</p>
-                    <p>{edu.degree ? `${edu.degree}` : 'Degree'} in {edu.fieldOfStudy}</p>
-                </div>
-            ))}
+const Educations: Component<EducationProps> = ({ title, educations }) => (
+    <CollapsSection title={title}>
+        {[...educations].sort(sortByDate).map((edu, index) => (
+            <div>
+                <h3>{edu.school}</h3>
+                <p>
+                    {format(new Date(edu.fromyear, edu.frommonth - 1), 'MMM yyyy')}
+                    {' - '}
+                    {format(new Date(edu.toyear, edu.tomonth - 1), 'MMM yyyy')}
+                </p>
+                <p>{edu.description}</p>
+                <p>{edu.degree ? `${edu.degree}` : 'Degree'} in {edu.fieldOfStudy}</p>
+            </div>
+        ))}
+    </CollapsSection>
+)
+
+const Employments: Component<EmploymentProps> = ({ title, employments }) => (
+    <CollapsSection title={title}>
+        {[...employments].sort(sortByDate).map((emp, index) => (
+            <div>
+                <h3>{emp.company}</h3>
+                <p>
+                    {emp.title}
+                    {', '}
+                    {format(new Date(emp.fromyear, emp.frommonth - 1), 'MMM yyyy')}
+                    {' - '}
+                    {format(new Date(emp.toyear, emp.tomonth - 1), 'MMM yyyy')}
+                </p>
+                <p>{emp.description}</p>
+            </div>
+        ))}
+    </CollapsSection>
+)
+
+const SkillPill: Component<SkillPillProps> = ({ skill }) => (
+    <span style={{
+        textTransform: 'capitalize',
+        fontStyle: 'italic'
+    }}>{skill.name}</span>
+)
+
+const Experiences: Component<ExperienceProps> = ({ title, experiences, skills }) => (
+    <CollapsSection title={title}>
+        {[...experiences].sort(sortByDate).map((exp) => (
+            <div>
+                <h3>{exp.title}</h3>
+                <p>
+                    {exp.company}
+                    {', '}
+                    {format(new Date(exp.fromyear, exp.frommonth - 1), 'MMM yyyy')}
+                    {' - '}
+                    {format(new Date(exp.toyear, exp.tomonth - 1), 'MMM yyyy')}
+                </p>
+                <p>{exp.description}</p>
+                <p>
+                    {filterExperienceSkills(exp.id, skills).map(skill => (
+                        <SkillPill skill={skill} />
+                    )).join(' / ')}
+                </p>
+            </div>
+        ))}
+    </CollapsSection>
+);
+
+const CollapsSection: Component<{title: string}> = ({title, children}) => (
+    <section x-data="{ expanded: false }" class={accordionClasses.accordion}>
+        <h2 x-on:click="expanded = ! expanded">{title}</h2>
+        <div x-on:click="expanded = ! expanded" class="state-icon">﹀</div>
+        <div x-show="expanded" x-collapse class={classes.accordionContent}>
+            {children}
         </div>
     </section>
 )
-
-const Experience: Component<ExperienceProps> = ({ title, experiences }) => (
-    <section>
-        <h2>{title}</h2>
-        <div>
-            {[...experiences].sort(sortByDate).map((exp) => (
-                <div>
-                    <h3>{exp.title}</h3>
-                    <p>{exp.company}</p>
-                    <p>
-                        {format(new Date(exp.fromyear, exp.frommonth - 1), 'MMM yyyy')} -
-                        {format(new Date(exp.toyear, exp.tomonth - 1), 'MMM yyyy')}
-                    </p>
-                    <p>{exp.description}</p>
-                    <p>{exp.id}</p>
-                </div>
-            ))}
-        </div>
-    </section>
-);
-
-const Expertise: Component<ExpertiseProps> = ({ title, expertises, experiences, skills }) => (
-    <section>
-        <h2>{title}</h2>
-        {expertises.map((expertise) => (
-            <div>
-                <h3>{expertise.title}</h3>
-                <div>
-                    <Skills
-                        title="Skills & Technologies"
-                        skills={expertise.skills}
-                    />
-                </div>
-            </div>
-        ))}
-    </section>
-);
-
-const SkillsUsage: Component<SkillsUsageProps> = ({ id, title, skills }) => {
-    const sortedSkills = [...skills].sort((a, b) => b.skillExperienceMonths - a.skillExperienceMonths)
-
-
-    return (
-        <section>
-            <h2>{title}</h2>
-            <div>
-                {sortedSkills.map((skill, index) => (
-                    <div>
-                        <div>
-                            <h3>{skill.name}</h3>
-                            <div>Level: {skill.skillLevel}/100</div>
-                        </div>
-                        <div>
-                            Experience: {Math.floor(skill.skillExperienceMonths / 12)} years,
-                            {skill.skillExperienceMonths % 12} months
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </section>
-    );
-};
-
-
-function resolveParents(data, paths) {
-    return paths.map(path => {
-        // Remove the last element in the path to get the parent path
-        const parentPath = path.slice(1, -1);
-        console.log({ path, parentPath })
-
-        // Traverse the data structure, handling both objects and arrays
-        let lastNonArrayParent = data;
-
-        const result = parentPath.reduce((acc, key) => {
-            if (acc && typeof acc === 'object') {
-                const nextAcc = acc[isNaN(key) ? key : Number(key)];
-                
-                // Update lastNonArrayParent only if nextAcc is not an array
-                if (!Array.isArray(nextAcc)) {
-                    lastNonArrayParent = nextAcc;
-                }
-                
-                return nextAcc;
-            }
-            return undefined;
-        }, data);
-
-        return Array.isArray(result) ? lastNonArrayParent : result;
-    })
-}
 
 const AboutMePage: Component<{
     article: Article,
@@ -251,44 +262,44 @@ const AboutMePage: Component<{
     article,
     cvData
 }) => {
+    const headTags = [
+        '<script src="//unpkg.com/@alpinejs/collapse"></script>',
+        '<script src="//unpkg.com/alpinejs" defer></script>'
+    ]
         const { data } = cvData
-
-        const id = 'de934608-4bf8-4ad4-b483-d294157370e3'
-        const paths = jsonpath.paths(data, `$..expertises..[?(@.id=="${id}")]`)
-
-        const res = resolveParents(data, paths, 3)
-
         return (
-            <pre>
-                {JSON.stringify(res, null, 2)}
-            </pre>
-        )
+            <Layout ctx={ctx} pageTitle={article.meta.title} headTags={headTags}>
+                <CardSection class={articlePageClasses.article}>
+                    <h1 class={articlePageClasses.title}>{article.meta.title}</h1>
 
-        return (
-            <>
-                {/* <ArticlePage ctx={ctx} article={article}> */}
-                <h2>CV - {data.name}</h2>
+                    <div class={classes.content}>
 
-                <PersonalInfo data={data} />
+                        <h2>CV - {data.name}</h2>
 
-                <Experience
-                    title="Professional Experience"
-                    experiences={data.experiences}
-                    skills={data.skills}
-                />
+                        <PersonalInfo data={data} />
 
-                {/* <Expertise
-                        title="Areas of Expertise"
-                        expertises={data.expertises}                        
-                    /> */}
+                        <AccordionArticleBody article={article} />
 
-                {/* <Education
-                        title="Education"
-                        educations={data.educations}
-                    /> */}
+                        <Experiences
+                            title="Highlighted Experiences"
+                            experiences={data.experiences}
+                            skills={data.skills}
+                        />
 
-                {/* </ArticlePage> */}
-            </>
+                        <Employments
+                                title="Employments"
+                                employments={data.employers}
+                            />
+
+                        <Educations
+                                title="Education"
+                                educations={data.educations}
+                            />
+
+                        <BackLink />
+                    </div>
+                </CardSection>
+            </Layout>
         )
     }
 

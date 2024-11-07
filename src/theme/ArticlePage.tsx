@@ -11,7 +11,7 @@ import CardSection from './CardSection'
 import { BackLink } from './BackLink'
 import { Show } from '../lib/components'
 
-const { classes } = createSheet({
+export const { classes } = createSheet({
     article: {
         '& > *': {
             padding: '0px 1rem',
@@ -26,7 +26,6 @@ const { classes } = createSheet({
         textAlign: 'center',
         textTransform: 'capitalize',
         fontSize: '1.7rem',
-
     },
     body: {
         '& > h3': {
@@ -45,14 +44,16 @@ const { classes } = createSheet({
 
 
 export const ArticlePage: Component<{
-    article: Article    
+    article: Article
+    headTags?: string[]
 }> = async ({
     ctx,
     article,
-    children
+    children,
+    headTags = []
 }) => {
         return (
-            <Layout ctx={ctx} pageTitle={article.meta.title}>
+            <Layout ctx={ctx} pageTitle={article.meta.title} headTags={headTags}>
                 <CardSection class={classes.article}>
                     <h1 class={classes.title}>{article.meta.title}</h1>
                     <div class={classes.body}>{article.body}</div>
