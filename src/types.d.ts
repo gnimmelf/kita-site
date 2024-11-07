@@ -11,12 +11,12 @@ type Context = {
 } & ElysiaContext
 
 
-type KitaProps<T = {}> = {
-    children?: Children
-    ctx: Context
-} & Omit<T, Parameters, query>;
+type KitaProps<T = Record<string, any>> = {
+    children?: Children;
+    ctx?: Context;
+} & Omit<T, 'Parameters' | 'query'>;
 
-export type Component<T = {}> = (this: void, props: KitaProps<T>) => JSX.Element;
+export type Component<T = Record<string, any>> = (this: void, props: KitaProps<T>) => JSX.Element;
 
 
 export type CacheControl = {
