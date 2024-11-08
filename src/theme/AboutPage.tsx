@@ -6,7 +6,7 @@
  */
 import Html from "@kitajs/html";
 
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 import { Article, Component, Datafile } from "../types";
 
@@ -171,12 +171,10 @@ const formatYearMonth = (year: number, month: number) => {
 const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
     <section style={{ padding: "10px" }}>
         <div>
-            {
-                /* <img
+            {/* <img
                 src={data.image}
                 alt={data.name}
-            /> */
-            }
+            /> */}
         </div>
         <div>
             <h1>{data.name}</h1>
@@ -187,7 +185,7 @@ const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
                 <p>Phone: {data.phone}</p>
                 <p>
                     Birth Date:{" "}
-                    {format(new Date(data.birthdate), "MMMM do, yyyy")}
+                    {format(parse(data.birthdate, 'dd/MM/yyyy', new Date()), "MMMM do, yyyy")}
                 </p>
             </div>
         </div>
