@@ -251,7 +251,10 @@ const Experiences: Component<ExperienceProps> = ({ title, experiences, skills })
 const CollapsSection: Component<{title: string}> = ({title, children}) => (
     <section x-data="{ expanded: false }" class={accordionClasses.accordion}>
         <h2 x-on:click="expanded = ! expanded">{title}</h2>
-        <div x-on:click="expanded = ! expanded" class="state-icon">﹀</div>
+        <div
+            x-on:click="expanded = ! expanded"
+            x-bind:class="expanded ? 'expanded' : 'collapsed'"
+            class="state-icon">﹀</div>
         <div x-show="expanded" x-collapse class={classes.accordionContent}>
             {children}
         </div>
