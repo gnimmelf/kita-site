@@ -11,7 +11,9 @@ import { Show } from "../lib/components";
 export const { classes } = createSheet({
     article: {
         "& > *": {
-            padding: "0px 1rem",
+            /* Use left, right explicitly to not mess with top, bottom set elsewhere */
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
         },
         maxWidth: "var(--content-width)",
         margin: "0 auto",
