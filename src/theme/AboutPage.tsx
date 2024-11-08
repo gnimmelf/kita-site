@@ -4,33 +4,31 @@
  * To:
  *      https://github.com/gnimmelf/intergate-io-cms/edit/main/quadim-profile.json
  */
-import Html from '@kitajs/html'
+import Html from "@kitajs/html";
 
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
-import {
-    Component,
-    Article,
-    Datafile,
-} from '../types'
+import { Article, Component, Datafile } from "../types";
 
-import CardSection from './CardSection'
-import Layout from './Layout';
-import { classes as articlePageClasses} from './ArticlePage'
-import AccordionArticleBody, { classes as accordionClasses} from './AccordionArticleBody'
-import BackLink from './BackLink';
-import { createSheet } from './styles';
+import CardSection from "./CardSection";
+import Layout from "./Layout";
+import { classes as articlePageClasses } from "./ArticlePage";
+import AccordionArticleBody, {
+    classes as accordionClasses,
+} from "./AccordionArticleBody";
+import BackLink from "./BackLink";
+import { createSheet } from "./styles";
 
 const { classes } = createSheet({
     content: {
-        textAlign: 'center',
-        padding: '0px',
-        '& h3': {
-            display: 'inline-block',
-            borderBottom: '1px dashed',
-            borderBottomWidth: '1px',
-            borderBottomColor: 'currentColor',
-            paddingBottom: '3px',
+        textAlign: "center",
+        padding: "0px",
+        "& h3": {
+            display: "inline-block",
+            borderBottom: "1px dashed",
+            borderBottomWidth: "1px",
+            borderBottomColor: "currentColor",
+            paddingBottom: "3px",
             borderImage: `repeating-linear-gradient(
                 to right,
                 currentColor 0,
@@ -38,12 +36,12 @@ const { classes } = createSheet({
                 transparent 8px,
                 transparent 12px
             ) 1`,
-        }
+        },
     },
     accordionContent: {
-        padding: '0 15px'
-    }
-})
+        padding: "0 15px",
+    },
+});
 
 interface DateRange {
     frommonth: number;
@@ -114,12 +112,12 @@ interface EmploymentProps extends TitleProps {
 }
 
 interface ExpertiseProps extends TitleProps {
-    expertises: Expertise[]
+    expertises: Expertise[];
 }
 
 interface ExperienceProps extends TitleProps {
-    experiences: Experience[]
-    skills: Skill[]
+    experiences: Experience[];
+    skills: Skill[];
 }
 
 interface SkillPillProps {
@@ -127,7 +125,17 @@ interface SkillPillProps {
 }
 
 interface PersonalInfoProps {
-    data: Pick<CVData, 'name' | 'description' | 'birthdate' | 'address' | 'city' | 'mail' | 'image' | 'phone'>;
+    data: Pick<
+        CVData,
+        | "name"
+        | "description"
+        | "birthdate"
+        | "address"
+        | "city"
+        | "mail"
+        | "image"
+        | "phone"
+    >;
 }
 
 interface CVPageProps {
@@ -146,29 +154,29 @@ const filterExperienceSkills = (experienceId: string, skills: Skill[]) => {
     const filtered = skills
         .filter((skill: Skill) => {
             return skill.readOnlyCompactExperienceList
-                .some((exp: Experience) => exp.id === experienceId)
+                .some((exp: Experience) => exp.id === experienceId);
         })
-        .sort((a, b) => b.skillLevel - a.skillLevel)
-    return filtered
-}
+        .sort((a, b) => b.skillLevel - a.skillLevel);
+    return filtered;
+};
 
 const formatYearMonth = (year: number, month: number) => {
-    return year
-        ? format(new Date(year, month - 1), 'MMM yyyy')
-        : 'Ongoing'
-}
+    return year ? format(new Date(year, month - 1), "MMM yyyy") : "Ongoing";
+};
 
 /**
  * Components
  */
 
 const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
-    <section style={{padding: '10px'}}>
+    <section style={{ padding: "10px" }}>
         <div>
-            {/* <img
+            {
+                /* <img
                 src={data.image}
                 alt={data.name}
-            /> */}
+            /> */
+            }
         </div>
         <div>
             <h1>{data.name}</h1>
@@ -177,7 +185,10 @@ const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
                 <p>Address: {data.address}, {data.city}</p>
                 <p>Email: {data.mail}</p>
                 <p>Phone: {data.phone}</p>
-                <p>Birth Date: {format(new Date(data.birthdate), 'MMMM do, yyyy')}</p>
+                <p>
+                    Birth Date:{" "}
+                    {format(new Date(data.birthdate), "MMMM do, yyyy")}
+                </p>
             </div>
         </div>
     </section>
@@ -190,15 +201,18 @@ const Educations: Component<EducationProps> = ({ title, educations }) => (
                 <h3>{edu.school}</h3>
                 <p>
                     {formatYearMonth(edu.fromyear, edu.frommonth)}
-                    {' - '}
+                    {" - "}
                     {formatYearMonth(edu.toyear, edu.tomonth)}
                 </p>
                 <p>{edu.description}</p>
-                <p>{edu.degree ? `${edu.degree}` : 'Degree'} in {edu.fieldOfStudy}</p>
+                <p>
+                    {edu.degree ? `${edu.degree}` : "Degree"} in{" "}
+                    {edu.fieldOfStudy}
+                </p>
             </div>
         ))}
     </CollapsSection>
-)
+);
 
 const Employments: Component<EmploymentProps> = ({ title, employments }) => (
     <CollapsSection title={title}>
@@ -207,109 +221,117 @@ const Employments: Component<EmploymentProps> = ({ title, employments }) => (
                 <h3>{emp.company}</h3>
                 <p>
                     {emp.title}
-                    {', '}
+                    {", "}
                     {formatYearMonth(emp.fromyear, emp.frommonth)}
-                    {' - '}
+                    {" - "}
                     {formatYearMonth(emp.toyear, emp.tomonth)}
                 </p>
                 <p>{emp.description}</p>
             </div>
         ))}
     </CollapsSection>
-)
+);
 
 const SkillPill: Component<SkillPillProps> = ({ skill }) => (
-    <span style={{
-        textTransform: 'capitalize',
-        fontStyle: 'italic'
-    }}>{skill.name}</span>
-)
+    <span
+        style={{
+            textTransform: "capitalize",
+            fontStyle: "italic",
+        }}
+    >
+        {skill.name}
+    </span>
+);
 
-const Experiences: Component<ExperienceProps> = ({ title, experiences, skills }) => (
+const Experiences: Component<ExperienceProps> = (
+    { title, experiences, skills },
+) => (
     <CollapsSection title={title}>
         {[...experiences].sort(sortByDate).map((exp) => (
             <div>
                 <h3>{exp.title}</h3>
                 <p>
                     {exp.company}
-                    {', '}
+                    {", "}
                     {formatYearMonth(exp.fromyear, exp.frommonth)}
-                    {' - '}
+                    {" - "}
                     {formatYearMonth(exp.toyear, exp.tomonth)}
                 </p>
                 <p>{exp.description}</p>
                 <p>
-                    {filterExperienceSkills(exp.id, skills).map(skill => (
+                    {filterExperienceSkills(exp.id, skills).map((skill) => (
                         <SkillPill skill={skill} />
-                    )).join(' / ')}
+                    )).join(" / ")}
                 </p>
             </div>
         ))}
     </CollapsSection>
 );
 
-const CollapsSection: Component<{title: string}> = ({title, children}) => (
+const CollapsSection: Component<{ title: string }> = ({ title, children }) => (
     <section x-data="{ expanded: false }" class={accordionClasses.accordion}>
         <h2 x-on:click="expanded = ! expanded">{title}</h2>
         <div
             x-on:click="expanded = ! expanded"
             x-bind:class="expanded ? 'expanded' : 'collapsed'"
-            class="state-icon">﹀</div>
+            class="state-icon"
+        >
+            ﹀
+        </div>
         <div x-show="expanded" x-collapse class={classes.accordionContent}>
             {children}
         </div>
     </section>
-)
+);
 
-const AboutPage: Component<{
-    article: Article,
+export const AboutPage: Component<{
+    article: Article;
     cvData: Datafile & {
-        data: CVData
-    }
+        data: CVData;
+    };
 }> = async ({
     ctx,
     article,
-    cvData
+    cvData,
 }) => {
     const headTags = [
         '<script src="//unpkg.com/@alpinejs/collapse"></script>',
-        '<script src="//unpkg.com/alpinejs" defer></script>'
-    ]
-        const { data } = cvData
-        return (
-            <Layout ctx={ctx} pageTitle={article.meta.title} headTags={headTags}>
-                <CardSection class={articlePageClasses.article}>
-                    <h1 class={articlePageClasses.title}>{article.meta.title}</h1>
+        '<script src="//unpkg.com/alpinejs" defer></script>',
+    ];
+    const { data } = cvData;
+    return (
+        <Layout ctx={ctx} pageTitle={article.meta.title} headTags={headTags}>
+            <CardSection class={articlePageClasses.article}>
+                <h1 class={articlePageClasses.title}>{article.meta.title}</h1>
 
-                    <div class={classes.content}>
+                <div class={classes.content}>
+                    <h2>CV - {data.name}</h2>
 
-                        <h2>CV - {data.name}</h2>
+                    <PersonalInfo data={data} />
 
-                        <PersonalInfo data={data} />
+                    <AccordionArticleBody article={article} />
 
-                        <AccordionArticleBody article={article} />
+                    <Experiences
+                        title="Highlighted Experiences"
+                        experiences={data.experiences}
+                        skills={data.skills}
+                    />
 
-                        <Experiences
-                            title="Highlighted Experiences"
-                            experiences={data.experiences}
-                            skills={data.skills}
-                        />
+                    <Employments
+                        title="Employments"
+                        employments={data.employers}
+                    />
 
-                        <Employments
-                                title="Employments"
-                                employments={data.employers}
-                            />
+                    <Educations
+                        title="Education"
+                        educations={data.educations}
+                    />
 
-                        <Educations
-                                title="Education"
-                                educations={data.educations}
-                            />
+                    <BackLink />
+                </div>
+            </CardSection>
+        </Layout>
+    );
+};
 
-                        <BackLink />
-                    </div>
-                </CardSection>
-            </Layout>
-        )
-    }
-
-export default AboutPage
+export default AboutPage;

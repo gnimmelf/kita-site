@@ -1,51 +1,79 @@
-import Html from '@kitajs/html'
-import {
-    Component,
-    Article,
-    Context,
-} from '../types'
+import Html from "@kitajs/html";
+import { Article, Component, Context, TeaserLinkTypes } from "../types.d";
 
-import CardSection from './CardSection'
-import Link from './TeaserMetaLink'
+import CardSection from "./CardSection";
 
-import { createSheet } from './styles'
+import { createSheet } from "./styles";
+import { parseArticleMetaLink } from "../lib/utils";
+import { MdiCog, MdiExternalLink } from "./Icons";
 
 const { classes } = createSheet({
     teaser: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '0px 10px 10px',
+        display: "flex",
+        flexDirection: "column",
+        padding: "0px 10px 10px",
+        height: '100%',
+        color: "var(--card-fg)",
+        '&:hover': {
+            color: "var(--card-fg)"
+        }
     },
     title: {
-        textTransform: 'capitalize'
+        textTransform: "capitalize",
     },
     intro: {
         // Push link down to bottom of teaser card
-        flexGrow: '1'
+        flexGrow: "1",
     },
     link: {
-        display: 'inline-flex',
-        justifyContent: 'end',
-        paddingTop: '1rem'
-    }
-})
+        display: "inline-flex",
+        justifyContent: "end",
+        paddingTop: "1rem",
+        color: "var(--accent-2)",
+        '&:hover': {
+            color: "var(--accent-1)"
+        }
 
-const Teaser: Component<{
-    article: Article,
-    ctx: Context
+    },
+    vAlign: {
+        display: "flex",
+        alignItems: "center",
+    }
+});
+
+export const Teaser: Component<{
+    article: Article;
+    ctx: Context;
 }> = ({
     article,
-    ctx
+    ctx,
 }) => {
-        return (
-            <CardSection class={classes.teaser} data-id={article.id} data-weight={article.meta.weight}>
+    const linkData = parseArticleMetaLink(article, ctx);
+    const LinkIcon = ({
+        [TeaserLinkTypes.External]: <MdiExternalLink />,
+        [TeaserLinkTypes.Showcase]: <MdiCog />,
+        [TeaserLinkTypes.ReadMore]: "",
+    })[linkData.type];
+    const target = linkData.isExternal ? "_blank" : "";
+    const href = linkData.url.href;
+
+    return (
+        <CardSection
+            data-id={article.id}
+            data-weight={article.meta.weight}
+        >
+            <a href={href} target={target} class={classes.teaser}>
                 <h2 class={classes.title}>{article.meta.title}</h2>
                 <div class={classes.intro}>{article.meta.intro}</div>
                 <div class={classes.link}>
-                    <Link ctx={ctx} article={article} />
+                    <span class={classes.vAlign}>
+                        <span>{linkData.name}</span>
+                        {LinkIcon}
+                    </span>
                 </div>
-            </CardSection>
-        )
-    }
+            </a>
+        </CardSection>
+    );
+};
 
-export default Teaser
+export default Teaser;

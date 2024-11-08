@@ -51,7 +51,8 @@
 
     --border-style: solid var(--accent-alt-2) 1px;
     --border-radius: 10px;
-    --drop-shadow-filter: drop-shadow(0px 0px 5px var(--accent-alt-2))
+    --drop-shadow-filter: drop-shadow(0px 0px 5px var(--accent-alt-2));
+    --drop-shadow-filter-accent: drop-shadow(0px 0px 5px var(--accent-alt-1));
   }
 }
 

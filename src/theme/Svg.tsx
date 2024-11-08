@@ -1,14 +1,11 @@
-import Html from '@kitajs/html'
-import * as cheerio from 'cheerio';
-import {
-    Component,
-} from '../types'
+import Html from "@kitajs/html";
+import * as cheerio from "cheerio";
+import { Component } from "../types";
 
 /**
  * See:
  *  - https://css-tricks.com/svg-properties-and-css/
  */
-
 
 /**
  * Static Svg-filters defintions.
@@ -21,17 +18,19 @@ import {
  */
 export const SvgFilters: Component = () => {
     return (
-        <svg style={{
-            position: 'absolute',
-            height: '0px'
-        }}>
+        <svg
+            style={{
+                position: "absolute",
+                height: "0px",
+            }}
+        >
             <defs>
-                <filter id='noise'>
+                <filter id="noise">
                     <feTurbulence
-                        type='fractalNoise'
-                        baseFrequency='1'
-                        numOctaves='3'
-                        stitchTiles='stitch'
+                        type="fractalNoise"
+                        baseFrequency="1"
+                        numOctaves="3"
+                        stitchTiles="stitch"
                     />
                 </filter>
 
@@ -50,16 +49,19 @@ export const SvgFilters: Component = () => {
                     />
                 </filter>
             </defs>
-        </svg >
-    )
-}
+        </svg>
+    );
+};
 
 export const SvgRect: Component<{ filterId?: string }> = ({ filterId }) => {
     return (
-        <rect width='100%' height='100%' filter={filterId ? `url(#${filterId})` : ''} />
-    )
-}
-
+        <rect
+            width="100%"
+            height="100%"
+            filter={filterId ? `url(#${filterId})` : ""}
+        />
+    );
+};
 
 /**
  * Create an Svg component based on an svg-file-path.
@@ -70,21 +72,25 @@ export const SvgRect: Component<{ filterId?: string }> = ({ filterId }) => {
  * @param filterId string reference to a svg-filter tag
  * @returns
  */
-export const SvgFile: Component<{ file: string, filterId?: string }> = async ({ file, filterId, children }) => {
-    const bunFile = Bun.file(file)
-    const xml = await bunFile.text()
+export const SvgFile: Component<{ file: string; filterId?: string }> = async (
+    { file, filterId, children },
+) => {
+    const bunFile = Bun.file(file);
+    const xml = await bunFile.text();
     const $ = cheerio.load(xml, {}, false);
 
-    const viewBox = $('svg').attr('viewBox')
+    const viewBox = $("svg").attr("viewBox");
 
-    const $svg = $(`<svg viewbox="${viewBox}" xmlns="http://www.w3.org/2000/svg">`)
+    const $svg = $(
+        `<svg viewbox="${viewBox}" xmlns="http://www.w3.org/2000/svg">`,
+    );
 
-    const defs = children?.toString()
+    const defs = children?.toString();
 
     // Add
-    $svg.append(`<defs>${defs || ''}</defs>`)
+    $svg.append(`<defs>${defs || ""}</defs>`);
 
-    $svg.append($('g').attr('filter', filterId ? `url(#${filterId})` : ''))
+    $svg.append($("g").attr("filter", filterId ? `url(#${filterId})` : ""));
 
-    return $svg.toString()
-}
+    return $svg.toString();
+};

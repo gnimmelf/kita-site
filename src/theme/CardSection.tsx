@@ -1,24 +1,28 @@
-import Html from '@kitajs/html'
-import {
-    Component,
-} from '../types'
+import Html from "@kitajs/html";
 
-import { createSheet } from './styles'
+import { Component } from "../types";
+
+import { createSheet } from "./styles";
 
 const { classes } = createSheet({
     section: {
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--card-fg)',
-        border: 'var(--border-style)',
-        borderRadius: 'var(--border-radius)',
-        filter: 'var(--drop-shadow-filter)',
-    }
-})
+        backgroundColor: "var(--card-bg)",
+        color: "var(--card-fg)",
+        border: "var(--border-style)",
+        borderRadius: "var(--border-radius)",
+        filter: "var(--drop-shadow-filter)",
+        '&:hover': {
+            filter: "var(--drop-shadow-filter-accent)",
+        }
+    },
+});
 
-const CardSection:Component = ({ children, ...props }) => {
+export const CardSection: Component = ({ children, ...props }) => {
     return (
-        <section class={[classes.section].concat(props.class).join(' ')}>{children}</section>
-    )
-}
+        <section class={[classes.section].concat(props.class).join(" ")}>
+            {children}
+        </section>
+    );
+};
 
-export default CardSection
+export default CardSection;

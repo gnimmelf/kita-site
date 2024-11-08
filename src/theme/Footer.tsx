@@ -1,51 +1,56 @@
-import Html from '@kitajs/html'
-import {
-    Article,
-    Component,
-} from '../types'
+import Html from "@kitajs/html";
+import { Article, Component } from "../types";
 
-import { createSheet } from './styles'
+import { createSheet } from "./styles";
+import { Show } from "../lib/components";
 
 const { classes } = createSheet({
     footer: {
-        fontSize: 'medium',
-        textAlign: 'center',
-        backgroundColor: 'var(--footer-bg)',
-        color: 'var(--footer-fg)',
-        overflow: 'auto',
-        marginTop: '1rem',
-        padding: '1rem',
-        '& a': {
-            color: 'var(--footer-accent)',
+        fontSize: "medium",
+        textAlign: "center",
+        backgroundColor: "var(--footer-bg)",
+        color: "var(--footer-fg)",
+        overflow: "auto",
+        marginTop: "1rem",
+        padding: "1rem",
+        "& a": {
+            color: "var(--footer-accent)",
         },
-        '& h3': {
-            color: 'var(--footer-fg)',
-        }
+        "& h3": {
+            color: "var(--footer-fg)",
+        },
     },
     content: {
-        maxWidth: 'var(--content-width)',
-        margin: '0 auto'
+        maxWidth: "var(--content-width)",
+        margin: "0 auto",
     },
-    title: {
+    title: {},
+});
 
-    }
-})
-
-const Footer: Component<{}> = ({
-    ctx
+export const Footer: Component<{}> = ({
+    ctx,
 }) => {
-    const { footer, header } = ctx.site
-    const year = new Date().getFullYear()
+    //@ts-ignore
+    const { footer } = ctx.site;
+    const year = new Date().getFullYear();
     return (
         <section class={classes.footer}>
             <div class={classes.content}>
-                <h3>{footer.meta.title}</h3>
+                <Show when={footer.meta.titleLink}>
+                    <h3>
+                        <a href={footer.meta.titleLink}>{footer.meta.title}</a>
+                    </h3>
+                </Show>
+                <Show when={!footer.meta.titleLink}>
+                    <h3>{footer.meta.title}</h3>
+                </Show>
+
                 <div>{footer.meta.intro}</div>
                 <div>{footer.body}</div>
                 <small>© {year} {footer.meta.copyright}</small>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default Footer
+export default Footer;

@@ -29,6 +29,12 @@ export enum FileExtensions {
     JSON = 'json'
 }
 
+export enum TeaserLinkTypes {
+    ReadMore = 'readmore',
+    Showcase = 'showcase',
+    External = 'external'
+}
+
 // Record types
 
 export type ArticleMeta = Record<{
