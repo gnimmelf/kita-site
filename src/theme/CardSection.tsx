@@ -11,10 +11,7 @@ const { classes } = createSheet({
         border: "var(--border-style)",
         borderRadius: "var(--border-radius)",
         filter: "var(--drop-shadow-filter)",
-        '&:hover': {
-            filter: "var(--drop-shadow-filter-accent)",
-        }
-    },
+    }
 });
 
 export const CardSection: Component = ({ children, ...props }) => {

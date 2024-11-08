@@ -8,6 +8,11 @@ import { parseArticleMetaLink } from "../lib/utils";
 import { MdiCog, MdiExternalLink } from "./Icons";
 
 const { classes } = createSheet({
+    card: {
+        '&:hover': {
+            filter: "var(--drop-shadow-filter-accent)",
+        }
+    },
     teaser: {
         display: "flex",
         flexDirection: "column",
@@ -61,6 +66,7 @@ export const Teaser: Component<{
         <CardSection
             data-id={article.id}
             data-weight={article.meta.weight}
+            class={classes.card}
         >
             <a href={href} target={target} class={classes.teaser}>
                 <h2 class={classes.title}>{article.meta.title}</h2>
