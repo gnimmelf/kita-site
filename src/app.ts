@@ -13,7 +13,7 @@ import ArticlePage from "./theme/ArticlePage";
 import ShowcasePage from "./theme/ShowcasePage";
 
 import { stylesRegistry } from "./theme/styles";
-import AboutMePage from "./theme/AboutMePage";
+import AboutPage from "./theme/AboutPage";
 import ErrorPage from "./theme/ErrorPage";
 
 
@@ -29,13 +29,13 @@ export const createApp = async () => {
   }
 
   const app = new Elysia()
-    .onError(async ({code, error, ...ctx}) => {      
+    .onError(async ({code, error, ...ctx}) => {
       // Deriveds not available for 404, so cannot present a 404 insie the Layout-template
       console.error(error)
       if (code === 'UNKNOWN') {
-        ctx.set.status = StatusMap["Internal Server Error"]      
+        ctx.set.status = StatusMap["Internal Server Error"]
         return ErrorPage({ ctx, error })
-      }      
+      }
     })
     .use(html({
       autoDetect: true,
@@ -99,11 +99,11 @@ export const createApp = async () => {
       const cssStr = stylesRegistry.toString()
       return cssStr
     })
-    .get('/about-flemming', async (ctx) => {
-      const article = await loadArticle('__about-me')
+    .get('/about', async (ctx) => {
+      const article = await loadArticle('__more-about-me')
       const cvData = await api.getDatafileById('quadim-profile')
 
-      return AboutMePage({
+      return AboutPage({
         ctx,
         article,
         cvData

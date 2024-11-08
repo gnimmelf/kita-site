@@ -152,6 +152,12 @@ const filterExperienceSkills = (experienceId: string, skills: Skill[]) => {
     return filtered
 }
 
+const formatYearMonth = (year: number, month: number) => {
+    return year
+        ? format(new Date(year, month - 1), 'MMM yyyy')
+        : 'Ongoing'
+}
+
 /**
  * Components
  */
@@ -179,13 +185,13 @@ const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
 
 const Educations: Component<EducationProps> = ({ title, educations }) => (
     <CollapsSection title={title}>
-        {[...educations].sort(sortByDate).map((edu, index) => (
+        {[...educations].sort(sortByDate).map((edu) => (
             <div>
                 <h3>{edu.school}</h3>
                 <p>
-                    {format(new Date(edu.fromyear, edu.frommonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(edu.fromyear, edu.frommonth)}
                     {' - '}
-                    {format(new Date(edu.toyear, edu.tomonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(edu.toyear, edu.tomonth)}
                 </p>
                 <p>{edu.description}</p>
                 <p>{edu.degree ? `${edu.degree}` : 'Degree'} in {edu.fieldOfStudy}</p>
@@ -196,15 +202,15 @@ const Educations: Component<EducationProps> = ({ title, educations }) => (
 
 const Employments: Component<EmploymentProps> = ({ title, employments }) => (
     <CollapsSection title={title}>
-        {[...employments].sort(sortByDate).map((emp, index) => (
+        {[...employments].sort(sortByDate).map((emp) => (
             <div>
                 <h3>{emp.company}</h3>
                 <p>
                     {emp.title}
                     {', '}
-                    {format(new Date(emp.fromyear, emp.frommonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(emp.fromyear, emp.frommonth)}
                     {' - '}
-                    {format(new Date(emp.toyear, emp.tomonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(emp.toyear, emp.tomonth)}
                 </p>
                 <p>{emp.description}</p>
             </div>
@@ -227,9 +233,9 @@ const Experiences: Component<ExperienceProps> = ({ title, experiences, skills })
                 <p>
                     {exp.company}
                     {', '}
-                    {format(new Date(exp.fromyear, exp.frommonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(exp.fromyear, exp.frommonth)}
                     {' - '}
-                    {format(new Date(exp.toyear, exp.tomonth - 1), 'MMM yyyy')}
+                    {formatYearMonth(exp.toyear, exp.tomonth)}
                 </p>
                 <p>{exp.description}</p>
                 <p>
@@ -252,7 +258,7 @@ const CollapsSection: Component<{title: string}> = ({title, children}) => (
     </section>
 )
 
-const AboutMePage: Component<{
+const AboutPage: Component<{
     article: Article,
     cvData: Datafile & {
         data: CVData
@@ -303,4 +309,4 @@ const AboutMePage: Component<{
         )
     }
 
-export default AboutMePage
+export default AboutPage
