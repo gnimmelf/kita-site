@@ -8,6 +8,10 @@ import {
 
 type Context = {
     siteTitle: string
+    site: {
+        header: Article
+        footer: Article
+    }
 } & ElysiaContext
 
 
@@ -36,12 +40,19 @@ export enum TeaserLinkTypes {
 
 // Record types
 
-export type ArticleMeta = Record<{
+export type ArticleMeta = {
     title?: string,
     intro?: string
     link?: string,
     weight?: string
-}>
+    opengraph?: {
+        description?: string
+        site_name?: string
+        author?: string
+        image?: string
+    }
+    social?: Record<string, string>
+}
 
 export type Article = {
     id: string
