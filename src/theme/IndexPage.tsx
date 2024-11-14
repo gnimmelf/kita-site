@@ -5,6 +5,7 @@ import Layout from "./Layout";
 import Teaser from "./Teaser";
 
 import { createSheet } from "./styles";
+import MetaTags from "./MetaTags";
 
 const { classes } = createSheet({
     flex: {
@@ -34,12 +35,20 @@ export const IndexPage: Component<{
 }) => {
     articles.sort((a: Article, b: Article) => a.meta.weight > b.meta.weight);
 
+    const pageMetaTags = <MetaTags ctx={ctx} />;
+
     const headTags = [
         '<script src="//unpkg.com/@alpinejs/collapse"></script>',
         '<script src="//unpkg.com/alpinejs" defer></script>',
+        "",
     ];
     return (
-        <Layout ctx={ctx} isIndexPage={true} headTags={headTags}>
+        <Layout
+            ctx={ctx}
+            isIndexPage={true}
+            headTags={headTags}
+            pageMetaTags={pageMetaTags}
+        >
             <div class={classes.flex}>
                 {articles.map((article: Article) => (
                     <Teaser ctx={ctx} article={article} />

@@ -1,5 +1,5 @@
 import Html from "@kitajs/html";
-import { Component } from "../types";
+import { Component, PageMeta } from "../types";
 
 import { SvgFilters } from "./Svg";
 
@@ -27,19 +27,18 @@ export const { classes } = createSheet({
 });
 
 export const Layout: Component<{
-    pageTitle?: string;
+    pageMetaTags: JSX.Element,
     headTags?: string[];
     endTags?: string[];
-    isIndexPage?: Boolean;
+    isIndexPage?: boolean;
 }> = ({
     ctx,
     children,
-    pageTitle,
+    pageMetaTags,
     isIndexPage = false,
     headTags = [],
     endTags = [],
 }) => {
-    const siteTitle = ctx?.site?.header?.meta?.title || "Kita-site";
     return (
         <>
             {"<!doctype html>"}
@@ -51,17 +50,14 @@ export const Layout: Component<{
                     />
                     <meta http-equiv="Pragma" content="no-cache" />
                     <meta http-equiv="Expires" content="0" />
-                    {headTags.join("\n")}
-                    <title>
-                        {pageTitle ? `${pageTitle} - ` : ""}
-                        {siteTitle}
-                    </title>
                     <link
                         rel="stylesheet"
                         type="text/css"
                         href="/public/globals.css"
                     />
                     <link rel="stylesheet" type="text/css" href="/styles.css" />
+                    {pageMetaTags}
+                    {headTags.join("\n")}
                 </head>
                 <body class={classes.body}>
                     <SvgFilters />

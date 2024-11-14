@@ -18,6 +18,7 @@ import AccordionArticleBody, {
 } from "./AccordionArticleBody";
 import BackLink from "./BackLink";
 import { createSheet } from "./styles";
+import MetaTags from "./MetaTags";
 
 const { classes } = createSheet({
     content: {
@@ -171,21 +172,24 @@ const formatYearMonth = (year: number, month: number) => {
 const PersonalInfo: Component<PersonalInfoProps> = ({ data }) => (
     <section style={{ padding: "10px" }}>
         <div>
-            {/* <img
+            {
+                /* <img
                 src={data.image}
                 alt={data.name}
-            /> */}
+            /> */
+            }
         </div>
         <div>
             <h1>{data.name}</h1>
             <p>{data.description}</p>
             <div>
-                <p>Address: {data.address}, {data.city}</p>
                 <p>Email: {data.mail}</p>
-                <p>Phone: {data.phone}</p>
                 <p>
                     Birth Date:{" "}
-                    {format(parse(data.birthdate, 'dd/MM/yyyy', new Date()), "MMMM do, yyyy")}
+                    {format(
+                        parse(data.birthdate, "dd/MM/yyyy", new Date()),
+                        "MMMM do, yyyy",
+                    )}
                 </p>
             </div>
         </div>
@@ -296,9 +300,16 @@ export const AboutPage: Component<{
         '<script src="//unpkg.com/@alpinejs/collapse"></script>',
         '<script src="//unpkg.com/alpinejs" defer></script>',
     ];
+    const pageMetaTags = (
+        <MetaTags
+            ctx={ctx}
+            title={article.meta.title}
+            description={article.meta.intro}
+        />
+    );
     const { data } = cvData;
     return (
-        <Layout ctx={ctx} pageTitle={article.meta.title} headTags={headTags}>
+        <Layout ctx={ctx} pageMetaTags={pageMetaTags} headTags={headTags}>
             <CardSection class={articlePageClasses.article}>
                 <h1 class={articlePageClasses.title}>{article.meta.title}</h1>
 

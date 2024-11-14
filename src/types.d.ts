@@ -18,7 +18,6 @@ type KitaProps<T = Record<string, any>> = {
 
 export type Component<T = Record<string, any>> = (this: void, props: KitaProps<T>) => JSX.Element;
 
-
 export type CacheControl = {
     etag: string,
     lastModified: string

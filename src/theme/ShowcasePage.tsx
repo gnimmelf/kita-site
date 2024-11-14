@@ -5,6 +5,7 @@ import Layout from "./Layout";
 
 import { createSheet } from "./styles";
 import { BackLink } from "./BackLink";
+import { MetaTags } from "./MetaTags";
 
 const { classes } = createSheet({
     article: {
@@ -37,9 +38,15 @@ export const ShowcasePage: Component<{
     ctx,
     article,
 }) => {
-    // TODO! Figure out to load the individual showcases, they will be almost exclusively browser-code
+    const pageMetaTags = (
+        <MetaTags
+            ctx={ctx}
+            title={article.meta.title}
+            description={article.meta.intro}
+        />
+    );
     return (
-        <Layout ctx={ctx} pageTitle={article.meta.title}>
+        <Layout ctx={ctx} pageMetaTags={pageMetaTags}>
             <section class={classes.article}>
                 <h2>~ Showcase ~</h2>
                 <h1>{article.meta.title}</h1>

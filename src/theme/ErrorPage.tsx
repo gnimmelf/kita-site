@@ -4,6 +4,7 @@ import { Component } from "../types";
 import Layout from "./Layout";
 import BackLink from "./BackLink";
 import { createSheet } from "./styles";
+import MetaTags from "./MetaTags";
 
 const { classes } = createSheet({
     center: {
@@ -17,10 +18,15 @@ export const ErrorPage: Component<{
     ctx,
     error,
 }) => {
-    // console.dir(ctx)
-    const pageTitle = `Error - ${ctx.set.status}`;
+    const pageMetaTags = (
+        <MetaTags
+            ctx={ctx}
+            title={`Error - ${ctx?.set.status}`}
+            description={`Ops! An error occured`}
+        />
+    );
     return (
-        <Layout ctx={ctx} pageTitle={pageTitle}>
+        <Layout ctx={ctx} pageMetaTags={pageMetaTags}>
             <div class={classes.center}>
                 <p>
                     {error.name}
