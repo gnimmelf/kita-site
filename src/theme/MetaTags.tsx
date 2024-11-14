@@ -25,6 +25,8 @@ export const MetaTags: Component<{
             <meta property="og:title" content={pageTitle} />
             <meta property="og:description" content={pageDescription} />
             <meta property="og:image" content={image} />
+            <meta property="og:site_name" content={siteMeta?.opengraph?.site_name || ''} />
+            <meta property="og:author" content={siteMeta?.opengraph?.author || ''} />
         </>
     );
 };
