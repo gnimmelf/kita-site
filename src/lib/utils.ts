@@ -51,7 +51,7 @@ export const parseArticleMetaLink = (article: Article, ctx: Context) => {
   let linkUrl = new URL(`/blog/${article.id}`, baseUrl)
 
   const linkData = {
-    name: 'Read more',
+    name: 'Read article',
     url: linkUrl,
     isExternal: false,
     type: TeaserLinkTypes.ReadMore
@@ -68,7 +68,7 @@ export const parseArticleMetaLink = (article: Article, ctx: Context) => {
       linkData.url.pathname += `/${article.id}`;
     }
     else {
-      linkData.name = linkUrl.hostname
+      linkData.name = linkData.url.hostname
       linkData.type = TeaserLinkTypes.External
     }
   }
